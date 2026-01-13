@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRADEOS v1 - Trading Operating System</title>
+    <style>
+        :root {
+            --primary: #0a0f1e;
+            --secondary: #1a2035;
+            --accent: #00ff9d;
+            --warning: #ffb800;
+            --danger: #ff4757;
+            --info: #00d4ff;
+            --text: #e2e8f0;
+            --text-muted: #8a94a6;
+            --border: #2a3249;
+            --card-bg: #1a2035;
+            --input-bg: #252d45;
+            --success-bg: rgba(0, 255, 157, 0.1);
+            --warning-bg: rgba(255, 184, 0, 0.1);
+            --danger-bg: rgba(255, 71, 87, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: var(--primary);
+            color: var(--text);
+            padding-bottom: 70px;
+            min-height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 10px;
+            z-index: 1000;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn.active {
+            background: var(--card-bg);
+            color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-btn i {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Status Cards */
+        .status-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(26, 32, 53, 0.8));
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .status-success {
+            background: var(--success-bg);
+            color: var(--accent);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .status-warning {
+            background: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(255, 184, 0, 0.3);
+        }
+        
+        .status-danger {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #00cc7a);
+            color: var(--primary);
+        }
+        
+        .btn-secondary {
+            background: var(--input-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #ff2e43);
+            color: white;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+            margin: 0;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 16px;
+            appearance: none;
+        }
+        
+        /* Strategy Selector */
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .strategy-option {
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .strategy-option.active {
+            border-color: var(--accent);
+            background: rgba(0, 255, 157, 0.1);
+        }
+        
+        /* Checkbox Items */
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            border-color: var(--border);
+        }
+        
+        .checkbox-item input {
+            margin-right: 12px;
+            margin-top: 4px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+        }
+        
+        .checkbox-content {
+            flex: 1;
+        }
+        
+        .checkbox-label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
+        .checkbox-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .checkbox-points {
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        /* Grade Display */
+        .grade-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 157, 0.1), rgba(26, 32, 53, 0.8));
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 255, 157, 0.2);
+        }
+        
+        .grade-value {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 16px 0;
+        }
+        
+        .grade-Aplusplus { color: var(--accent); }
+        .grade-Aplus { color: #00d4ff; }
+        .grade-A { color: var(--warning); }
+        .grade-B { color: var(--warning); }
+        .grade-C { color: var(--danger); }
+        .grade-D { color: var(--danger); }
+        .grade-F { color: var(--danger); }
+        
+        /* Psychology Selector */
+        .psychology-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+        
+        .psych-option {
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .psych-option.active {
+            border-color: var(--accent);
+            background: rgba(0, 255, 157, 0.1);
+        }
+        
+        /* Trade List */
+        .trade-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .trade-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        /* Calendar */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            background: var(--input-bg);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--accent);
+        }
+        
+        .calendar-day.profit {
+            background: rgba(0, 255, 157, 0.2);
+        }
+        
+        .calendar-day.loss {
+            background: rgba(255, 71, 87, 0.2);
+        }
+        
+        /* Alert */
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .alert-success {
+            background: var(--success-bg);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .alert-warning {
+            background: var(--warning-bg);
+            border: 1px solid rgba(255, 184, 0, 0.3);
+        }
+        
+        .alert-danger {
+            background: var(--danger-bg);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 15, 30, 0.95);
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .modal.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            margin: 40px auto;
+            border: 1px solid var(--border);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: var(--input-bg);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #00cc7a);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .stats-grid,
+            .strategy-grid,
+            .psychology-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .grade-value {
+                font-size: 36px;
+            }
+            
+            .calendar {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 4px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Dashboard Screen -->
+    <div id="dashboard" class="screen active">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    TradeOS Dashboard
+                </div>
+                <div class="status-badge status-success">SYSTEM ACTIVE</div>
+            </div>
+            
+            <div id="systemStatus">
+                <!-- Dynamic status will be inserted here -->
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalTrades">0</div>
+                    <div class="stat-label">Total Trades</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="winRate">0%</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avgGrade">-</div>
+                    <div class="stat-label">Avg Grade</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="disciplineScore">100</div>
+                    <div class="stat-label">Discipline</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-brain"></i>
+                    Psychology State
+                </div>
+            </div>
+            <div id="psychologyStatus">
+                <!-- Psychology state will be inserted here -->
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-fire"></i>
+                    Quick Actions
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="showScreen('strategy')">
+                <i class="fas fa-plus"></i> New Trade Setup
+            </button>
+            <button class="btn btn-secondary" onclick="showScreen('journal')">
+                <i class="fas fa-book-open"></i> View Journal
+            </button>
+        </div>
+    </div>
+    
+    <!-- Strategy Selection Screen -->
+    <div id="strategy" class="screen">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-chess-board"></i>
+                    Select Strategy
+                </div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <div style="font-weight: 600;">Strategy Lock</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">
+                        Once selected, you must grade ALL setups with this strategy's rules
+                    </div>
+                </div>
+            </div>
+            
+            <div class="strategy-grid">
+                <div class="strategy-option" onclick="selectStrategy('smc')">
+                    <i class="fas fa-sitemap" style="font-size: 24px; margin-bottom: 8px; color: var(--accent);"></i>
+                    <div style="font-weight: 600;">SMC</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Liquidity & Order Flow</div>
+                </div>
+                <div class="strategy-option active" onclick="selectStrategy('pa')">
+                    <i class="fas fa-chart-line" style="font-size: 24px; margin-bottom: 8px; color: var(--accent);"></i>
+                    <div style="font-weight: 600;">Price Action</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Patterns & S/R</div>
+                </div>
+                <div class="strategy-option" onclick="selectStrategy('ict')">
+                    <i class="fas fa-bullseye" style="font-size: 24px; margin-bottom: 8px; color: var(--accent);"></i>
+                    <div style="font-weight: 600;">ICT</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Killzones & PD Arrays</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Trading Style</label>
+                <select class="form-select" id="tradingStyle">
+                    <option value="scalper">Scalper (M1-M15)</option>
+                    <option value="day" selected>Day Trader (H1-H4)</option>
+                    <option value="swing">Swing Trader (D1-W1)</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" onclick="proceedToPlanning()">
+                Continue to Trade Planning
+            </button>
+        </div>
+    </div>
+    
+    <!-- Trade Planning Screen -->
+    <div id="planning" class="screen">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-map"></i>
+                    Trade Planning
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Currency Pair</label>
+                <input type="text" class="form-input" id="tradePair" placeholder="EURUSD" value="XAUUSD">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Order Type</label>
+                <select class="form-select" id="orderType">
+                    <option value="limit">Limit Order</option>
+                    <option value="market">Market Order</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Risk %</label>
+                <input type="number" class="form-input" id="riskPercent" value="1.0" step="0.1" min="0.1" max="5">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Stop Loss (Price)</label>
+                <input type="text" class="form-input" id="stopLoss" placeholder="1950.00" value="1950.00">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Take Profit (Price)</label>
+                <input type="text" class="form-input" id="takeProfit" placeholder="1975.00" value="1975.00">
+            </div>
+            
+            <div id="rrDisplay" class="status-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: 600;">Risk:Reward Ratio</div>
+                        <div style="font-size: 14px; color: var(--text-muted);" id="rrValue">Enter prices to calculate</div>
+                    </div>
+                    <div class="status-badge" id="rrBadge">-</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="proceedToGrading()">
+                Continue to Confluence Grading
+            </button>
+        </div>
+    </div>
+    
+    <!-- Confluence Grading Screen -->
+    <div id="grading" class="screen">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-clipboard-check"></i>
+                    Confluence Grading
+                </div>
+                <div class="status-badge" id="currentStrategyBadge">PA</div>
+            </div>
+            
+            <div class="alert" id="psychologyBlock" style="display: none;">
+                <i class="fas fa-ban"></i>
+                <div>
+                    <div style="font-weight: 600;">Psychology Block</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;" id="blockReason"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Current Psychology State</label>
+                <div class="psychology-grid">
+                    <div class="psych-option active" onclick="selectPsychology('calm')">
+                        😌 Calm
+                    </div>
+                    <div class="psych-option" onclick="selectPsychology('neutral')">
+                        😐 Neutral
+                    </div>
+                    <div class="psych-option" onclick="selectPsychology('fomo')">
+                        🏃 FOMO
+                    </div>
+                    <div class="psych-option" onclick="selectPsychology('revenge')">
+                        😠 Revenge
+                    </div>
+                    <div class="psych-option" onclick="selectPsychology('tired')">
+                        😴 Tired
+                    </div>
+                </div>
+            </div>
+            
+            <div id="confluenceList">
+                <!-- Confluences will be loaded based on strategy -->
+            </div>
+            
+            <div class="grade-display">
+                <div style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">SETUP GRADE</div>
+                <div id="gradeValue" class="grade-value">-</div>
+                <div id="gradeMessage" style="color: var(--text); font-weight: 600; margin: 16px 0; font-size: 16px;">
+                    Complete confluence checklist
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="gradeProgress" style="width: 0%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <div style="color: var(--text-muted); font-size: 14px;">Core: <span id="coreScore">0</span>/100</div>
+                    <div style="color: var(--text-muted); font-size: 14px;">Bonus: <span id="bonusScore">0</span>/10</div>
+                    <div style="color: var(--text); font-size: 14px; font-weight: 600;">Total: <span id="totalScore">0</span>/110</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" id="executeBtn" onclick="executeTrade()" disabled>
+                <i class="fas fa-rocket"></i> Execute Trade
+            </button>
+            
+            <button class="btn btn-secondary" onclick="showScreen('dashboard')">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    </div>
+    
+    <!-- Journal Screen -->
+    <div id="journal" class="screen">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-book-open"></i>
+                    Trade Journal
+                </div>
+                <div class="status-badge" id="journalStats">0 trades</div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn btn-secondary" onclick="filterTrades('all')" style="flex: 1;">
+                    All Trades
+                </button>
+                <button class="btn btn-secondary" onclick="filterTrades('open')" style="flex: 1;">
+                    Open (<span id="openCount">0</span>)
+                </button>
+            </div>
+            
+            <div id="tradesList">
+                <!-- Trades will be loaded here -->
+                <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                    <i class="fas fa-book" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                    <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">No Trades Yet</div>
+                    <div>Your trading journey starts here</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Screen -->
+    <div id="stats" class="screen">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Performance Analytics
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="statWins">0</div>
+                    <div class="stat-label">Wins</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statLosses">0</div>
+                    <div class="stat-label">Losses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statProfitFactor">0.00</div>
+                    <div class="stat-label">Profit Factor</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statAvgRR">0.00</div>
+                    <div class="stat-label">Avg R:R</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Performance by Grade</label>
+                <div id="gradeStats">
+                    <!-- Grade statistics will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Performance by Psychology</label>
+                <div id="psychologyStats">
+                    <!-- Psychology statistics will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calendar Screen -->
+    <div id="calendar" class="screen">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-calendar"></i>
+                    Daily P&L Calendar
+                </div>
+                <div style="color: var(--text-muted); font-size: 14px;" id="calendarMonth">January 2024</div>
+            </div>
+            
+            <div class="calendar" id="calendarGrid">
+                <!-- Calendar will be generated here -->
+            </div>
+            
+            <div id="calendarDetails" style="margin-top: 20px;">
+                <!-- Selected day details will appear here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div id="closeTradeModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div class="card-title" style="margin-bottom: 0;">
+                    <i class="fas fa-flag-checkered"></i>
+                    Close Trade
+                </div>
+                <button onclick="closeModal()" style="background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            
+            <div id="closeTradeInfo">
+                <!-- Trade info will be inserted here -->
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Result</label>
+                <select class="form-select" id="tradeResult">
+                    <option value="win">WIN</option>
+                    <option value="loss">LOSS</option>
+                    <option value="breakeven">Break Even</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">P&L %</label>
+                <input type="text" class="form-input" id="tradePnL" placeholder="+2.5% or -1.5%">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Emotional State at Exit</label>
+                <select class="form-select" id="exitEmotion">
+                    <option value="calm">😌 Calm</option>
+                    <option value="anxious">😰 Anxious</option>
+                    <option value="greedy">💰 Greedy</option>
+                    <option value="relieved">😌 Relieved</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Key Lesson Learned</label>
+                <textarea class="form-input" id="tradeLesson" placeholder="What did you learn from this trade?" rows="3"></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveTradeResult()">
+                <i class="fas fa-save"></i> Save & Close
+            </button>
+            
+            <button class="btn btn-secondary" onclick="closeModal()" style="margin-top: 12px;">
+                Cancel
+            </button>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteTradeModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div class="card-title" style="margin-bottom: 0;">
+                    <i class="fas fa-trash"></i>
+                    Delete Trade
+                </div>
+                <button onclick="closeDeleteModal()" style="background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            
+            <div id="deleteTradeInfo">
+                <!-- Trade info will be inserted here -->
+            </div>
+            
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <div style="font-weight: 600;">Warning</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">
+                        This will permanently delete the trade from your journal. This action cannot be undone.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-danger" onclick="confirmDeleteTrade()" style="flex: 1;">
+                    <i class="fas fa-trash"></i> Delete Permanently
+                </button>
+                <button class="btn btn-secondary" onclick="closeDeleteModal()" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="nav">
+        <button class="nav-btn active" onclick="showScreen('dashboard')">
+            <i class="fas fa-home"></i>
+            Dashboard
+        </button>
+        <button class="nav-btn" onclick="showScreen('strategy')">
+            <i class="fas fa-plus"></i>
+            New Trade
+        </button>
+        <button class="nav-btn" onclick="showScreen('journal')">
+            <i class="fas fa-book"></i>
+            Journal
+        </button>
+        <button class="nav-btn" onclick="showScreen('stats')">
+            <i class="fas fa-chart-bar"></i>
+            Stats
+        </button>
+        <button class="nav-btn" onclick="showScreen('calendar')">
+            <i class="fas fa-calendar"></i>
+            Calendar
+        </button>
+    </div>
+
+    <script>
+        // ========== DATA PERSISTENCE ==========
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('tradeos_trades', JSON.stringify(appState.trades));
+                localStorage.setItem('tradeos_stats', JSON.stringify(appState.stats));
+                localStorage.setItem('tradeos_psychologyLog', JSON.stringify(appState.psychologyLog));
+                localStorage.setItem('tradeos_discipline', appState.disciplineScore.toString());
+                localStorage.setItem('tradeos_strategy', appState.currentStrategy);
+                localStorage.setItem('tradeos_psychology', appState.psychologyState);
+                localStorage.setItem('tradeos_tradingStyle', appState.tradingStyle);
+                console.log('✅ Data saved');
+            } catch (e) {
+                console.error('❌ Save failed:', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const trades = localStorage.getItem('tradeos_trades');
+                const stats = localStorage.getItem('tradeos_stats');
+                const psychLog = localStorage.getItem('tradeos_psychologyLog');
+                const discipline = localStorage.getItem('tradeos_discipline');
+                const strategy = localStorage.getItem('tradeos_strategy');
+                const psychology = localStorage.getItem('tradeos_psychology');
+                const style = localStorage.getItem('tradeos_tradingStyle');
+                
+                if (trades) appState.trades = JSON.parse(trades);
+                if (stats) appState.stats = JSON.parse(stats);
+                if (psychLog) appState.psychologyLog = JSON.parse(psychLog);
+                if (discipline) appState.disciplineScore = parseInt(discipline);
+                if (strategy) appState.currentStrategy = strategy;
+                if (psychology) appState.psychologyState = psychology;
+                if (style) appState.tradingStyle = style;
+                
+                console.log('✅ Data loaded');
+            } catch (e) {
+                console.error('❌ Load failed:', e);
+            }
+        }
+
+        // ========== APP STATE ==========
+        const appState = {
+            currentStrategy: 'pa',
+            tradingStyle: 'day',
+            psychologyState: 'calm',
+            disciplineScore: 100,
+            trades: [], // FIXED: Starts EMPTY, no fake trades
+            missedTrades: [],
+            psychologyLog: [],
+            currentTrade: null,
+            deleteTradeId: null,
+            stats: {
+                totalTrades: 0,
+                winningTrades: 0,
+                losingTrades: 0,
+                totalPnL: 0,
+                averageGrade: 0,
+                averageRR: 0,
+                profitFactor: 0,
+                winRate: 0
+            }
+        };
+
+        // ========== STRATEGY CONFIGURATIONS ==========
+        const strategies = {
+            pa: {
+                name: 'Price Action',
+                minGrade: 75,
+                minRR: 1.5
+            },
+            smc: {
+                name: 'SMC',
+                minGrade: 80,
+                minRR: 2.0
+            },
+            ict: {
+                name: 'ICT',
+                minGrade: 85,
+                minRR: 2.0
+            }
+        };
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            
+            // Set up R:R calculation
+            document.getElementById('stopLoss').addEventListener('input', calculateRR);
+            document.getElementById('takeProfit').addEventListener('input', calculateRR);
+            document.getElementById('tradePair').addEventListener('input', function() {
+                const pair = this.value.toUpperCase();
+                if (pair === 'EURUSD') {
+                    document.getElementById('stopLoss').value = '1.08000';
+                    document.getElementById('takeProfit').value = '1.09000';
+                    calculateRR();
+                } else if (pair === 'XAUUSD') {
+                    document.getElementById('stopLoss').value = '1950.00';
+                    document.getElementById('takeProfit').value = '1975.00';
+                    calculateRR();
+                }
+            });
+        });
+
+        function initializeApp() {
+            loadFromLocalStorage();
+            updateDashboard();
+            loadConfluences(appState.currentStrategy);
+            generateCalendar();
+            updateJournal();
+            updateStats();
+        }
+
+        // ========== SCREEN MANAGEMENT ==========
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(screenId).classList.add('active');
+            
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const screenIndex = ['dashboard', 'strategy', 'journal', 'stats', 'calendar'].indexOf(screenId);
+            if (screenIndex !== -1 && navButtons[screenIndex]) {
+                navButtons[screenIndex].classList.add('active');
+            }
+            
+            if (screenId === 'dashboard') {
+                updateDashboard();
+            } else if (screenId === 'journal') {
+                updateJournal();
+            } else if (screenId === 'stats') {
+                updateStats();
+            } else if (screenId === 'calendar') {
+                generateCalendar();
+            } else if (screenId === 'strategy') {
+                resetTradeFlow();
+            }
+        }
+
+        // ========== STRATEGY SELECTION ==========
+        function selectStrategy(strategy) {
+            appState.currentStrategy = strategy;
+            
+            document.querySelectorAll('.strategy-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            document.getElementById('currentStrategyBadge').textContent = strategy.toUpperCase();
+            loadConfluences(strategy);
+        }
+
+        function loadConfluences(strategy) {
+            let html = '';
+            
+            const coreConfluences = [
+                { id: 'ms', label: 'Market Structure Valid', desc: 'Clear BOS/CHOCH present', points: 25 },
+                { id: 'htf', label: 'HTF Bias Alignment', desc: 'Higher timeframe supports direction', points: 20 },
+                { id: 'poi', label: 'POI Quality (OB/FVG)', desc: 'Clean order block/fair value gap', points: 20 },
+                { id: 'ls', label: 'Liquidity Sweep Complete', desc: 'Equal highs/lows taken', points: 20 },
+                { id: 'em', label: 'Valid Entry Model', desc: 'Clear entry trigger present', points: 15 }
+            ];
+            
+            const bonusConfluences = [
+                { id: 'ema', label: 'EMA Alignment', desc: 'Price respects key moving averages', points: 3 },
+                { id: 'pattern', label: 'Price Action Pattern', desc: 'Pin bar, engulfing, etc.', points: 3 },
+                { id: 'session', label: 'Session Timing', desc: 'Trading during London/NY overlap', points: 2 },
+                { id: 'vol', label: 'Volume/Displacement', desc: 'Strong momentum present', points: 2 }
+            ];
+            
+            html += '<div style="font-weight: 600; margin-bottom: 16px; color: var(--text);">Core Confluences (100 points)</div>';
+            coreConfluences.forEach(confluence => {
+                html += `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="${confluence.id}" data-points="${confluence.points}" data-core="true" onchange="calculateGrade()">
+                        <div class="checkbox-content">
+                            <div class="checkbox-label">${confluence.label}</div>
+                            <div class="checkbox-desc">${confluence.desc}</div>
+                        </div>
+                        <div class="checkbox-points">${confluence.points}</div>
+                    </div>
+                `;
+            });
+            
+            html += '<div style="font-weight: 600; margin: 24px 0 16px 0; color: var(--text);">Bonus Confluences (+10 points)</div>';
+            bonusConfluences.forEach(confluence => {
+                html += `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="${confluence.id}" data-points="${confluence.points}" data-bonus="true" onchange="calculateGrade()">
+                        <div class="checkbox-content">
+                            <div class="checkbox-label">${confluence.label}</div>
+                            <div class="checkbox-desc">${confluence.desc}</div>
+                        </div>
+                        <div class="checkbox-points">+${confluence.points}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('confluenceList').innerHTML = html;
+            calculateGrade();
+        }
+
+        // ========== PSYCHOLOGY MANAGEMENT ==========
+        function selectPsychology(state) {
+            appState.psychologyState = state;
+            
+            document.querySelectorAll('.psych-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            checkPsychologyBlock();
+            calculateGrade();
+        }
+
+        function checkPsychologyBlock() {
+            const blockDiv = document.getElementById('psychologyBlock');
+            
+            if (appState.psychologyState === 'fomo' || appState.psychologyState === 'revenge') {
+                blockDiv.style.display = 'flex';
+                document.getElementById('blockReason').textContent = 
+                    `${appState.psychologyState.toUpperCase()} state → TRADE BLOCKED`;
+            } else {
+                blockDiv.style.display = 'none';
+            }
+        }
+
+        // ========== REAL R:R CALCULATION ==========
+        function calculateRR() {
+            const pair = document.getElementById('tradePair').value.toUpperCase();
+            let entryPrice;
+            
+            if (pair === 'EURUSD') entryPrice = 1.08500;
+            else if (pair === 'XAUUSD') entryPrice = 1965.00;
+            else entryPrice = 100.00;
+            
+            const sl = parseFloat(document.getElementById('stopLoss').value);
+            const tp = parseFloat(document.getElementById('takeProfit').value);
+            
+            if (sl && tp && !isNaN(sl) && !isNaN(tp)) {
+                const risk = Math.abs(entryPrice - sl);
+                const reward = Math.abs(tp - entryPrice);
+                let rr = risk > 0 ? (reward / risk) : 0;
+                
+                const rrDisplay = rr.toFixed(2);
+                document.getElementById('rrValue').textContent = `1:${rrDisplay}`;
+                
+                const badge = document.getElementById('rrBadge');
+                if (rr >= 2.0) {
+                    badge.textContent = 'EXCELLENT';
+                    badge.className = 'status-badge status-success';
+                } else if (rr >= 1.5) {
+                    badge.textContent = 'GOOD';
+                    badge.className = 'status-badge status-success';
+                } else if (rr >= 1.0) {
+                    badge.textContent = 'MINIMUM';
+                    badge.className = 'status-badge status-warning';
+                } else {
+                    badge.textContent = 'POOR';
+                    badge.className = 'status-badge status-danger';
+                }
+                
+                return rr;
+            }
+            return 0;
+        }
+
+        // ========== GRADE CALCULATION ==========
+        function calculateGrade() {
+            let coreScore = 0;
+            let bonusScore = 0;
+            
+            document.querySelectorAll('input[data-core="true"]:checked').forEach(cb => {
+                coreScore += parseInt(cb.dataset.points) || 0;
+            });
+            
+            if (coreScore >= 60) {
+                document.querySelectorAll('input[data-bonus="true"]:checked').forEach(cb => {
+                    bonusScore += parseInt(cb.dataset.points) || 0;
+                });
+            }
+            
+            const totalScore = coreScore + bonusScore;
+            const rr = calculateRR();
+            const minGrade = strategies[appState.currentStrategy].minGrade;
+            const minRR = strategies[appState.currentStrategy].minRR;
+            
+            document.getElementById('coreScore').textContent = coreScore;
+            document.getElementById('bonusScore').textContent = bonusScore;
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('gradeProgress').style.width = `${(totalScore / 110) * 100}%`;
+            
+            let grade, gradeClass, message;
+            let isBlocked = false;
+            let blockReasons = [];
+            
+            if (appState.psychologyState === 'fomo' || appState.psychologyState === 'revenge') {
+                isBlocked = true;
+                blockReasons.push(`Psychology: ${appState.psychologyState.toUpperCase()}`);
+            }
+            
+            if (totalScore < minGrade) {
+                isBlocked = true;
+                blockReasons.push(`Grade ${totalScore} < ${minGrade}`);
+            }
+            
+            if (rr < minRR) {
+                isBlocked = true;
+                blockReasons.push(`R:R ${rr.toFixed(2)} < ${minRR}`);
+            }
+            
+            if (totalScore >= 100) {
+                grade = 'A+'; gradeClass = 'grade-Aplusplus';
+                message = '✅ EXCELLENT - Full position';
+            } else if (totalScore >= 85) {
+                grade = 'A'; gradeClass = 'grade-A';
+                message = '✅ GOOD - Reduced position (0.75x)';
+            } else if (totalScore >= 75) {
+                grade = 'B'; gradeClass = 'grade-B';
+                message = '⚠️ QUESTIONABLE - Half position (0.5x)';
+            } else if (totalScore >= 60) {
+                grade = 'C'; gradeClass = 'grade-C';
+                message = '⚠️ WEAK - Quarter position (0.25x)';
+            } else {
+                grade = 'F'; gradeClass = 'grade-F';
+                message = '🚫 POOR - Paper trade only';
+                isBlocked = true;
+            }
+            
+            const gradeElement = document.getElementById('gradeValue');
+            gradeElement.textContent = grade;
+            gradeElement.className = 'grade-value ' + gradeClass;
+            
+            if (isBlocked && blockReasons.length > 0) {
+                document.getElementById('gradeMessage').innerHTML = 
+                    `<span style="color: var(--danger);">🚫 TRADE BLOCKED</span><br>
+                     <small style="color: var(--text-muted);">${blockReasons.join(', ')}</small>`;
+            } else {
+                document.getElementById('gradeMessage').textContent = message;
+            }
+            
+            const executeBtn = document.getElementById('executeBtn');
+            if (!isBlocked) {
+                executeBtn.disabled = false;
+                executeBtn.innerHTML = '<i class="fas fa-rocket"></i> Execute Trade';
+                executeBtn.className = 'btn btn-primary';
+            } else {
+                executeBtn.disabled = true;
+                executeBtn.innerHTML = '<i class="fas fa-ban"></i> Trade Blocked';
+                executeBtn.className = 'btn btn-danger';
+            }
+            
+            return { coreScore, bonusScore, totalScore, grade, isBlocked, blockReasons, rr };
+        }
+
+        // ========== TRADE FLOW ==========
+        function resetTradeFlow() {
+            document.getElementById('tradePair').value = 'XAUUSD';
+            document.getElementById('orderType').value = 'limit';
+            document.getElementById('riskPercent').value = '1.0';
+            document.getElementById('stopLoss').value = '1950.00';
+            document.getElementById('takeProfit').value = '1975.00';
+            
+            appState.psychologyState = 'calm';
+            document.querySelectorAll('.psych-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            document.querySelectorAll('.psych-option')[0].classList.add('active');
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            calculateGrade();
+        }
+
+        function proceedToPlanning() {
+            appState.tradingStyle = document.getElementById('tradingStyle').value;
+            showScreen('planning');
+            calculateRR();
+        }
+
+        function proceedToGrading() {
+            const pair = document.getElementById('tradePair').value;
+            const sl = document.getElementById('stopLoss').value;
+            const tp = document.getElementById('takeProfit').value;
+            
+            if (!pair) {
+                alert('⚠️ Enter currency pair');
+                return;
+            }
+            
+            if (!sl || !tp) {
+                alert('⚠️ Enter stop loss and take profit prices');
+                return;
+            }
+            
+            showScreen('grading');
+            calculateRR();
+        }
+
+        function executeTrade() {
+            const grade = calculateGrade();
+            
+            if (grade.isBlocked) {
+                alert(`🚫 TRADE BLOCKED\n\nReasons:\n• ${grade.blockReasons.join('\n• ')}`);
+                return;
+            }
+            
+            if (appState.psychologyState === 'tired') {
+                appState.disciplineScore = Math.max(0, appState.disciplineScore - 5);
+            }
+            
+            const trade = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                pair: document.getElementById('tradePair').value.toUpperCase(),
+                strategy: appState.currentStrategy,
+                style: appState.tradingStyle,
+                orderType: document.getElementById('orderType').value,
+                riskPercent: parseFloat(document.getElementById('riskPercent').value),
+                stopLoss: document.getElementById('stopLoss').value,
+                takeProfit: document.getElementById('takeProfit').value,
+                rr: grade.rr,
+                psychology: appState.psychologyState,
+                coreScore: grade.coreScore,
+                bonusScore: grade.bonusScore,
+                totalScore: grade.totalScore,
+                grade: grade.grade,
+                status: 'open',
+                result: null,
+                pnl: null,
+                reflection: {},
+                notes: ''
+            };
+            
+            appState.trades.unshift(trade);
+            appState.currentTrade = trade;
+            
+            appState.psychologyLog.push({
+                date: new Date().toISOString(),
+                state: appState.psychologyState,
+                action: 'trade_opened',
+                grade: grade.grade
+            });
+            
+            saveToLocalStorage();
+            updateDashboard();
+            updateJournal();
+            updateStats();
+            generateCalendar();
+            
+            alert(`✅ TRADE EXECUTED\n\n${trade.pair}\nGrade: ${trade.grade}\nRisk: ${trade.riskPercent}%\nR:R: 1:${trade.rr.toFixed(2)}\n\nTrade logged to Open Trades`);
+            
+            showScreen('journal');
+        }
+
+        // ========== TRADE MANAGEMENT ==========
+        function openCloseModal(tradeId) {
+            const trade = appState.trades.find(t => t.id === tradeId);
+            if (!trade) {
+                alert('Trade not found');
+                return;
+            }
+            
+            appState.currentTrade = trade;
+            
+            document.getElementById('closeTradeInfo').innerHTML = `
+                <div class="status-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">${trade.pair} • ${trade.strategy.toUpperCase()}</div>
+                    <div style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">
+                        Opened: ${new Date(trade.date).toLocaleDateString()}<br>
+                        Grade: ${trade.grade} (${trade.totalScore}/110)<br>
+                        Risk: ${trade.riskPercent}% • R:R: 1:${trade.rr ? trade.rr.toFixed(2) : '0.00'}
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Psychology</div>
+                            <div style="font-weight: 600;">${trade.psychology}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Status</div>
+                            <div class="status-badge status-success" style="font-size: 12px;">OPEN</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0; padding: 16px; background: rgba(0, 255, 157, 0.05); border-radius: 12px; border: 1px solid rgba(0, 255, 157, 0.2);">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--accent);">
+                        <i class="fas fa-brain"></i> Required Reflection (3 Questions)
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">1. Did you follow your rules?</label>
+                        <select class="form-select" id="reflectionRules">
+                            <option value="">Select answer</option>
+                            <option value="yes">✅ Yes, perfectly</option>
+                            <option value="mostly">⚠️ Mostly followed</option>
+                            <option value="no">❌ No, deviated significantly</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">2. Setup quality (A/B/C)?</label>
+                        <select class="form-select" id="reflectionQuality">
+                            <option value="">Select grade</option>
+                            <option value="A">A - Textbook perfect setup</option>
+                            <option value="B">B - Good with minor issues</option>
+                            <option value="C">C - Mediocre, questionable</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">3. Which core confluence made this valid?</label>
+                        <input type="text" class="form-input" id="reflectionCore" placeholder="e.g., Market Structure, HTF Bias, POI Quality...">
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('tradeResult').value = 'win';
+            document.getElementById('tradePnL').value = '+2.5%';
+            document.getElementById('exitEmotion').value = 'calm';
+            document.getElementById('tradeLesson').value = '';
+            
+            document.getElementById('closeTradeModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('closeTradeModal').classList.remove('active');
+        }
+
+        function saveTradeResult() {
+            const result = document.getElementById('tradeResult').value;
+            const pnl = document.getElementById('tradePnL').value;
+            const emotion = document.getElementById('exitEmotion').value;
+            const rules = document.getElementById('reflectionRules').value;
+            const quality = document.getElementById('reflectionQuality').value;
+            const coreConfluence = document.getElementById('reflectionCore').value;
+            const lesson = document.getElementById('tradeLesson').value;
+            
+            if (!rules || !quality || !coreConfluence) {
+                alert('⚠️ Please complete all 3 reflection questions');
+                return;
+            }
+            
+            if (!pnl || !pnl.match(/^[+-]?\d+(\.\d+)?%?$/)) {
+                alert('⚠️ Enter valid P&L (e.g., +2.5% or -1.5 or +50)');
+                return;
+            }
+            
+            let pnlFormatted = pnl;
+            if (!pnl.includes('%')) {
+                pnlFormatted = pnl + '%';
+            }
+            
+            const trade = appState.currentTrade;
+            if (!trade) {
+                alert('No active trade found');
+                return;
+            }
+            
+            trade.status = 'closed';
+            trade.result = result;
+            trade.pnl = pnlFormatted;
+            trade.exitEmotion = emotion;
+            trade.reflection = {
+                rulesFollowed: rules,
+                quality: quality,
+                coreConfluence: coreConfluence,
+                lesson: lesson
+            };
+            trade.closeDate = new Date().toISOString();
+            
+            if (rules === 'yes' && quality === 'A') {
+                appState.disciplineScore = Math.min(100, appState.disciplineScore + 5);
+            } else if (rules === 'no' || quality === 'C') {
+                appState.disciplineScore = Math.max(0, appState.disciplineScore - 10);
+            }
+            
+            if (result === 'win') {
+                appState.stats.winningTrades++;
+            } else if (result === 'loss') {
+                appState.stats.losingTrades++;
+            }
+            
+            appState.psychologyLog.push({
+                date: new Date().toISOString(),
+                state: emotion,
+                action: 'trade_closed',
+                result: result,
+                disciplineChange: rules === 'yes' && quality === 'A' ? '+5' : 
+                              rules === 'no' || quality === 'C' ? '-10' : '0'
+            });
+            
+            saveToLocalStorage();
+            closeModal();
+            updateDashboard();
+            updateJournal();
+            updateStats();
+            generateCalendar();
+            
+            alert(`📘 TRADE JOURNALED\n\n${trade.pair}: ${result.toUpperCase()} ${pnlFormatted}\nDiscipline: ${appState.disciplineScore}\n\nTrade moved to journal.`);
+        }
+
+        // ========== DELETE TRADE FUNCTIONALITY ==========
+        function openDeleteModal(tradeId) {
+            const trade = appState.trades.find(t => t.id === tradeId);
+            if (!trade) return;
+            
+            appState.deleteTradeId = tradeId;
+            
+            document.getElementById('deleteTradeInfo').innerHTML = `
+                <div class="status-card">
+                    <div style="font-weight: 600; margin-bottom: 8px;">${trade.pair} • ${trade.strategy.toUpperCase()}</div>
+                    <div style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">
+                        Opened: ${new Date(trade.date).toLocaleDateString()}<br>
+                        Grade: ${trade.grade} (${trade.totalScore}/110)<br>
+                        Status: ${trade.status === 'open' ? 'OPEN' : 'CLOSED'}
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Risk</div>
+                            <div style="font-weight: 600;">${trade.riskPercent}%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Psychology</div>
+                            <div style="font-weight: 600;">${trade.psychology}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('deleteTradeModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteTradeModal').classList.remove('active');
+            appState.deleteTradeId = null;
+        }
+
+        function confirmDeleteTrade() {
+            if (!appState.deleteTradeId) return;
+            
+            const index = appState.trades.findIndex(t => t.id === appState.deleteTradeId);
+            if (index !== -1) {
+                appState.trades.splice(index, 1);
+                
+                saveToLocalStorage();
+                updateDashboard();
+                updateJournal();
+                updateStats();
+                generateCalendar();
+                
+                alert('✅ Trade deleted successfully');
+            }
+            
+            closeDeleteModal();
+        }
+
+        // ========== JOURNAL ==========
+        function updateJournal() {
+            const openTrades = appState.trades.filter(t => t.status === 'open');
+            const closedTrades = appState.trades.filter(t => t.status === 'closed');
+            
+            document.getElementById('openCount').textContent = openTrades.length;
+            document.getElementById('journalStats').textContent = `${appState.trades.length} trades`;
+            
+            let html = '';
+            
+            if (appState.trades.length === 0) {
+                html = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        <i class="fas fa-book" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                        <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">No Trades Yet</div>
+                        <div>Create your first trade from the New Trade screen</div>
+                    </div>
+                `;
+            } else {
+                appState.trades.forEach(trade => {
+                    const date = new Date(trade.date);
+                    const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const dateStr = date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                    
+                    const gradeColor = trade.grade.includes('A') ? 'var(--accent)' : 
+                                      trade.grade.includes('B') ? 'var(--warning)' : 'var(--danger)';
+                    
+                    html += `
+                        <div class="trade-item">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div>
+                                    <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">${trade.pair}</div>
+                                    <div style="color: var(--text-muted); font-size: 14px;">
+                                        ${dateStr} ${timeStr} • ${trade.strategy.toUpperCase()}
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="font-weight: 600; color: ${gradeColor};">${trade.grade}</div>
+                                    ${trade.status === 'open' ? 
+                                        `<div class="status-badge status-success" style="font-size: 12px;">OPEN</div>` :
+                                        `<div class="status-badge ${trade.result === 'win' ? 'status-success' : 'status-danger'}" style="font-size: 12px;">
+                                            ${trade.result === 'win' ? 'WIN' : 'LOSS'}
+                                        </div>`
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 16px; font-size: 14px; margin-bottom: 12px;">
+                                <div>
+                                    <div style="color: var(--text-muted);">Risk</div>
+                                    <div style="font-weight: 600;">${trade.riskPercent}%</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--text-muted);">R:R</div>
+                                    <div style="font-weight: 600;">1:${trade.rr ? trade.rr.toFixed(2) : '0.00'}</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--text-muted);">Psychology</div>
+                                    <div style="font-weight: 600;">${trade.psychology}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="trade-actions">
+                                ${trade.status === 'open' ? 
+                                    `<button class="btn btn-primary btn-small" onclick="openCloseModal(${trade.id})" style="flex: 1;">
+                                        <i class="fas fa-flag-checkered"></i> Close Trade
+                                    </button>
+                                    <button class="btn btn-danger btn-small" onclick="openDeleteModal(${trade.id})" style="flex: 1;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>` :
+                                    `<div style="flex: 1; padding: 8px 16px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center;">
+                                        <div style="color: ${trade.result === 'win' ? 'var(--accent)' : 'var(--danger)'}; font-weight: 600;">
+                                            ${trade.pnl} • ${trade.exitEmotion}
+                                        </div>
+                                        ${trade.reflection.lesson ? `<div style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">${trade.reflection.lesson}</div>` : ''}
+                                    </div>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('tradesList').innerHTML = html;
+        }
+
+        function filterTrades(filter) {
+            updateJournal();
+        }
+
+        // ========== STATISTICS ==========
+        function updateStats() {
+            const closedTrades = appState.trades.filter(t => t.status === 'closed');
+            const wins = closedTrades.filter(t => t.result === 'win');
+            const losses = closedTrades.filter(t => t.result === 'loss');
+            
+            const totalTrades = closedTrades.length;
+            const winRate = totalTrades > 0 ? Math.round((wins.length / totalTrades) * 100) : 0;
+            
+            let totalProfit = 0;
+            let totalLoss = 0;
+            
+            wins.forEach(t => {
+                const pnl = parseFloat(t.pnl) || 0;
+                totalProfit += pnl;
+            });
+            
+            losses.forEach(t => {
+                const pnl = Math.abs(parseFloat(t.pnl) || 0);
+                totalLoss += pnl;
+            });
+            
+            const profitFactor = totalLoss > 0 ? (totalProfit / totalLoss).toFixed(2) : totalProfit > 0 ? '∞' : '0.00';
+            
+            const avgRR = closedTrades.length > 0 ? 
+                (closedTrades.reduce((sum, t) => sum + (t.rr || 0), 0) / closedTrades.length).toFixed(2) : '0.00';
+            
+            document.getElementById('statWins').textContent = wins.length;
+            document.getElementById('statLosses').textContent = losses.length;
+            document.getElementById('statProfitFactor').textContent = profitFactor;
+            document.getElementById('statAvgRR').textContent = avgRR;
+            
+            document.getElementById('totalTrades').textContent = appState.trades.length;
+            document.getElementById('winRate').textContent = `${winRate}%`;
+            
+            const gradeStats = {};
+            appState.trades.forEach(t => {
+                gradeStats[t.grade] = (gradeStats[t.grade] || 0) + 1;
+            });
+            
+            let gradeHtml = '';
+            Object.entries(gradeStats).forEach(([grade, count]) => {
+                const color = grade.includes('A') ? 'var(--accent)' : 
+                             grade.includes('B') ? 'var(--warning)' : 'var(--danger)';
+                gradeHtml += `
+                    <div style="display: flex; justify-content: space-between; margin: 8px 0; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                        <span style="font-weight: 600; color: ${color}">${grade}</span>
+                        <span>${count} trade${count !== 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('gradeStats').innerHTML = gradeHtml || 
+                '<div style="color: var(--text-muted); text-align: center; padding: 20px;">No grade data yet</div>';
+            
+            const psychStats = {};
+            appState.trades.forEach(t => {
+                psychStats[t.psychology] = (psychStats[t.psychology] || 0) + 1;
+            });
+            
+            let psychHtml = '';
+            const psychLabels = {
+                calm: '😌 Calm',
+                neutral: '😐 Neutral',
+                fomo: '🏃 FOMO',
+                revenge: '😠 Revenge',
+                tired: '😴 Tired'
+            };
+            
+            Object.entries(psychStats).forEach(([psych, count]) => {
+                psychHtml += `
+                    <div style="display: flex; justify-content: space-between; margin: 8px 0; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                        <span style="font-weight: 600;">${psychLabels[psych] || psych}</span>
+                        <span>${count} trade${count !== 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('psychologyStats').innerHTML = psychHtml || 
+                '<div style="color: var(--text-muted); text-align: center; padding: 20px;">No psychology data yet</div>';
+        }
+
+        // ========== CALENDAR ==========
+        function generateCalendar() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const today = now.getDate();
+            
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendarMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            let html = '';
+            
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayNames.forEach(day => {
+                html += `<div style="text-align: center; font-weight: 600; color: var(--text-muted); padding: 8px 0;">${day}</div>`;
+            });
+            
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div class="calendar-day"></div>';
+            }
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const tradesToday = appState.trades.filter(t => {
+                    const tradeDate = new Date(t.date).toISOString().split('T')[0];
+                    return tradeDate === dateStr && t.status === 'closed';
+                });
+                
+                let dailyPnL = 0;
+                tradesToday.forEach(trade => {
+                    if (trade.pnl) {
+                        const pnlValue = parseFloat(trade.pnl);
+                        if (!isNaN(pnlValue)) {
+                            dailyPnL += pnlValue;
+                        }
+                    }
+                });
+                
+                const isToday = day === today;
+                const dayClass = `calendar-day ${isToday ? 'today' : ''} ${dailyPnL > 0 ? 'profit' : dailyPnL < 0 ? 'loss' : ''}`;
+                
+                html += `
+                    <div class="${dayClass}" onclick="showDayDetails('${dateStr}')">
+                        <div style="font-weight: 600;">${day}</div>
+                        ${tradesToday.length > 0 ? `<div style="font-size: 10px; margin-top: 2px;">${tradesToday.length}t</div>` : ''}
+                        ${dailyPnL !== 0 ? `<div style="font-size: 10px; margin-top: 2px; color: ${dailyPnL > 0 ? 'var(--accent)' : 'var(--danger)'}">${dailyPnL > 0 ? '+' : ''}${dailyPnL.toFixed(1)}%</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            document.getElementById('calendarGrid').innerHTML = html;
+        }
+
+        function showDayDetails(dateStr) {
+            const tradesToday = appState.trades.filter(t => {
+                const tradeDate = new Date(t.date).toISOString().split('T')[0];
+                return tradeDate === dateStr && t.status === 'closed';
+            });
+            
+            let totalPnL = 0;
+            tradesToday.forEach(trade => {
+                if (trade.pnl) {
+                    const pnlValue = parseFloat(trade.pnl);
+                    if (!isNaN(pnlValue)) {
+                        totalPnL += pnlValue;
+                    }
+                }
+            });
+            
+            let detailsHtml = '';
+            if (tradesToday.length === 0) {
+                detailsHtml = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">No closed trades on this day</div>';
+            } else {
+                detailsHtml = `
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">${dateStr}</div>
+                        <div style="color: ${totalPnL > 0 ? 'var(--accent)' : totalPnL < 0 ? 'var(--danger)' : 'var(--text-muted)'}; font-size: 24px; font-weight: 700;">
+                            ${totalPnL > 0 ? '+' : ''}${totalPnL.toFixed(2)}%
+                        </div>
+                        <div style="color: var(--text-muted); font-size: 14px;">${tradesToday.length} trade${tradesToday.length !== 1 ? 's' : ''}</div>
+                    </div>
+                    
+                    <div style="font-weight: 600; margin-bottom: 12px;">Trades:</div>
+                `;
+                
+                tradesToday.forEach(trade => {
+                    detailsHtml += `
+                        <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="font-weight: 600;">${trade.pair}</span>
+                                <span style="color: ${trade.result === 'win' ? 'var(--accent)' : 'var(--danger)'}; font-weight: 600;">
+                                    ${trade.pnl}
+                                </span>
+                            </div>
+                            <div style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">
+                                Grade: ${trade.grade} • R:R: 1:${trade.rr.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('calendarDetails').innerHTML = detailsHtml;
+        }
+
+        // ========== DASHBOARD ==========
+        function updateDashboard() {
+            const closedTrades = appState.trades.filter(t => t.status === 'closed');
+            const wins = closedTrades.filter(t => t.result === 'win');
+            const winRate = closedTrades.length > 0 ? 
+                Math.round((wins.length / closedTrades.length) * 100) : 0;
+            
+            let avgGrade = 0;
+            if (appState.trades.length > 0) {
+                const totalScore = appState.trades.reduce((sum, t) => sum + t.totalScore, 0);
+                avgGrade = Math.round(totalScore / appState.trades.length);
+            }
+            
+            document.getElementById('totalTrades').textContent = appState.trades.length;
+            document.getElementById('winRate').textContent = `${winRate}%`;
+            document.getElementById('avgGrade').textContent = avgGrade;
+            document.getElementById('disciplineScore').textContent = appState.disciplineScore;
+            
+            let tradeStatus = 'ALLOWED';
+            let statusClass = 'status-success';
+            let statusMessage = '✅ Ready to trade';
+            
+            if (appState.psychologyState === 'fomo' || appState.psychologyState === 'revenge') {
+                tradeStatus = 'BLOCKED';
+                statusClass = 'status-danger';
+                statusMessage = '🚫 Trading blocked - psychology';
+            } else if (appState.psychologyState === 'tired') {
+                tradeStatus = 'WARNING';
+                statusClass = 'status-warning';
+                statusMessage = '⚠️ Reduced position - tired';
+            } else if (appState.disciplineScore < 70) {
+                tradeStatus = 'WARNING';
+                statusClass = 'status-warning';
+                statusMessage = '⚠️ Discipline low - be careful';
+            }
+            
+            document.getElementById('systemStatus').innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">System Status</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div class="status-badge status-success">${strategies[appState.currentStrategy].name}</div>
+                        <div class="status-badge ${statusClass}">${tradeStatus}</div>
+                        <div class="status-badge ${appState.disciplineScore >= 80 ? 'status-success' : appState.disciplineScore >= 60 ? 'status-warning' : 'status-danger'}">
+                            DISC: ${appState.disciplineScore}
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 8px;">Trade Readiness</div>
+                    <div style="color: ${statusClass === 'status-success' ? 'var(--accent)' : statusClass === 'status-warning' ? 'var(--warning)' : 'var(--danger)'};">
+                        ${statusMessage}
+                    </div>
+                </div>
+            `;
+            
+            const psychHtml = `
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="font-size: 32px;">
+                        ${appState.psychologyState === 'calm' ? '😌' : 
+                          appState.psychologyState === 'fomo' ? '🏃' : 
+                          appState.psychologyState === 'revenge' ? '😠' : 
+                          appState.psychologyState === 'tired' ? '😴' : '😐'}
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 18px;">${appState.psychologyState.toUpperCase()}</div>
+                        <div style="color: var(--text-muted); font-size: 14px;">
+                            ${appState.psychologyState === 'calm' ? 'Optimal trading state' :
+                              appState.psychologyState === 'fomo' ? 'FOMO detected - trades blocked' :
+                              appState.psychologyState === 'revenge' ? 'Revenge trading - system locked' :
+                              appState.psychologyState === 'tired' ? 'Reduced capacity - extra caution' :
+                              'Proceed with normal caution'}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${appState.disciplineScore}%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <div style="color: var(--text-muted); font-size: 14px;">Discipline Score</div>
+                    <div style="color: var(--text); font-size: 14px; font-weight: 600;">${appState.disciplineScore}/100</div>
+                </div>
+            `;
+            
+            document.getElementById('psychologyStatus').innerHTML = psychHtml;
+        }
+    </script>
+</body>
+</html>
