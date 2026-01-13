@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 🔒 SECURITY TAGS -->
+    <meta name="copyright" content="© 2024 TradeOS Proprietary System. Unauthorized use prohibited.">
+    <meta name="owner" content="Labaran Abdulrahman">
+    <meta name="legal" content="All rights reserved. Confidential testing only.">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <title>TRADEOS v1 - Trading Operating System</title>
     <style>
         :root {
@@ -36,6 +41,42 @@
             min-height: 100vh;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+        }
+        
+        /* 🔒 PROTECTION WATERMARK */
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9999;
+            opacity: 0.15;
+            font-size: 11px;
+            color: var(--text-muted);
+            pointer-events: none;
+            user-select: none;
+            transform: rotate(-15deg);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+        
+        /* 🔒 TEST PERIOD ALERT */
+        .test-alert {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.9), rgba(255, 184, 0, 0.7));
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 9998;
+            text-align: center;
+            border: 1px solid rgba(255, 184, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(255, 184, 0, 0.2);
         }
         
         /* Navigation */
@@ -516,11 +557,26 @@
                 grid-template-columns: repeat(7, 1fr);
                 gap: 4px;
             }
+            
+            .test-alert {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- 🔒 TEST PERIOD WARNING -->
+    <div class="test-alert" id="testPeriodAlert">
+        ⏳ TEST PERIOD: 48 HOURS ONLY | CONFIDENTIAL SYSTEM
+    </div>
+    
+    <!-- 🔒 WATERMARK PROTECTION -->
+    <div class="watermark" id="dynamicWatermark">
+        TradeOS V1 • IP Protected • Do Not Distribute
+    </div>
+    
     <!-- Dashboard Screen -->
     <div id="dashboard" class="screen active">
         <div class="card">
@@ -552,6 +608,17 @@
                 <div class="stat-item">
                     <div class="stat-value" id="disciplineScore">100</div>
                     <div class="stat-label">Discipline</div>
+                </div>
+            </div>
+            
+            <!-- 🔒 COUNTDOWN TIMER -->
+            <div class="alert alert-warning" style="margin-top: 16px;">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <div style="font-weight: 600;">⏳ SYSTEM ACCESS</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">
+                        Remaining: <span id="countdownTimer">48:00:00</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -973,6 +1040,122 @@
     </div>
 
     <script>
+        // ========== 🔒 SECURITY & PROTECTION ==========
+        (function() {
+            // Console protection warning
+            console.log('%c⚠️ TRADEOS V1 - PROPRIETARY SYSTEM ⚠️', 
+                'color: #ff4757; font-size: 16px; font-weight: bold; background: #0a0f1e; padding: 10px; border: 2px solid #ff4757;');
+            console.log('%c© 2024 TradeOS - Intellectual Property', 
+                'color: #00ff9d; font-size: 14px;');
+            console.log('%cUnauthorized copying or distribution prohibited.', 
+                'color: #ffb800; font-size: 12px;');
+            console.log('%cTest Period: 48 Hours | Confidential Use Only', 
+                'color: #00d4ff; font-size: 11px;');
+            
+            // Track session
+            const sessionId = 'tradeos_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('tradeos_session', sessionId);
+            console.log('Session ID:', sessionId);
+            
+            // Update watermark with session info
+            const watermark = document.getElementById('dynamicWatermark');
+            if (watermark) {
+                const today = new Date();
+                watermark.textContent = `TradeOS V1 • ${today.toLocaleDateString()} • ${sessionId.substr(-6)}`;
+            }
+            
+            // Basic copy protection
+            document.addEventListener('copy', function(e) {
+                console.log('Copy attempt detected - TradeOS content protected');
+            });
+            
+            // Disable right-click on sensitive elements
+            const sensitiveElements = document.querySelectorAll('.grade-display, .status-card, .card-header');
+            sensitiveElements.forEach(el => {
+                el.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+            
+        })();
+        
+        // ========== 🔒 TEST PERIOD COUNTDOWN ==========
+        function startCountdown() {
+            const storedEndTime = localStorage.getItem('tradeos_test_end');
+            let endTime;
+            
+            if (!storedEndTime) {
+                // First load - set 48 hours from now
+                endTime = Date.now() + (48 * 60 * 60 * 1000);
+                localStorage.setItem('tradeos_test_end', endTime.toString());
+            } else {
+                endTime = parseInt(storedEndTime);
+            }
+            
+            function updateTimer() {
+                const now = Date.now();
+                const remaining = endTime - now;
+                
+                if (remaining <= 0) {
+                    document.getElementById('countdownTimer').textContent = 'EXPIRED';
+                    document.getElementById('countdownTimer').style.color = 'var(--danger)';
+                    document.getElementById('testPeriodAlert').textContent = '🛑 TEST PERIOD ENDED • SYSTEM LOCKED';
+                    document.getElementById('testPeriodAlert').style.background = 'linear-gradient(135deg, rgba(255, 71, 87, 0.9), rgba(255, 71, 87, 0.7))';
+                    
+                    // Disable all buttons after expiry
+                    document.querySelectorAll('.btn').forEach(btn => {
+                        if (!btn.id.includes('execute')) { // Keep execute for testing
+                            btn.disabled = true;
+                            btn.style.opacity = '0.5';
+                        }
+                    });
+                    return;
+                }
+                
+                const hours = Math.floor(remaining / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                const timerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('countdownTimer').textContent = timerText;
+                
+                // Change color based on time remaining
+                if (hours < 12) {
+                    document.getElementById('countdownTimer').style.color = 'var(--warning)';
+                }
+                if (hours < 4) {
+                    document.getElementById('countdownTimer').style.color = 'var(--danger)';
+                }
+            }
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+        
+        // ========== 🔒 USAGE TRACKING ==========
+        function trackUsage(action, data = {}) {
+            const timestamp = new Date().toISOString();
+            const log = {
+                action: action,
+                data: data,
+                timestamp: timestamp,
+                strategy: appState.currentStrategy,
+                session: localStorage.getItem('tradeos_session')
+            };
+            
+            // Save to localStorage
+            try {
+                const logs = JSON.parse(localStorage.getItem('tradeos_usage_log') || '[]');
+                logs.push(log);
+                localStorage.setItem('tradeos_usage_log', JSON.stringify(logs.slice(-50))); // Keep last 50
+                
+                console.log(`📊 Usage Tracked: ${action}`, data);
+            } catch (e) {
+                console.error('Usage tracking failed:', e);
+            }
+        }
+        
         // ========== DATA PERSISTENCE ==========
         function saveToLocalStorage() {
             try {
@@ -983,7 +1166,12 @@
                 localStorage.setItem('tradeos_strategy', appState.currentStrategy);
                 localStorage.setItem('tradeos_psychology', appState.psychologyState);
                 localStorage.setItem('tradeos_tradingStyle', appState.tradingStyle);
-                console.log('✅ Data saved');
+                
+                // Add signature for protection
+                const signature = btoa(`TradeOS_${Date.now()}_${appState.trades.length}_${appState.currentStrategy}`);
+                localStorage.setItem('tradeos_signature', signature);
+                
+                console.log('✅ Data saved (Protected)');
             } catch (e) {
                 console.error('❌ Save failed:', e);
             }
@@ -1007,7 +1195,7 @@
                 if (psychology) appState.psychologyState = psychology;
                 if (style) appState.tradingStyle = style;
                 
-                console.log('✅ Data loaded');
+                console.log('✅ Data loaded (Protected)');
             } catch (e) {
                 console.error('❌ Load failed:', e);
             }
@@ -1019,7 +1207,7 @@
             tradingStyle: 'day',
             psychologyState: 'calm',
             disciplineScore: 100,
-            trades: [], // FIXED: Starts EMPTY, no fake trades
+            trades: [],
             missedTrades: [],
             psychologyLog: [],
             currentTrade: null,
@@ -1057,6 +1245,9 @@
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', function() {
+            // Security first
+            console.log('🔐 TradeOS V1 Initializing...');
+            
             initializeApp();
             
             // Set up R:R calculation
@@ -1074,6 +1265,9 @@
                     calculateRR();
                 }
             });
+            
+            // Start countdown timer
+            startCountdown();
         });
 
         function initializeApp() {
@@ -1083,6 +1277,12 @@
             generateCalendar();
             updateJournal();
             updateStats();
+            
+            // Track initialization
+            trackUsage('app_initialized', {
+                tradesCount: appState.trades.length,
+                strategy: appState.currentStrategy
+            });
         }
 
         // ========== SCREEN MANAGEMENT ==========
@@ -1114,6 +1314,9 @@
             } else if (screenId === 'strategy') {
                 resetTradeFlow();
             }
+            
+            // Track screen views
+            trackUsage('screen_view', { screen: screenId });
         }
 
         // ========== STRATEGY SELECTION ==========
@@ -1127,6 +1330,8 @@
             
             document.getElementById('currentStrategyBadge').textContent = strategy.toUpperCase();
             loadConfluences(strategy);
+            
+            trackUsage('strategy_selected', { strategy: strategy });
         }
 
         function loadConfluences(strategy) {
@@ -1190,6 +1395,8 @@
             
             checkPsychologyBlock();
             calculateGrade();
+            
+            trackUsage('psychology_changed', { state: state });
         }
 
         function checkPsychologyBlock() {
@@ -1357,6 +1564,8 @@
             appState.tradingStyle = document.getElementById('tradingStyle').value;
             showScreen('planning');
             calculateRR();
+            
+            trackUsage('planning_started', { style: appState.tradingStyle });
         }
 
         function proceedToGrading() {
@@ -1383,6 +1592,7 @@
             
             if (grade.isBlocked) {
                 alert(`🚫 TRADE BLOCKED\n\nReasons:\n• ${grade.blockReasons.join('\n• ')}`);
+                trackUsage('trade_blocked', { reasons: grade.blockReasons });
                 return;
             }
             
@@ -1428,6 +1638,13 @@
             updateJournal();
             updateStats();
             generateCalendar();
+            
+            trackUsage('trade_executed', {
+                pair: trade.pair,
+                grade: trade.grade,
+                score: trade.totalScore,
+                psychology: trade.psychology
+            });
             
             alert(`✅ TRADE EXECUTED\n\n${trade.pair}\nGrade: ${trade.grade}\nRisk: ${trade.riskPercent}%\nR:R: 1:${trade.rr.toFixed(2)}\n\nTrade logged to Open Trades`);
             
@@ -1502,6 +1719,8 @@
             document.getElementById('tradeLesson').value = '';
             
             document.getElementById('closeTradeModal').classList.add('active');
+            
+            trackUsage('close_modal_opened', { tradeId: tradeId });
         }
 
         function closeModal() {
@@ -1578,6 +1797,13 @@
             updateStats();
             generateCalendar();
             
+            trackUsage('trade_closed', {
+                result: result,
+                pnl: pnlFormatted,
+                grade: trade.grade,
+                reflectionCompleted: true
+            });
+            
             alert(`📘 TRADE JOURNALED\n\n${trade.pair}: ${result.toUpperCase()} ${pnlFormatted}\nDiscipline: ${appState.disciplineScore}\n\nTrade moved to journal.`);
         }
 
@@ -1610,6 +1836,8 @@
             `;
             
             document.getElementById('deleteTradeModal').classList.add('active');
+            
+            trackUsage('delete_modal_opened', { tradeId: tradeId });
         }
 
         function closeDeleteModal() {
@@ -1622,6 +1850,7 @@
             
             const index = appState.trades.findIndex(t => t.id === appState.deleteTradeId);
             if (index !== -1) {
+                const deletedTrade = appState.trades[index];
                 appState.trades.splice(index, 1);
                 
                 saveToLocalStorage();
@@ -1629,6 +1858,12 @@
                 updateJournal();
                 updateStats();
                 generateCalendar();
+                
+                trackUsage('trade_deleted', {
+                    tradeId: appState.deleteTradeId,
+                    pair: deletedTrade.pair,
+                    status: deletedTrade.status
+                });
                 
                 alert('✅ Trade deleted successfully');
             }
@@ -1915,6 +2150,8 @@
             }
             
             document.getElementById('calendarDetails').innerHTML = detailsHtml;
+            
+            trackUsage('calendar_day_view', { date: dateStr, tradesCount: tradesToday.length });
         }
 
         // ========== DASHBOARD ==========
