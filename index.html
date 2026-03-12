@@ -3,583 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TradeOS V1 - Trading Discipline System that objectively grades setups, detects psychological traps, and forces you to trade only A+ opportunities.">
-    <title>🎯 TRADEOS V1 - Trading Discipline System</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>🎯 TradeOS self demo</title>
     <style>
-        /* ===== TRADEOS DESIGN SYSTEM ===== */
         :root {
             --primary: #0a192f;
             --secondary: #172a45;
             --accent: #64ffda;
-            --success: #00ff88;
-            --danger: #ff6b6b;
-            --warning: #ffd166;
-            --missed: #a78bfa;
-            --text: #e2e8f0;
-            --text-secondary: #94a3b8;
+            --success: #4ade80; /* Lighter green */
+            --warning: #fbbf24;
+            --danger: #f87171; /* Lighter red */
+            --missed: #a78bfa; /* Lighter purple */
+            --text: #ccd6f6;
             --border: #2a3b5c;
             --card-bg: #112240;
-            --gradient-success: linear-gradient(135deg, #00ff88, #64ffda);
-            --gradient-danger: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            --gradient-accent: linear-gradient(135deg, #64ffda, #00ff88);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            --shadow-glow: 0 0 30px rgba(100, 255, 218, 0.3);
+            --light-success: rgba(74, 222, 128, 0.2); /* Light green background */
+            --light-danger: rgba(248, 113, 113, 0.2); /* Light red background */
+            --light-warning: rgba(251, 191, 36, 0.2); /* Light yellow background */
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
         
         body {
             background: var(--primary);
             color: var(--text);
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1000px;
+            padding: 15px;
+            max-width: 800px;
             margin: 0 auto;
+            -webkit-text-size-adjust: 100%;
         }
         
-        /* ===== HEADER & BRANDING ===== */
-        .tradeos-header {
+        /* HEADER */
+        .app-header {
             text-align: center;
-            padding: 30px 0;
-            margin-bottom: 30px;
-            border-bottom: 2px solid rgba(100, 255, 218, 0.2);
+            padding: 15px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
         }
         
-        .logo {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .logo-text {
-            font-size: 2.8rem;
-            font-weight: 900;
-            background: var(--gradient-accent);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
-        }
-        
-        .tagline {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            font-weight: 500;
-        }
-        
-        /* ===== MARKETING BANNER ===== */
-        .marketing-banner {
-            background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), rgba(0, 255, 136, 0.1));
-            border: 1px solid rgba(100, 255, 218, 0.3);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .value-prop {
+        .app-title {
             font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 10px;
             color: var(--accent);
+            margin-bottom: 5px;
         }
         
-        .problem-statement {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 15px;
+        .app-subtitle {
+            color: #8892b0;
+            font-size: 0.8rem;
         }
         
-        /* ===== STRATEGY SELECTION ===== */
-        .strategy-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .strategy-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .strategy-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: var(--shadow-glow);
-        }
-        
-        .strategy-card.active {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), transparent);
-            box-shadow: var(--shadow-glow);
-        }
-        
-        .strategy-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            display: block;
-        }
-        
-        .strategy-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--accent);
-        }
-        
-        .strategy-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-        
-        /* ===== NAVIGATION TABS ===== */
+        /* NAV TABS */
         .nav-tabs {
             display: flex;
             background: var(--secondary);
-            border-radius: 12px;
-            padding: 5px;
-            margin-bottom: 30px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
         
         .nav-tab {
             flex: 1;
-            padding: 15px 10px;
+            padding: 14px 5px;
             text-align: center;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            border-radius: 8px;
+            color: #8892b0;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border-bottom: 3px solid transparent;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-tab:hover {
-            background: rgba(100, 255, 218, 0.1);
         }
         
         .nav-tab.active {
-            background: rgba(100, 255, 218, 0.2);
             color: var(--accent);
-            box-shadow: 0 2px 10px rgba(100, 255, 218, 0.2);
+            border-bottom: 3px solid var(--accent);
+            background: rgba(100, 255, 218, 0.1);
         }
         
-        /* ===== GRADING INTERFACE ===== */
-        .grading-section {
+        /* BUTTONS */
+        .btn {
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 12px;
+            display: block;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            color: #0a192f;
+        }
+        
+        .btn-secondary {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
+            color: var(--text);
             border: 1px solid var(--border);
         }
         
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
+        .btn-danger {
+            background: var(--light-danger);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
         }
         
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--accent);
+        .btn-missed {
+            background: rgba(167, 139, 250, 0.15);
+            color: var(--missed);
+            border: 1px solid rgba(167, 139, 250, 0.3);
         }
         
-        .current-score {
-            background: rgba(100, 255, 218, 0.1);
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--accent);
-            border: 1px solid rgba(100, 255, 218, 0.3);
-        }
-        
-        .grading-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .confluence-group {
-            background: rgba(23, 42, 69, 0.5);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        
-        .confluence-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
-        }
-        
-        .confluence-name {
-            font-weight: 600;
-            color: var(--accent);
-            font-size: 0.95rem;
-        }
-        
-        .confluence-points {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--success);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-        
+        /* CHECKBOX ITEMS */
         .checkbox-item {
             display: flex;
-            align-items: flex-start;
-            padding: 12px;
+            align-items: center;
+            padding: 14px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             border: 1px solid transparent;
-            transition: all 0.2s ease;
-        }
-        
-        .checkbox-item:hover {
-            border-color: rgba(100, 255, 218, 0.3);
         }
         
         .checkbox-item input {
-            margin-right: 12px;
-            margin-top: 3px;
-            width: 20px;
-            height: 20px;
+            margin-right: 15px;
+            width: 24px;
+            height: 24px;
             accent-color: var(--accent);
         }
         
         .checkbox-item label {
             flex: 1;
             font-size: 0.9rem;
+            color: var(--text);
             cursor: pointer;
         }
         
-        .screenshot-container {
-            margin: 25px 0;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            position: relative;
+        .points-badge {
+            background: var(--light-success);
+            color: var(--success);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 8px;
         }
         
-        .screenshot-label {
-            background: rgba(100, 255, 218, 0.1);
-            padding: 10px 15px;
-            font-weight: 600;
-            color: var(--accent);
-            font-size: 0.9rem;
+        /* PAGE CONTAINERS */
+        .page {
+            display: none;
         }
         
-        .example-screenshot {
-            width: 100%;
-            height: auto;
+        .page.active {
             display: block;
-            background: var(--secondary);
         }
         
-        /* ===== GRADE DISPLAY ===== */
-        .grade-display {
-            text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(100, 255, 218, 0.05), transparent);
-            border-radius: 16px;
-            margin-top: 30px;
-            border: 2px solid rgba(100, 255, 218, 0.1);
-        }
-        
-        .grade-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-        
-        .grade-value {
-            font-size: 3.5rem;
-            font-weight: 900;
-            margin: 20px 0;
-            animation: celebration 1s ease-out;
-        }
-        
-        @keyframes celebration {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .grade-Aplusplus { 
-            color: var(--success);
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-        }
-        .grade-Aplus { color: var(--accent); }
-        .grade-A { color: var(--warning); }
-        .grade-B { color: #ff8e53; }
-        .grade-F { color: var(--danger); }
-        
-        .action-message {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 12px;
-            background: rgba(100, 255, 218, 0.1);
-            border: 1px solid rgba(100, 255, 218, 0.3);
-        }
-        
-        /* ===== BUTTONS ===== */
-        .btn {
-            padding: 16px 30px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 5px;
-            text-decoration: none;
-        }
-        
-        .btn-primary {
-            background: var(--gradient-accent);
-            color: var(--primary);
-            font-weight: 700;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(100, 255, 218, 0.4);
-        }
-        
-        .btn-secondary {
-            background: rgba(100, 255, 218, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(100, 255, 218, 0.3);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(100, 255, 218, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .btn-danger {
-            background: rgba(255, 107, 107, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-        }
-        
-        /* ===== P&L CALENDAR ===== */
-        .pnl-calendar {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .calendar-day {
-            aspect-ratio: 1;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .calendar-day:hover {
-            transform: scale(1.1);
-            z-index: 2;
-            box-shadow: var(--shadow);
-        }
-        
-        .day-win {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
-            color: var(--success);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-        }
-        
-        .day-loss {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
-            color: var(--danger);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-        }
-        
-        .day-even {
-            background: linear-gradient(135deg, rgba(255, 209, 102, 0.2), rgba(255, 209, 102, 0.1));
-            color: var(--warning);
-            border: 1px solid rgba(255, 209, 102, 0.3);
-        }
-        
-        .day-empty {
-            background: rgba(42, 59, 92, 0.2);
-            color: var(--text-secondary);
-            border: 1px solid rgba(42, 59, 92, 0.4);
-        }
-        
-        .calendar-legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .legend-box {
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
-        }
-        
-        /* ===== PSYCHOLOGY TRACKING ===== */
-        .psychology-tracker {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
-        }
-        
-        .psychology-state {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .state-item {
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-        }
-        
-        .state-active {
-            border-color: var(--accent);
-            background: rgba(100, 255, 218, 0.1);
-        }
-        
-        .state-danger {
-            border-color: var(--danger);
-            background: rgba(255, 107, 107, 0.1);
-        }
-        
-        .state-warning {
-            border-color: var(--warning);
-            background: rgba(255, 209, 102, 0.1);
-        }
-        
-        /* ===== TRADE JOURNAL ===== */
-        .trade-journal {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
-        }
-        
-        .journal-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            overflow-x: auto;
-        }
-        
-        .journal-tab {
-            padding: 12px 20px;
-            background: rgba(42, 59, 92, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-        
-        .journal-tab.active {
-            background: rgba(100, 255, 218, 0.2);
-            color: var(--accent);
-        }
-        
-        .trade-card {
-            background: rgba(23, 42, 69, 0.5);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-        }
-        
-        .trade-card.win {
-            border-left: 4px solid var(--success);
-        }
-        
-        .trade-card.loss {
-            border-left: 4px solid var(--danger);
-        }
-        
-        /* ===== MODALS ===== */
+        /* MODALS */
         .modal-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -587,9 +177,6 @@
             height: 100%;
             background: rgba(10, 25, 47, 0.95);
             z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
             overflow-y: auto;
         }
@@ -597,1039 +184,1679 @@
         .modal-content {
             background: var(--card-bg);
             border-radius: 16px;
-            padding: 30px;
+            padding: 25px;
             max-width: 500px;
-            width: 100%;
+            margin: 0 auto;
             border: 1px solid var(--border);
-            animation: modalSlide 0.3s ease-out;
         }
         
-        @keyframes modalSlide {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* FORM INPUTS */
+        .form-group {
+            margin-bottom: 20px;
         }
         
-        /* ===== TOAST NOTIFICATIONS ===== */
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 16px;
+            background: rgba(23, 42, 69, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            -webkit-appearance: none;
+        }
+        
+        /* TOAST */
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--card-bg);
             border: 1px solid var(--accent);
-            border-radius: 12px;
-            padding: 15px 25px;
+            border-radius: 10px;
+            padding: 14px 20px;
             color: var(--text);
             font-weight: 600;
             z-index: 2000;
             transition: transform 0.3s ease;
             max-width: 90%;
             text-align: center;
-            box-shadow: var(--shadow);
         }
         
         .toast.show {
             transform: translateX(-50%) translateY(0);
         }
         
-        /* ===== RESPONSIVE DESIGN ===== */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .logo {
-                font-size: 2.5rem;
-            }
-            
-            .logo-text {
-                font-size: 2rem;
-            }
-            
-            .strategy-selection {
-                grid-template-columns: 1fr;
-            }
-            
-            .grading-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .nav-tab {
-                min-width: 120px;
-                padding: 12px 5px;
-                font-size: 0.8rem;
-            }
+        /* QUICK ACTIONS */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
         }
         
-        /* ===== FOOTER ===== */
-        .footer {
+        .quick-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
             text-align: center;
-            padding: 30px 0;
-            margin-top: 50px;
-            border-top: 1px solid rgba(100, 255, 218, 0.1);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
         }
+        
+        /* TRADE CARDS */
+        .trade-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .open-trade {
+            border: 2px solid var(--accent);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { border-color: var(--accent); }
+            50% { border-color: rgba(100, 255, 218, 0.5); }
+            100% { border-color: var(--accent); }
+        }
+        
+        /* ACTION BUTTONS */
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .btn-win {
+            background: var(--light-success);
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+        
+        .btn-loss {
+            background: var(--light-danger);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+        
+        .btn-even {
+            background: var(--light-warning);
+            color: var(--warning);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        /* SESSION OPTIONS */
+        .session-option {
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            background: var(--card-bg);
+            cursor: pointer;
+        }
+        
+        .session-option.selected {
+            border-color: var(--accent);
+            background: rgba(100, 255, 218, 0.1);
+        }
+        
+        /* GRADE DISPLAY */
+        .grade-display {
+            text-align: center;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            margin-top: 25px;
+            border: 1px solid var(--border);
+        }
+        
+        .grade-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 15px 0;
+        }
+        
+        .grade-Aplusplus { color: var(--success); }
+        .grade-Aplus { color: var(--accent); }
+        .grade-A { color: var(--warning); }
+        .grade-Aminus { color: #ff6b00; }
+        .grade-fail { color: var(--danger); }
+        
+        /* FORM ROWS */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        /* DELETE BUTTON */
+        .delete-btn {
+            padding: 8px 16px;
+            background: var(--light-danger);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        /* MISSED STATUS */
+        .status-missed {
+            background: rgba(167, 139, 250, 0.15);
+            color: var(--missed);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        /* MISSED TRADE CARD */
+        .missed-trade {
+            border: 2px dashed var(--missed);
+            opacity: 0.8;
+        }
+        
+        /* CALENDAR BOXES */
+        .calendar-day-box {
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin: 2px;
+            cursor: help;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .day-win {
+            background: var(--light-success);
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+        
+        .day-loss {
+            background: var(--light-danger);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+        
+        .day-even {
+            background: var(--light-warning);
+            color: var(--warning);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .day-empty {
+            background: rgba(42, 59, 92, 0.3);
+            color: #64748b;
+            border: 1px solid rgba(42, 59, 92, 0.5);
+        }
+        
+        /* CALENDAR LEGEND */
+        .calendar-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-win { background: var(--light-success); border: 1px solid rgba(74, 222, 128, 0.3); }
+        .legend-loss { background: var(--light-danger); border: 1px solid rgba(248, 113, 113, 0.3); }
+        .legend-even { background: var(--light-warning); border: 1px solid rgba(251, 191, 36, 0.3); }
+        .legend-empty { background: rgba(42, 59, 92, 0.3); border: 1px solid rgba(42, 59, 92, 0.5); }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <!-- HEADER -->
-        <header class="tradeos-header">
-            <div class="logo">🎯</div>
-            <h1 class="logo-text">TRADEOS V1</h1>
-            <p class="tagline">Trading Discipline System - Objectively grade setups, detect psychological traps, trade only A+ opportunities</p>
-        </header>
-
-        <!-- MARKETING BANNER -->
-        <div class="marketing-banner">
-            <div class="value-prop">Bridging the Gap Between Knowledge & Profitability</div>
-            <p class="problem-statement">99% of traders know their strategy but break rules due to emotions. TradeOS enforces discipline, filters low-quality trades, and reveals behavioral weaknesses.</p>
-            <button class="btn btn-primary" onclick="showStrategySelection()">
-                <span>🚀 Start Trading with Discipline</span>
-            </button>
+        <div class="app-header">
+            <h1 class="app-title">🎯 TradeOS V1 personal </h1>
+            <div class="app-subtitle">Grade • Set Limit • Track • Win/Miss</div>
         </div>
-
-        <!-- STRATEGY SELECTION -->
-        <div id="strategySelection" class="strategy-selection" style="display: none;">
-            <div class="strategy-card" onclick="selectStrategy('PA')">
-                <div class="strategy-icon">📊</div>
-                <h3 class="strategy-name">Price Action</h3>
-                <p class="strategy-desc">Support/Resistance, Chart Patterns, Break & Retest. Perfect for visual traders who follow clean price movements.</p>
-                <div class="btn btn-secondary">Select Strategy</div>
+        
+        <!-- NAV TABS -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showPage('grading')">
+                <i class="fas fa-chart-line"></i><br>Grade
+            </div>
+            <div class="nav-tab" onclick="showPage('journal')">
+                <i class="fas fa-book"></i><br>Journal
+            </div>
+            <div class="nav-tab" onclick="showPage('stats')">
+                <i class="fas fa-chart-bar"></i><br>Stats
+            </div>
+            <!-- ADD P&L CALENDAR TAB -->
+            <div class="nav-tab" onclick="showPage('pnlcalendar')">
+                <i class="fas fa-calendar-alt"></i><br>P&L Calendar
+            </div>
+        </div>
+        
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+            <div class="quick-btn" onclick="quickGrade()">
+                <i class="fas fa-bolt"></i>
+                <span>Reset Grade</span>
+            </div>
+            <div class="quick-btn" onclick="exportData()">
+                <i class="fas fa-download"></i>
+                <span>Export</span>
+            </div>
+        </div>
+        
+        <!-- GRADING PAGE -->
+        <div id="grading-page" class="page active">
+            <div style="background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 1.2rem; font-weight: 600;">Setup Grading Matrix</h2>
+                    <div style="background: rgba(100, 255, 218, 0.1); padding: 8px 16px; border-radius: 20px; font-weight: 700; color: var(--accent);">
+                        Score: <span id="totalScore">0</span>/50
+                    </div>
+                </div>
+                
+                <!-- GRADING SECTIONS - FREE SCROLLING -->
+                <div id="gradingSections">
+                    <!-- Sections populated by JavaScript -->
+                </div>
+                
+                <!-- GRADE DISPLAY -->
+                <div class="grade-display">
+                    <div style="color: #8892b0; font-size: 0.85rem; margin-bottom: 10px;">SETUP GRADE</div>
+                    <div id="gradeValue" class="grade-value">-</div>
+                    <div id="actionMessage" style="color: var(--accent); font-weight: 600; margin: 15px 0; font-size: 0.95rem;">
+                        Grade your setup to see action plan
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="calculateGrade()">
+                        <i class="fas fa-calculator"></i> Calculate Grade
+                    </button>
+                    
+                    <button class="btn btn-secondary" onclick="showSaveTradeModal()">
+                        <i class="fas fa-save"></i> Save Graded Setup
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- JOURNAL PAGE -->
+        <div id="journal-page" class="page">
+            <!-- JOURNAL TABS -->
+            <div style="display: flex; background: var(--secondary); border-radius: 10px; margin-bottom: 20px; padding: 4px;">
+                <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer;" 
+                     onclick="showJournalTab('open')" id="journal-tab-open">
+                    Open (<span id="openTradesCount">0</span>)
+                </div>
+                <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer;" 
+                     onclick="showJournalTab('completed')" id="journal-tab-completed">
+                    Completed (<span id="completedTradesCount">0</span>)
+                </div>
+                <div style="flex: 1; text-align: center; padding: 12px; border-radius: 8px; cursor: pointer;" 
+                     onclick="showJournalTab('missed')" id="journal-tab-missed">
+                    Missed (<span id="missedTradesCount">0</span>)
+                </div>
             </div>
             
-            <div class="strategy-card" onclick="selectStrategy('SMC')">
-                <div class="strategy-icon">🏛️</div>
-                <h3 class="strategy-name">SMC/ICT</h3>
-                <p class="strategy-desc">Order Blocks, FVGs, Liquidity Concepts. For traders following institutional flow and market structure.</p>
-                <div class="btn btn-secondary">Select Strategy</div>
+            <!-- OPEN TRADES -->
+            <div id="open-trades-section">
+                <div id="openTradesList">
+                    <!-- Open trades will appear here -->
+                </div>
             </div>
             
-            <div class="strategy-card" onclick="selectStrategy('MS')">
-                <div class="strategy-icon">⚡</div>
-                <h3 class="strategy-name">Market Structure</h3>
-                <p class="strategy-desc">Pure Structure, BOS, CHOCH, Swing Points. Minimalist approach focusing only on price structure.</p>
-                <div class="btn btn-secondary">Select Strategy</div>
+            <!-- COMPLETED TRADES -->
+            <div id="completed-trades-section" style="display: none;">
+                <div id="completedTradesList">
+                    <!-- Completed trades will appear here -->
+                </div>
+            </div>
+            
+            <!-- MISSED TRADES -->
+            <div id="missed-trades-section" style="display: none;">
+                <div id="missedTradesList">
+                    <!-- Missed trades will appear here -->
+                </div>
+            </div>
+            
+            <!-- EMPTY STATES -->
+            <div id="emptyOpenState" class="empty-state" style="display: none;">
+                <i class="fas fa-clock" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h3 style="font-size: 1.2rem; margin: 10px 0;">No Open Trades</h3>
+                <p>Grade a setup and save it before entering a trade.</p>
+                <button class="btn btn-primary" onclick="showPage('grading')" style="margin-top: 20px;">
+                    <i class="fas fa-chart-line"></i> Grade a Setup
+                </button>
+            </div>
+            
+            <div id="emptyCompletedState" class="empty-state" style="display: none;">
+                <i class="fas fa-book-open" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h3 style="font-size: 1.2rem; margin: 10px 0;">No Completed Trades</h3>
+                <p>Close some open trades to see them here.</p>
+            </div>
+            
+            <div id="emptyMissedState" class="empty-state" style="display: none;">
+                <i class="fas fa-ban" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h3 style="font-size: 1.2rem; margin: 10px 0;">No Missed Trades</h3>
+                <p>Trades that didn't retest your entry level will appear here.</p>
             </div>
         </div>
-
-        <!-- MAIN CONTENT -->
-        <div id="mainContent" style="display: none;">
-            <!-- NAVIGATION -->
-            <div class="nav-tabs">
-                <div class="nav-tab active" onclick="showPage('grading')">🎯 Grade Setup</div>
-                <div class="nav-tab" onclick="showPage('journal')">📒 Trade Journal</div>
-                <div class="nav-tab" onclick="showPage('pnl')">📈 P&L Calendar</div>
-                <div class="nav-tab" onclick="showPage('psychology')">🧠 Psychology</div>
-                <div class="nav-tab" onclick="showPage('export')">📤 Export Data</div>
-            </div>
-
-            <!-- GRADING PAGE -->
-            <div id="gradingPage" class="page">
-                <div class="grading-section">
-                    <div class="section-header">
-                        <h2 class="section-title" id="strategyTitle">Select a Strategy First</h2>
-                        <div class="current-score">Score: <span id="currentScore">0</span>/100</div>
-                    </div>
-                    
-                    <div id="gradingInterface">
-                        <!-- Dynamic content based on strategy -->
-                    </div>
-                    
-                    <div class="grade-display">
-                        <div class="grade-label">Current Setup Grade</div>
-                        <div id="gradeDisplay" class="grade-value">-</div>
-                        <div id="actionMessage" class="action-message">
-                            Select a strategy and grade your setup
-                        </div>
-                        <button class="btn btn-primary" onclick="calculateGrade()">
-                            <span>📊 Calculate Grade</span>
-                        </button>
-                        <button class="btn btn-secondary" onclick="saveTrade()">
-                            <span>💾 Save Graded Setup</span>
-                        </button>
+        
+        <!-- STATS PAGE -->
+        <div id="stats-page" class="page">
+            <div style="background: var(--card-bg); border-radius: 16px; padding: 20px;">
+                <h2 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px;">Performance Statistics</h2>
+                
+                <div id="statsContent">
+                    <div class="empty-state">
+                        <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 10px 0;">No Statistics Yet</h3>
+                        <p>Complete some trades to see your performance.</p>
                     </div>
                 </div>
+                
+                <button class="btn btn-secondary" onclick="exportData()" style="margin-top: 20px;">
+                    <i class="fas fa-download"></i> Export All Data
+                </button>
             </div>
-
-            <!-- JOURNAL PAGE -->
-            <div id="journalPage" class="page" style="display: none;">
-                <div class="trade-journal">
-                    <h2 class="section-title">Trade Journal</h2>
-                    
-                    <div class="journal-tabs">
-                        <div class="journal-tab active" onclick="showJournalTab('open')">Open Trades</div>
-                        <div class="journal-tab" onclick="showJournalTab('closed')">Closed Trades</div>
-                        <div class="journal-tab" onclick="showJournalTab('missed')">Missed Trades</div>
+        </div>
+        
+        <!-- P&L CALENDAR PAGE -->
+        <div id="pnlcalendar-page" class="page">
+            <div style="background: var(--card-bg); border-radius: 16px; padding: 20px;">
+                <h2 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; color: var(--accent);">
+                    📈 P&L Calendar - Proof of System
+                </h2>
+                <p style="color: #8892b0; font-size: 0.9rem; margin-bottom: 25px;">
+                    Visual proof that A+ setups create consistent profitability
+                </p>
+                
+                <!-- LEGEND -->
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <div class="legend-box legend-win"></div>
+                        <span>WIN</span>
                     </div>
-                    
-                    <div id="journalContent">
-                        <!-- Dynamic journal content -->
+                    <div class="legend-item">
+                        <div class="legend-box legend-loss"></div>
+                        <span>LOSS</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box legend-even"></div>
+                        <span>BREAKEVEN</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box legend-empty"></div>
+                        <span>NO TRADE</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- P&L CALENDAR PAGE -->
-            <div id="pnlPage" class="page" style="display: none;">
-                <div class="pnl-calendar">
-                    <h2 class="section-title">P&L Calendar - Proof of System</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 20px;">
-                        Visual proof that A+ setups create consistent profitability. Each box shows daily P&L percentage.
-                    </p>
-                    
-                    <div class="calendar-legend">
-                        <div class="legend-item">
-                            <div class="legend-box day-win"></div>
-                            <span>WIN (+%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-box day-loss"></div>
-                            <span>LOSS (-%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-box day-even"></div>
-                            <span>BREAKEVEN</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-box day-empty"></div>
-                            <span>NO TRADE</span>
-                        </div>
-                    </div>
-                    
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- Calendar generated by JavaScript -->
-                    </div>
-                    
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div style="background: rgba(0, 255, 136, 0.1); border-radius: 12px; padding: 20px; border: 1px solid rgba(0, 255, 136, 0.3);">
-                                <div style="color: var(--success); font-size: 2rem; font-weight: 800; text-align: center;" id="totalProfit">+0%</div>
-                                <div style="color: var(--text-secondary); text-align: center;">Total Profit</div>
-                            </div>
-                            <div style="background: rgba(100, 255, 218, 0.1); border-radius: 12px; padding: 20px; border: 1px solid rgba(100, 255, 218, 0.3);">
-                                <div style="color: var(--accent); font-size: 2rem; font-weight: 800; text-align: center;" id="aPlusTrades">0</div>
-                                <div style="color: var(--text-secondary); text-align: center;">A+ Trades</div>
-                            </div>
-                        </div>
-                    </div>
+                
+                <!-- MONTHLY CALENDAR -->
+                <div id="pnlCalendarContainer">
+                    <!-- Will be populated by JavaScript -->
                 </div>
-            </div>
-
-            <!-- PSYCHOLOGY PAGE -->
-            <div id="psychologyPage" class="page" style="display: none;">
-                <div class="psychology-tracker">
-                    <h2 class="section-title">Psychology Tracking</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 25px;">
-                        Track your emotional state and avoid psychological traps. System detects boredom, FOMO, and rule-breaking patterns.
-                    </p>
-                    
-                    <div class="psychology-state">
-                        <div class="state-item" onclick="setPsychologyState('focused')">
-                            <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
-                            <div style="font-weight: 600;">Focused</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Patient, disciplined</div>
+                
+                <!-- SUMMARY STATS -->
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div style="background: var(--light-success); border-radius: 12px; padding: 15px; border: 1px solid rgba(74, 222, 128, 0.3);">
+                            <div style="color: var(--success); font-size: 2rem; font-weight: 800; text-align: center;" id="totalProfitDisplay">+9.9%</div>
+                            <div style="color: #8892b0; font-size: 0.85rem; text-align: center;">Total Profit</div>
                         </div>
-                        
-                        <div class="state-item" onclick="setPsychologyState('bored')">
-                            <div style="font-size: 2rem; margin-bottom: 10px;">😴</div>
-                            <div style="font-weight: 600;">Bored</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Seeking action</div>
-                        </div>
-                        
-                        <div class="state-item" onclick="setPsychologyState('fomo')">
-                            <div style="font-size: 2rem; margin-bottom: 10px;">🏃‍♂️</div>
-                            <div style="font-weight: 600;">FOMO</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Chasing moves</div>
-                        </div>
-                        
-                        <div class="state-item" onclick="setPsychologyState('revenge')">
-                            <div style="font-size: 2rem; margin-bottom: 10px;">⚔️</div>
-                            <div style="font-weight: 600;">Revenge</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">After losses</div>
+                        <div style="background: rgba(100, 255, 218, 0.1); border-radius: 12px; padding: 15px; border: 1px solid rgba(100, 255, 218, 0.3);">
+                            <div style="color: var(--accent); font-size: 2rem; font-weight: 800; text-align: center;" id="totalTradesDisplay">8</div>
+                            <div style="color: #8892b0; font-size: 0.85rem; text-align: center;">Consecutive A+ Trades</div>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 30px; background: rgba(255, 107, 107, 0.1); border-radius: 12px; padding: 20px; border: 1px solid rgba(255, 107, 107, 0.3);">
-                        <div style="color: var(--danger); font-weight: 600; margin-bottom: 10px;">⚠️ Psychology Warnings</div>
-                        <div id="psychologyWarnings" style="color: var(--text-secondary); font-size: 0.9rem;">
-                            No warnings yet. Track your psychology to see insights.
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 25px;">
-                        <button class="btn btn-secondary" onclick="showPsychologyTips()">
-                            <span>💡 View Psychology Tips</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EXPORT PAGE -->
-            <div id="exportPage" class="page" style="display: none;">
-                <div class="grading-section">
-                    <h2 class="section-title">Export & Data</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 25px;">
-                        Export your trading data for analysis or backup. All data is stored locally in your browser.
-                    </p>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-                        <div style="background: rgba(100, 255, 218, 0.1); border-radius: 12px; padding: 20px; border: 1px solid rgba(100, 255, 218, 0.3);">
-                            <div style="color: var(--accent); font-size: 1.5rem; font-weight: 800; text-align: center;" id="totalTradesCount">0</div>
-                            <div style="color: var(--text-secondary); text-align: center;">Total Trades</div>
-                        </div>
-                        
-                        <div style="background: rgba(0, 255, 136, 0.1); border-radius: 12px; padding: 20px; border: 1px solid rgba(0, 255, 136, 0.3);">
-                            <div style="color: var(--success); font-size: 1.5rem; font-weight: 800; text-align: center;" id="winRate">0%</div>
-                            <div style="color: var(--text-secondary); text-align: center;">Win Rate</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button class="btn btn-primary" onclick="exportData('json')">
-                            <span>📁 Export as JSON</span>
-                        </button>
-                        <button class="btn btn-secondary" onclick="exportData('csv')">
-                            <span>📊 Export as CSV</span>
-                        </button>
-                        <button class="btn btn-danger" onclick="clearData()">
-                            <span>🗑️ Clear All Data</span>
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
-                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
-                            <strong>Note:</strong> All data is stored locally in your browser. Export regularly to backup your trading history.
-                        </div>
+                    <!-- MONTHLY BREAKDOWN -->
+                    <div style="margin-top: 20px;" id="monthlyBreakdown">
+                        <!-- Will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            <p>🎯 TRADEOS V1 - Trading Discipline System</p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">
-                For marketing & feedback | Follow our journey on social media | 
-                <a href="#" style="color: var(--accent); text-decoration: none;" onclick="showFeedbackModal()">Submit Feedback</a>
-            </p>
-        </footer>
     </div>
-
-    <!-- MODALS -->
+    
+    <!-- MODAL: SAVE GRADED SETUP -->
     <div id="saveTradeModal" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="margin-bottom: 20px; color: var(--accent);">Save Graded Setup</h2>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--text);">Currency Pair</label>
-                <input type="text" id="tradePair" placeholder="EURUSD" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="font-size: 1.3rem; font-weight: 600;">Save Graded Setup</h2>
+                <button onclick="closeModal('saveTradeModal')" style="background: none; border: none; color: #8892b0; font-size: 1.8rem; cursor: pointer;">×</button>
             </div>
             
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--text);">Direction</label>
-                <select id="tradeDirection" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text);">
+            <div class="form-group">
+                <label class="form-label">Currency Pair</label>
+                <input type="text" class="form-input" id="tradePair" placeholder="EURUSD" value="">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Direction</label>
+                <select class="form-select" id="tradeDirection">
                     <option value="LONG">LONG</option>
                     <option value="SHORT">SHORT</option>
                 </select>
             </div>
             
-            <div style="background: rgba(100, 255, 218, 0.1); border-radius: 12px; padding: 15px; margin: 20px 0;">
-                <div style="color: var(--accent); font-weight: 600; margin-bottom: 5px;">Setup Grade</div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div id="modalGradeDisplay" style="font-size: 1.8rem; font-weight: 800;">-</div>
-                    <div id="modalActionMessage" style="color: var(--text-secondary); font-size: 0.9rem;"></div>
-                </div>
-            </div>
-            
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="confirmSaveTrade()" style="flex: 1;">Save Trade</button>
-                <button class="btn btn-secondary" onclick="closeModal('saveTradeModal')" style="flex: 1;">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="feedbackModal" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 20px; color: var(--accent);">Feedback & Suggestions</h2>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--text);">What do you think of TradeOS?</label>
-                <textarea id="feedbackText" placeholder="Your feedback helps us improve..." rows="4" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text);"></textarea>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; color: var(--text);">Most valuable feature?</label>
-                <select id="featureRating" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text);">
-                    <option value="">Select one</option>
-                    <option value="grading">Setup Grading</option>
-                    <option value="psychology">Psychology Tracking</option>
-                    <option value="pnl">P&L Calendar</option>
-                    <option value="journal">Trade Journal</option>
+            <div class="form-group">
+                <label class="form-label">Entry Type</label>
+                <select class="form-select" id="entryType">
+                    <option value="LIMIT">Limit Order</option>
+                    <option value="MARKET">Market Order</option>
                 </select>
             </div>
             
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="submitFeedback()" style="flex: 1;">Submit Feedback</button>
-                <button class="btn btn-secondary" onclick="closeModal('feedbackModal')" style="flex: 1;">Cancel</button>
+            <div class="form-group">
+                <label class="form-label">Target Level (Optional)</label>
+                <input type="text" class="form-input" id="targetLevel" placeholder="e.g., 1.08500 (4H structure)">
             </div>
+            
+            <div class="form-group">
+                <label class="form-label">Date & Time</label>
+                <input type="datetime-local" class="form-input" id="tradeDate">
+            </div>
+            
+            <div style="background: rgba(100, 255, 218, 0.1); border-radius: 12px; padding: 15px; margin: 20px 0;">
+                <div style="color: var(--accent); font-weight: 600; margin-bottom: 5px;">Current Grade</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent);" id="modalGradeValue">-</div>
+                        <div style="color: #8892b0; font-size: 0.85rem;" id="modalScoreValue">Score: 0/50</div>
+                    </div>
+                    <div style="color: var(--accent); font-weight: 600; font-size: 0.9rem; text-align: right;" id="modalActionMessage">
+                        Grade your setup
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveGradedSetup()">
+                <i class="fas fa-check-circle"></i> Save & Place Limit Order
+            </button>
+            
+            <button class="btn btn-secondary" onclick="closeModal('saveTradeModal')">
+                Cancel
+            </button>
         </div>
     </div>
-
-    <!-- TOAST -->
+    
+    <!-- MODAL: CLOSE TRADE -->
+    <div id="closeTradeModal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="font-size: 1.3rem; font-weight: 600;">Close Trade</h2>
+                <button onclick="closeModal('closeTradeModal')" style="background: none; border: none; color: #8892b0; font-size: 1.8rem; cursor: pointer;">×</button>
+            </div>
+            
+            <div id="closeTradeInfo">
+                <!-- Trade info will be inserted here -->
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Result</label>
+                    <select class="form-select" id="tradeResult">
+                        <option value="">Select Result</option>
+                        <option value="WIN">WIN</option>
+                        <option value="LOSS">LOSS</option>
+                        <option value="BREAKEVEN">Break Even</option>
+                        <option value="MISSED">Missed (No Retest)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Close Date & Time</label>
+                    <input type="datetime-local" class="form-input" id="closeDate">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Risk:Reward</label>
+                    <input type="text" class="form-input" id="tradeRR" placeholder="1:2.5" value="">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">P&L %</label>
+                    <input type="text" class="form-input" id="tradePnL" placeholder="+2.5%" value="">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Reason (Why missed?)</label>
+                <select class="form-select" id="missedReason" style="display: none;">
+                    <option value="">Select Reason</option>
+                    <option value="NO_RETEST">Price didn't retest entry level</option>
+                    <option value="STOP_HUNT">Stop hunt before entry</option>
+                    <option value="NEWS">News prevented entry</option>
+                    <option value="CHANGED_MIND">Changed my mind</option>
+                    <option value="OTHER">Other reason</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Trade Notes & Lessons</label>
+                <textarea class="form-textarea" id="tradeNotes" placeholder="What you learned from this trade..." rows="3"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="saveTradeResult()">
+                    <i class="fas fa-check-circle"></i> Save & Close
+                </button>
+                
+                <button class="btn btn-danger" onclick="deleteOpenTrade()" id="deleteTradeBtn" style="display: none;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="closeModal('closeTradeModal')">
+                Cancel
+            </button>
+        </div>
+    </div>
+    
+    <!-- TOAST NOTIFICATION -->
     <div class="toast" id="toast"></div>
 
-    <!-- EMBEDDED SCREENSHOTS (Base64 SVGs) -->
     <script>
-        // These are embedded SVG images that work offline
-        const screenshots = {
-            PA: {
-                pattern: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QcmljZSBBY3Rpb24gRXhhbXBsZTwvdGV4dD48dGV4dCB4PSI0MDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjY2NkNmY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5IZWFkICZhbXA7IFNob3VsZGVycyBQYXR0ZXJuPC90ZXh0PjxyZWN0IHg9IjIwMCIgeT0iMTUwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgcng9IjEwIiBmaWxsPSIjMTcyYTQ1IiBzdHJva2U9IiM2NGZmZGEiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0yNTAgMjAwIEwzNTAgMTUwIEw0NTAgMjAwIEwzNTAgMjUwIFoiIGZpbGw9InJnYmEoMTAwLCAyNTUsIDIxOCwgMC4yKSIgc3Ryb2tlPSIjNjRmZmRhIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSIzNTAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjRmZmRhIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SGVhZCAmYW1wOyBTaG91bGRlcnM8L3RleHQ+PHBhdGggZD0iTTI1MCAyNTAgTDI1MCAzMDAiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHRleHQgeD0iMjUwIiB5PSIzMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwZmY4OCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U3VwcG9ydDwvdGV4dD48cGF0aCBkPSJNNDUwIDI1MCBMNDUwIDMwMCIgc3Ryb2tlPSIjZmY2YjZiIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1kYXNoYXJyYXk9IjUiLz48dGV4dCB4PSI0NTAiIHk9IjMzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjZmY2YjZiIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5SZXNpc3RhbmNlPC90ZXh0Pjwvc3ZnPg==",
-                breakRetest: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CcmVhayAmYW1wOyBSZXRlc3QgU2V0dXA8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2NjZDZmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q2xlYW4gU3RydWN0dXJlIEJyZWFrIHdpdGggUmV0ZXN0IENvbmZpcm1hdGlvbjwvdGV4dD48cmVjdCB4PSIyMDAiIHk9IjE1MCIgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0iIzE3MmE0NSIgc3Ryb2tlPSIjNjRmZmRhIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMzAwIDE1MCBMMzAwIDI1MCBMMzUwIDI1MCBMMzUwIDMwMCBMNTAwIDMwMCBMNTAwIDI1MCBMNDUwIDI1MCBMNDUwIDE1MCIgc3Ryb2tlPSIjMDBmZjg4IiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9InJnYmEoMCwgMjU1LCAxMzYsIDAuMSkiLz48Y2lyY2xlIGN4PSIzNTAiIGN5PSIyNTAiIHI9IjgiIGZpbGw9IiMwMGZmODgiLz48dGV4dCB4PSIzNTAiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDBmZjg4IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QnJlYWs8L3RleHQ+PGNpcmNsZSBjeD0iNDUwIiBjeT0iMjUwIiByPSI4IiBmaWxsPSIjNjRmZmRhIi8+PHRleHQgeD0iNDUwIiB5PSIyMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzY0ZmZkYSIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlJldGVzdDwvdGV4dD48Y2lyY2xlIGN4PSI1MDAiIGN5PSIyNTAiIHI9IjgiIGZpbGw9IiNmZjZkNmQiLz48dGV4dCB4PSI1MDAiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjZmY2ZDZkIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RW50cnk8L3RleHQ+PC9zdmc+",
-                pinBar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QaW4gQmFyIFJlamVjdGlvbjwvdGV4dD48dGV4dCB4PSI0MDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjY2NkNmY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TdHJvbmcgUmVqZWN0aW9uIGF0IEtleSBMZXZlbDwvdGV4dD48cmVjdCB4PSIyMDAiIHk9IjE1MCIgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0iIzE3MmE0NSIgc3Ryb2tlPSIjNjRmZmRhIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMzAwIiB5MT0iMTUwIiB4Mj0iMzAwIiB5Mj0iMzMwIiBzdHJva2U9IiM2NGZmZGEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNSIvPjx0ZXh0IHg9IjMwMCIgeT0iMzUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2NGZmZGEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPktleSBSZXNpc3RhbmNlPC90ZXh0PjxyZWN0IHg9IjM3NSIgeT0iMjAwIiB3aWR0aD0iNTAiIGhlaWdodD0iMTAwIiByeD0iMjUiIGZpbGw9IiMxMTIyNDAiIHN0cm9rZT0iIzY0ZmZkYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjM3NSIgeTE9IjI1MCIgeDI9IjQyNSIgeTI9IjI1MCIgc3Ryb2tlPSIjZmY2YjZiIiBzdHJva2Utd2lkdGg9IjQiLz48bGluZSB4MT0iNDAwIiB5MT0iMjAwIiB4Mj0iNDAwIiB5Mj0iMzAwIiBzdHJva2U9IiMwMGZmODgiIHN0cm9rZS13aWR0aD0iNCIvPjx0ZXh0IHg9IjQwMCIgeT0iMTgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMwMGZmODgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QaW4gQmFyPC90ZXh0Pjx0ZXh0IHg9IjQwMCIgeT0iMzIwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2NGZmZGEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9wZW4gPSBDbG9zZSA9IEhpZ2g8L3RleHQ+PHBhdGggZD0iTTM3NSAzMDAgTDM1MCAzMjUgTDI3NSAzMjUiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHRleHQgeD0iMjUwIiB5PSIzNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwZmY4OCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRhcmdldDwvdGV4dD48L3N2Zz4="
-            },
-            SMC: {
-                orderBlock: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TTUMgT3JkZXIgQmxvY2s8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2NjZDZmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q2xlYW4gT2JzdHJ1Y3Rpb24gQmxvY2sgd2l0aCBMaXF1aWRpdHkgU3dlZXA8L3RleHQ+PHJlY3QgeD0iMjAwIiB5PSIxNTAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiByeD0iMTAiIGZpbGw9IiMxNzJhNDUiIHN0cm9rZT0iIzY0ZmZkYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHJlY3QgeD0iMzAwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMTAwIiByeD0iMTAiIGZpbGw9InJnYmEoMTAwLCAyNTUsIDIxOCwgMC4yKSIgc3Ryb2tlPSIjNjRmZmRhIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI0MDAiIHk9IjIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjRmZmRhIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T3JkZXIgQmxvY2sgWm9uZTwvdGV4dD48cGF0aCBkPSJNMzAwIDIwMCBMMzAwIDE1MCIgc3Ryb2tlPSIjZmY2YjZiIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1kYXNoYXJyYXk9IjUiLz48dGV4dCB4PSIzMDAiIHk9IjEzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjZmY2YjZiIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TGlxdWlkaXR5IFN3ZWVwPC90ZXh0PjxwYXRoIGQ9Ik01MDAgMjAwIEw1MDAgMTUwIiBzdHJva2U9IiNmZjZiNmIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iNSIvPjxwYXRoIGQ9Ik00MDAgMzAwIEw0MDAgMzUwIiBzdHJva2U9IiMwMGZmODgiIHN0cm9rZS13aWR0aD0iMyIvPjxjaXJjbGUgY3g9IjQwMCIgY3k9IjMwMCIgcj0iOCIgZmlsbD0iIzAwZmY4OCIvPjx0ZXh0IHg9IjQwMCIgeT0iMzgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMwMGZmODgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FbnRyeSBhZnRlciBSZXRlc3Q8L3RleHQ+PC9zdmc+",
-                fvg: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5GYWlyIFZhbHVlIEdhcCAoRlZHKTwvdGV4dD48dGV4dCB4PSI0MDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjY2NkNmY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DbGVhbiBGVkcgd2l0aCBTdHJvbmcgRGlzcGxhY2VtZW50PC90ZXh0PjxyZWN0IHg9IjIwMCIgeT0iMTUwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgcng9IjEwIiBmaWxsPSIjMTcyYTQ1IiBzdHJva2U9IiM2NGZmZGEiIHN0cm9rZS13aWR0aD0iMiIvPjxyZWN0IHg9IjM1MCIgeT0iMTgwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjE0MCIgZmlsbD0icmdiYSgwLCAyNTUsIDEzNiwgMC4xNSkiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwZmY4OCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZhaXIgVmFsdWUgR2FwPC90ZXh0PjxwYXRoIGQ9Ik0zMDAgMTgwIEwzMDAgMTUwIiBzdHJva2U9IiNmZjZiNmIiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik01MDAgMTgwIEw1MDAgMTUwIiBzdHJva2U9IiNmZjZiNmIiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjQwMCIgeT0iMTM1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiNmZjZiNmIiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5EaXNwbGFjZW1lbnQ8L3RleHQ+PHBhdGggZD0iTTM1MCAzMjAgTDM1MCAzNTAiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHRleHQgeD0iMzUwIiB5PSIzODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwZmY4OCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlJldGVzdCBFbnRyeTwvdGV4dD48Y2lyY2xlIGN4PSIzNTAiIGN5PSIzMjAiIHI9IjgiIGZpbGw9IiMwMGZmODgiLz48L3N2Zz4=",
-                liquidity: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MaXF1aWRpdHkgQ29uY2VwdDwvdGV4dD48dGV4dCB4PSI0MDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjY2NkNmY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MaXF1aWRpdHkgU3dlZXAgZm9sbG93ZWQgYnkgU3Ryb25nIFJldmVyc2FsPC90ZXh0PjxyZWN0IHg9IjIwMCIgeT0iMTUwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgcng9IjEwIiBmaWxsPSIjMTcyYTQ1IiBzdHJva2U9IiM2NGZmZGEiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0yNTAgMTUwIEwzMDAgMjAwIEw0MDAgMTUwIEw1MDAgMjAwIEw1NTAgMTUwIiBzdHJva2U9IiNmZjZiNmIiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWRhc2hhcnJheT0iNSIvPjx0ZXh0IHg9IjQwMCIgeT0iMTMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiNmZjZiNmIiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MaXF1aWRpdHkgU3dlZXA8L3RleHQ+PHBhdGggZD0iTTU1MCAxNTAgTDUwMCAyNTAgTDQwMCAyMDAgTDMwMCAyNTAgTDI1MCAyMDAiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+PHRleHQgeD0iNDAwIiB5PSIyNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwZmY4OCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlJldmVyc2FsIEFmdGVyIExpcXVpZGl0eTwvdGV4dD48Y2lyY2xlIGN4PSI1NTAiIGN5PSIxNTAiIHI9IjgiIGZpbGw9IiNmZjZiNmIiLz48Y2lyY2xlIGN4PSIyNTAiIGN5PSIyMDAiIHI9IjgiIGZpbGw9IiMwMGZmODgiLz48L3N2Zz4="
-            },
-            MS: {
-                bos: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CcmVhayBvZiBTdHJ1Y3R1cmUgKEJPUyk8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2NjZDZmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q2xlYW4gU3RydWN0dXJlIEJyZWFrIHdpdGggQ29uZmlybWF0aW9uPC90ZXh0PjxyZWN0IHg9IjIwMCIgeT0iMTUwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgcng9IjEwIiBmaWxsPSIjMTcyYTQ1IiBzdHJva2U9IiM2NGZmZGEiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0yNTAgMjAwIEwzMDAgMTUwIEw0MDAgMjAwIEw1MDAgMTUwIEw1NTAgMjAwIiBzdHJva2U9IiM2NGZmZGEiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjx0ZXh0IHg9IjQwMCIgeT0iMTMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QcmV2aW91cyBTdHJ1Y3R1cmU8L3RleHQ+PHBhdGggZD0iTTU1MCAyMDAgTDUwMCAyNTAgTDQwMCAyMDAgTDMwMCAyNTAgTDI1MCAyMDAiIHN0cm9rZT0iIzAwZmY4OCIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+PHRleHQgeD0iNDAwIiB5PSIyNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwZmY4OCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbxlIj5OZXcgU3RydWN0dXJlIChCcmVhayk8L3RleHQ+PGNpcmNsZSBjeD0iNTUwIiBjeT0iMjAwIiByPSI4IiBmaWxsPSIjMDBmZjg4Ii8+PHRleHQgeD0iNTUwIiB5PSIxODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwZmY4OCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkJyZWFrIFBvaW50PC90ZXh0Pjwvc3ZnPg==",
-                choch: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DSE9DSCAoQ2hhbmdlIG9mIENoYXJhY3Rlcik8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2NjZDZmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U3RydWN0dXJlIFNoaWZ0IHdpdGggTmV3IFN3aW5nIFBvaW50czwvdGV4dD48cmVjdCB4PSIyMDAiIHk9IjE1MCIgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMCIgZmlsbD0iIzE3MmE0NSIgc3Ryb2tlPSIjNjRmZmRhIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMzAwIDIwMCBMMzUwIDE1MCBMNDUwIDIwMCBMNTAwIDE1MCIgc3Ryb2tlPSIjNjRmZmRhIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48dGV4dCB4PSI0MDAiIHk9IjEzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNjRmZmRhIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VXAgU3RydWN0dXJlPC90ZXh0PjxwYXRoIGQ9Ik01MDAgMTUwIEw0NTAgMjUwIEwzNTAgMjAwIEwzMDAgMjUwIiBzdHJva2U9IiMwMGZmODgiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjx0ZXh0IHg9IjQwMCIgeT0iMjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMwMGZmODgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Eb3duIFN0cnVjdHVyZSAoQ0hPQ0gpPC90ZXh0PjxjaXJjbGUgY3g9IjUwMCIgY3k9IjE1MCIgcj0iOCIgZmlsbD0iIzAwZmY4OCIvPjx0ZXh0IHg9IjUwMCIgeT0iMTMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMwMGZmODgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DSE9DSCBQb2ludDwvdGV4dD48L3N2Zz4=",
-                swing: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDgwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMwYTE5MmYiLz48dGV4dCB4PSI0MDAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2NGZmZGEiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Td2luZyBQb2ludCBTdHJ1Y3R1cmU8L3RleHQ+PHRleHQgeD0iNDAwIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2NjZDZmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q2xlYW4gSEgvTEggU3RydWN0dXJlIHdpdGggRGVmaW5lZCBTd2luZ3M8L3RleHQ+PHJlY3QgeD0iMjAwIiB5PSIxNTAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiByeD0iMTAiIGZpbGw9IiMxNzJhNDUiIHN0cm9rZT0iIzY0ZmZkYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTI1MCAyMDAgTDM1MCAxNTAgTDQ1MCAyMDAgTDU1MCAxNTAgTDYwMCAyMDAiIHN0cm9rZT0iIzY0ZmZkYSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+PHRleHQgeD0iMzUwIiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzY0ZmZkYSIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhpZ2hlciBMb3c8L3RleHQ+PHRleHQgeD0iNTUwIiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzY0ZmZkYSIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhpZ2hlciBIaWdoPC90ZXh0PjxwYXRoIGQ9Ik0yNTAgMjAwIEwzNTAgMjUwIEw0NTAgMjAwIEw1NTAgMjUwIEw2MDAgMjAwIiBzdHJva2U9IiMwMGZmODgiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjx0ZXh0IHg9IjM1MCIgeT0iMjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMwMGZmODgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb3dlciBIaWdoPC90ZXh0Pjx0ZXh0IHg9IjU1MCIgeT0iMjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMwMGZmODgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb3dlciBMb3c8L3RleHQ+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMTUwIiByPSI4IiBmaWxsPSIjMDBmZjg4Ii8+PGNpcmNsZSBjeD0iNTUwIiBjeT0iMTUwIiByPSI4IiBmaWxsPSIjMDBmZjg4Ii8+PC9zdmc+"
-            }
-        };
-    </script>
-
-    <script>
-        // ========== TRADEOS V1 CORE LOGIC ==========
-        let currentStrategy = null;
+        // ========== DATA STORAGE ==========
+        let openTrades = JSON.parse(localStorage.getItem('sniperOpenTrades') || '[]');
+        let completedTrades = JSON.parse(localStorage.getItem('sniperCompletedTrades') || '[]');
+        let missedTrades = JSON.parse(localStorage.getItem('sniperMissedTrades') || '[]');
         let currentGrade = { score: 0, grade: '', action: '' };
-        let trades = JSON.parse(localStorage.getItem('tradeosTrades') || '[]');
-        let psychologyState = JSON.parse(localStorage.getItem('tradeosPsychology') || '{"state": "focused", "history": []}');
-
-        // ========== INITIALIZATION ==========
+        let currentTradeToClose = null;
+        
+        // ========== INITIAL SETUP ==========
         document.addEventListener('DOMContentLoaded', function() {
-            showToast('🎯 TradeOS V1 Loaded - Start by selecting your trading strategy');
-            updateExportStats();
-        });
-
-        // ========== STRATEGY SELECTION ==========
-        function showStrategySelection() {
-            document.getElementById('strategySelection').style.display = 'grid';
-            document.querySelector('.marketing-banner').style.display = 'none';
-        }
-
-        function selectStrategy(strategy) {
-            currentStrategy = strategy;
+            // Populate grading sections
+            createGradingSections();
+            
+            // Calculate initial grade
+            calculateGrade();
+            
+            // Set default date for new trade modal
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('tradeDate').value = localDateTime;
             
             // Update UI
-            document.querySelectorAll('.strategy-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
+            updateTradeCounts();
+            renderOpenTrades();
+            renderCompletedTrades();
+            renderMissedTrades();
             
-            // Show main content
-            document.getElementById('strategySelection').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
+            // Initialize P&L Calendar
+            updatePnLCalendar();
             
-            // Load strategy-specific grading
-            loadGradingInterface(strategy);
-            
-            // Update title
-            const strategyNames = {
-                'PA': 'Price Action Grading',
-                'SMC': 'SMC/ICT Grading', 
-                'MS': 'Market Structure Grading'
-            };
-            document.getElementById('strategyTitle').textContent = strategyNames[strategy];
-            
-            showToast(`✅ ${strategyNames[strategy]} selected`);
-        }
-
-        // ========== GRADING SYSTEM ==========
-        function loadGradingInterface(strategy) {
-            const gradingTemplates = {
-                PA: {
-                    title: "Price Action Grading",
-                    confluences: [
-                        {
-                            name: "📅 Weekly Context",
-                            points: 20,
-                            items: [
-                                { id: 'pa_weekly_trend', label: 'Clear Weekly Trend Direction', points: 5 },
-                                { id: 'pa_weekly_key', label: 'Weekly Key S/R Level Present', points: 5 },
-                                { id: 'pa_weekly_pattern', label: 'Weekly Pattern Recognition', points: 5 },
-                                { id: 'pa_weekly_clean', label: 'Clean Weekly Chart Structure', points: 5 }
-                            ]
-                        },
-                        {
-                            name: "📊 Daily Structure",
-                            points: 25,
-                            items: [
-                                { id: 'pa_daily_alignment', label: 'Daily aligns with Weekly Bias', points: 7 },
-                                { id: 'pa_daily_sr', label: 'Daily S/R with Rejection', points: 6 },
-                                { id: 'pa_daily_pattern', label: 'Clear Daily Pattern (H&S, Double)', points: 6 },
-                                { id: 'pa_daily_momentum', label: 'Daily Momentum Confirmation', points: 6 }
-                            ]
-                        },
-                        {
-                            name: "🎯 Entry Precision",
-                            points: 30,
-                            items: [
-                                { id: 'pa_entry_clean', label: 'Clean Entry Pattern/Trigger', points: 8 },
-                                { id: 'pa_entry_confirmation', label: 'Multiple Timeframe Confirmation', points: 7 },
-                                { id: 'pa_entry_risk', label: 'Clear Risk Management Plan', points: 8 },
-                                { id: 'pa_entry_timing', label: 'Optimal Session Timing', points: 7 }
-                            ]
-                        },
-                        {
-                            name: "⚡ Optimization",
-                            points: 25,
-                            items: [
-                                { id: 'pa_opt_rr', label: 'Risk:Reward ≥ 1:1.5', points: 7 },
-                                { id: 'pa_opt_volume', label: 'Volume Confirmation', points: 6 },
-                                { id: 'pa_opt_clean', label: 'Chart Clean & Uncluttered', points: 6 },
-                                { id: 'pa_opt_psychology', label: 'Psychology State Focused', points: 6 }
-                            ]
-                        }
-                    ]
-                },
-                SMC: {
-                    title: "SMC/ICT Grading",
-                    confluences: [
-                        {
-                            name: "🏛️ HTF Narrative",
-                            points: 20,
-                            items: [
-                                { id: 'smc_htf_bias', label: 'Clear HTF Institutional Bias', points: 5 },
-                                { id: 'smc_pd_arrays', label: 'PD Arrays Identified', points: 5 },
-                                { id: 'smc_liquidity_zones', label: 'Liquidity Zones Marked', points: 5 },
-                                { id: 'smc_htf_structure', label: 'HTF Structure Clear', points: 5 }
-                            ]
-                        },
-                        {
-                            name: "💰 Order Blocks & FVGs",
-                            points: 30,
-                            items: [
-                                { id: 'smc_ob_clean', label: 'Clean Order Block Identification', points: 8 },
-                                { id: 'smc_fvg_quality', label: 'FVG Quality & Placement', points: 7 },
-                                { id: 'smc_premium_discount', label: 'Premium/Discount Zone Respect', points: 8 },
-                                { id: 'smc_mitigation', label: 'No Mitigation on Key Levels', points: 7 }
-                            ]
-                        },
-                        {
-                            name: "⚡ Displacement & Entry",
-                            points: 30,
-                            items: [
-                                { id: 'smc_liquidity_sweep', label: 'Liquidity Sweep Confirmed', points: 8 },
-                                { id: 'smc_displacement', label: 'Strong Displacement Present', points: 7 },
-                                { id: 'smc_killzone', label: 'ICT Killzone Timing', points: 8 },
-                                { id: 'smc_entry_model', label: 'Clear Entry Model (OB/FVG)', points: 7 }
-                            ]
-                        },
-                        {
-                            name: "🎯 Risk & Management",
-                            points: 20,
-                            items: [
-                                { id: 'smc_risk_logic', label: 'Stop Beyond Institutional Invalidation', points: 6 },
-                                { id: 'smc_rr', label: 'Risk:Reward ≥ 1:2', points: 5 },
-                                { id: 'smc_session', label: 'Optimal Session for Setup', points: 5 },
-                                { id: 'smc_breakeven', label: 'Breakeven Plan Defined', points: 4 }
-                            ]
-                        }
-                    ]
-                },
-                MS: {
-                    title: "Market Structure Grading",
-                    confluences: [
-                        {
-                            name: "⚡ Pure Structure",
-                            points: 30,
-                            items: [
-                                { id: 'ms_structure_clear', label: 'Market Structure Clearly Defined', points: 8 },
-                                { id: 'ms_swing_points', label: 'Swing Points Clean & Visible', points: 7 },
-                                { id: 'ms_trend_bias', label: 'Trend Bias Clearly Established', points: 8 },
-                                { id: 'ms_chart_clean', label: 'Chart Minimal & Clean', points: 7 }
-                            ]
-                        },
-                        {
-                            name: "🔄 Structural Shifts",
-                            points: 30,
-                            items: [
-                                { id: 'ms_bos_clear', label: 'BOS (Break of Structure) Clear', points: 8 },
-                                { id: 'ms_choch_present', label: 'CHOCH (Change of Character) Present', points: 7 },
-                                { id: 'ms_retest_confirmation', label: 'Retest of Broken Structure', points: 8 },
-                                { id: 'ms_momentum_shift', label: 'Momentum Shift Confirmation', points: 7 }
-                            ]
-                        },
-                        {
-                            name: "🎯 Entry & Execution",
-                            points: 25,
-                            items: [
-                                { id: 'ms_entry_trigger', label: 'Clear Entry Trigger at Structure', points: 7 },
-                                { id: 'ms_multiple_tf', label: 'Multiple TF Alignment', points: 6 },
-                                { id: 'ms_risk_placement', label: 'Logical Stop Loss Placement', points: 6 },
-                                { id: 'ms_entry_quality', label: 'Entry Quality (Limit vs Market)', points: 6 }
-                            ]
-                        },
-                        {
-                            name: "📊 Optimization",
-                            points: 15,
-                            items: [
-                                { id: 'ms_rr', label: 'Risk:Reward ≥ 1:1.5', points: 5 },
-                                { id: 'ms_volume', label: 'Volume Confirms Structure Break', points: 4 },
-                                { id: 'ms_patience', label: 'Patience in Execution', points: 3 },
-                                { id: 'ms_psychology', label: 'Psychology State Focused', points: 3 }
-                            ]
-                        }
-                    ]
-                }
-            };
-
-            const template = gradingTemplates[strategy];
-            let html = '<div class="grading-grid">';
-
-            template.confluences.forEach((group, groupIndex) => {
-                html += `
-                    <div class="confluence-group">
-                        <div class="confluence-title">
-                            <span class="confluence-name">${group.name}</span>
-                            <span class="confluence-points">${group.points} pts</span>
-                        </div>
-                        
-                        ${group.items.map(item => `
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="${item.id}" data-points="${item.points}" onchange="calculateGrade()">
-                                <label for="${item.id}">${item.label}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            });
-
-            html += '</div>';
-
-            // Add screenshot example
-            const screenshotKey = Object.keys(screenshots[strategy])[0];
-            html += `
-                <div class="screenshot-container">
-                    <div class="screenshot-label">📸 Example ${strategy} Setup</div>
-                    <img src="${screenshots[strategy][screenshotKey]}" alt="${strategy} Example" class="example-screenshot">
-                </div>
-            `;
-
-            document.getElementById('gradingInterface').innerHTML = html;
-            calculateGrade(); // Initial calculation
-        }
-
-        function calculateGrade() {
-            let score = 0;
-            let totalPossible = 0;
-            
-            // Calculate from checkboxes
-            document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(cb => {
-                totalPossible += parseInt(cb.dataset.points) || 0;
-                if (cb.checked) {
-                    score += parseInt(cb.dataset.points) || 0;
-                }
-            });
-
-            // Update current grade
-            currentGrade.score = score;
-            document.getElementById('currentScore').textContent = score;
-
-            // Determine grade and action message
-            let grade, gradeClass, actionMessage;
-            const percentage = (score / totalPossible) * 100;
-
-            if (percentage >= 90) {
-                grade = 'A++'; gradeClass = 'grade-Aplusplus';
-                actionMessage = '🎯 MASTERPIECE SETUP - Full position size allowed (1.5x risk)';
-            } else if (percentage >= 80) {
-                grade = 'A+'; gradeClass = 'grade-Aplus';
-                actionMessage = '✅ EXCELLENT SETUP - Normal position size (1x risk)';
-            } else if (percentage >= 70) {
-                grade = 'A'; gradeClass = 'grade-A';
-                actionMessage = '⚠️ GOOD SETUP - Reduced position size (0.75x risk)';
-            } else if (percentage >= 60) {
-                grade = 'B'; gradeClass = 'grade-B';
-                actionMessage = '❌ MEDIOCRE SETUP - Minimal position only (0.5x risk)';
-            } else {
-                grade = 'F'; gradeClass = 'grade-F';
-                actionMessage = '🚫 POOR SETUP - Paper trade only. Review your confluences.';
-            }
-
-            currentGrade.grade = grade;
-            currentGrade.action = actionMessage;
-
-            // Update display
-            document.getElementById('gradeDisplay').textContent = grade;
-            document.getElementById('gradeDisplay').className = 'grade-value ' + gradeClass;
-            document.getElementById('actionMessage').textContent = actionMessage;
-
-            // Show celebration for A++ setups
-            if (grade === 'A++') {
-                showToast('🎉 PERFECT A++ SETUP! This is textbook trading!');
-            }
-        }
-
+            // Show welcome message
+            setTimeout(() => {
+                showToast('🎯 Sniper Journal Ready - Track Limit Orders & Misses');
+            }, 500);
+        });
+        
         // ========== PAGE NAVIGATION ==========
         function showPage(page) {
             // Hide all pages
-            document.querySelectorAll('.page').forEach(p => {
-                p.style.display = 'none';
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             
             // Show selected page
-            document.getElementById(page + 'Page').style.display = 'block';
+            document.getElementById(page + '-page').classList.add('active');
             
-            // Add active class to clicked tab
-            event.currentTarget.classList.add('active');
+            // Update nav tabs (now 4 tabs)
+            const tabIndex = {
+                'grading': 0,
+                'journal': 1,
+                'stats': 2,
+                'pnlcalendar': 3
+            }[page];
             
-            // Update content based on page
-            if (page === 'pnl') {
-                updatePnLCalendar();
-            } else if (page === 'journal') {
+            document.querySelectorAll('.nav-tab')[tabIndex].classList.add('active');
+            
+            // Update content
+            if (page === 'journal') {
                 showJournalTab('open');
-            } else if (page === 'export') {
-                updateExportStats();
+                updateTradeCounts();
+            } else if (page === 'stats') {
+                updateStatsPage();
+            } else if (page === 'pnlcalendar') {
+                updatePnLCalendar();
             }
         }
-
+        
         function showJournalTab(tab) {
-            // Update UI
-            document.querySelectorAll('.journal-tab').forEach(t => {
-                t.classList.remove('active');
+            // Reset all tabs
+            ['open', 'completed', 'missed'].forEach(t => {
+                document.getElementById('journal-tab-' + t).style.background = 'transparent';
+                document.getElementById('journal-tab-' + t).style.color = '#8892b0';
+                document.getElementById(t + '-trades-section').style.display = 'none';
+                document.getElementById('empty' + t.charAt(0).toUpperCase() + t.slice(1) + 'State').style.display = 'none';
             });
-            event.currentTarget.classList.add('active');
             
-            // Show content
+            // Set active tab
+            document.getElementById('journal-tab-' + tab).style.background = 'rgba(100, 255, 218, 0.1)';
+            document.getElementById('journal-tab-' + tab).style.color = 'var(--accent)';
+            document.getElementById(tab + '-trades-section').style.display = 'block';
+            
+            // Show empty state if needed
+            if (tab === 'open' && openTrades.length === 0) {
+                document.getElementById('emptyOpenState').style.display = 'block';
+            } else if (tab === 'completed' && completedTrades.length === 0) {
+                document.getElementById('emptyCompletedState').style.display = 'block';
+            } else if (tab === 'missed' && missedTrades.length === 0) {
+                document.getElementById('emptyMissedState').style.display = 'block';
+            }
+        }
+        
+        // ========== GRADING SYSTEM ==========
+        function createGradingSections() {
+            const sections = [
+                {
+                    title: '📅 Weekly Context',
+                    points: 8,
+                    items: [
+                        { id: 'weekly_trend', label: 'Clear Weekly Trend (HH/HL or LL/LH)', points: 2 },
+                        { id: 'weekly_key', label: 'Weekly Key Level with Rejection', points: 2 },
+                        { id: 'weekly_ema', label: 'Weekly EMA Respect (20/50 EMA)', points: 2 },
+                        { id: 'weekly_pattern', label: 'Weekly Pattern (H&S, Double)', points: 2 }
+                    ]
+                },
+                {
+                    title: '📊 Daily Bias',
+                    points: 8,
+                    items: [
+                        { id: 'daily_alignment', label: 'Daily aligns with Weekly Trend', points: 2 },
+                        { id: 'daily_key', label: 'Daily Key Level Rejection', points: 2 },
+                        { id: 'daily_ema', label: 'Daily EMA Rejection (Clear candle)', points: 2 },
+                        { id: 'daily_pattern', label: 'Daily Pattern (H&S, Double, Triangle)', points: 2 }
+                    ]
+                },
+                {
+                    title: '⚡ 4H Engine (CORE)',
+                    points: 15,
+                    items: [
+                        { id: '4h_trend', label: '4H Clear Trending Bias', points: 3 },
+                        { id: '4h_bos', label: 'Perfect 4H BOS (Clean break)', points: 4 },
+                        { id: '4h_pattern', label: 'Strong 4H Pattern (H&S, Double)', points: 3 },
+                        { id: '4h_key', label: '4H Key Structure Level (Your Limit Level)', points: 2 },
+                        { id: '4h_ema', label: '4H EMA Alignment (Respects 20/50)', points: 3 }
+                    ]
+                },
+                {
+                    title: '🎯 Entry Precision',
+                    points: 8,
+                    items: [
+                        { id: '1h_trend', label: '1H Trend aligns with 4H', points: 2 },
+                        { id: '1h_ema', label: '1H EMA Rejection (Candlestick)', points: 2 },
+                        { id: '15m_aoi', label: '15M AOI (Breaker Block/Order Block)', points: 2 },
+                        { id: '15m_overlap', label: '15M AOI overlaps 4H Structure', points: 2 }
+                    ]
+                }
+            ];
+            
             let html = '';
-            const filteredTrades = trades.filter(t => t.status === tab);
-            
-            if (filteredTrades.length === 0) {
-                html = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">${tab === 'open' ? '📝' : tab === 'closed' ? '✅' : '⏰'}</div>
-                        <h3 style="margin: 10px 0;">No ${tab} trades yet</h3>
-                        <p>${tab === 'open' ? 'Grade and save a setup to see it here' : tab === 'closed' ? 'Close some open trades to see results' : 'Missed trades will appear here'}</p>
-                    </div>
+            sections.forEach(section => {
+                html += `
+                    <div style="background: rgba(23, 42, 69, 0.6); border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="font-weight: 600; color: var(--accent); font-size: 0.95rem;">${section.title}</div>
+                            <div style="color: #8892b0; font-size: 0.8rem;">${section.points} points</div>
+                        </div>
                 `;
-            } else {
-                filteredTrades.forEach(trade => {
-                    const date = new Date(trade.date).toLocaleDateString();
+                
+                section.items.forEach(item => {
                     html += `
-                        <div class="trade-card ${trade.result === 'WIN' ? 'win' : trade.result === 'LOSS' ? 'loss' : ''}">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <div>
-                                    <h3 style="font-weight: 700;">${trade.pair} • ${trade.direction}</h3>
-                                    <div style="color: var(--text-secondary); font-size: 0.9rem;">${date} • ${trade.grade}</div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div style="font-weight: 700; color: ${trade.pnl > 0 ? 'var(--success)' : trade.pnl < 0 ? 'var(--danger)' : 'var(--warning)'}">
-                                        ${trade.pnl > 0 ? '+' : ''}${trade.pnl}%
-                                    </div>
-                                    <div style="color: var(--text-secondary); font-size: 0.9rem;">${trade.rr}</div>
-                                </div>
-                            </div>
-                            <div style="color: var(--text-secondary); font-size: 0.9rem;">
-                                ${trade.notes || 'No notes'}
-                            </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="${item.id}" data-points="${item.points}" onchange="calculateGrade()">
+                            <label for="${item.id}">${item.label} <span class="points-badge">${item.points}</span></label>
                         </div>
                     `;
                 });
-            }
-            
-            document.getElementById('journalContent').innerHTML = html;
-        }
-
-        // ========== P&L CALENDAR ==========
-        function updatePnLCalendar() {
-            const calendarGrid = document.getElementById('calendarGrid');
-            const totalProfitDisplay = document.getElementById('totalProfit');
-            const aPlusTradesDisplay = document.getElementById('aPlusTrades');
-            
-            // Get closed trades
-            const closedTrades = trades.filter(t => t.status === 'closed');
-            const aPlusTrades = closedTrades.filter(t => t.grade === 'A+' || t.grade === 'A++').length;
-            
-            // Calculate total profit
-            let totalProfit = 0;
-            closedTrades.forEach(trade => {
-                totalProfit += parseFloat(trade.pnl) || 0;
+                
+                html += '</div>';
             });
             
-            // Update displays
-            totalProfitDisplay.textContent = totalProfit > 0 ? '+' + totalProfit.toFixed(1) + '%' : totalProfit.toFixed(1) + '%';
-            aPlusTradesDisplay.textContent = aPlusTrades;
-            
-            // Generate calendar
-            let html = '';
-            const daysInMonth = 31;
-            
-            // Group trades by day (simplified)
-            const tradesByDay = {};
-            closedTrades.forEach(trade => {
-                const date = new Date(trade.date);
-                const day = date.getDate();
-                if (day >= 1 && day <= daysInMonth) {
-                    if (!tradesByDay[day]) tradesByDay[day] = [];
-                    tradesByDay[day].push(trade);
-                }
-            });
-            
-            // Create calendar days
-            for (let day = 1; day <= daysInMonth; day++) {
-                let dayClass = 'day-empty';
-                let dayProfit = 0;
-                let tooltip = `Day ${day}: No trade`;
-                
-                if (tradesByDay[day]) {
-                    tradesByDay[day].forEach(trade => {
-                        dayProfit += parseFloat(trade.pnl) || 0;
-                    });
-                    
-                    if (dayProfit > 0) {
-                        dayClass = 'day-win';
-                        tooltip = `Day ${day}: WIN | +${dayProfit.toFixed(1)}%`;
-                    } else if (dayProfit < 0) {
-                        dayClass = 'day-loss';
-                        tooltip = `Day ${day}: LOSS | ${dayProfit.toFixed(1)}%`;
-                    } else {
-                        dayClass = 'day-even';
-                        tooltip = `Day ${day}: BREAKEVEN`;
-                    }
-                }
-                
-                html += `
-                    <div class="calendar-day ${dayClass}" title="${tooltip}" onclick="showDayDetails(${day})">
-                        ${day}
-                        ${tradesByDay[day] ? `<div style="font-size: 0.7rem; margin-top: 2px;">${dayProfit > 0 ? '+' : ''}${dayProfit.toFixed(1)}%</div>` : ''}
+            // Add session selection
+            html += `
+                <div style="background: rgba(23, 42, 69, 0.6); border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                    <div style="font-weight: 600; color: var(--accent); font-size: 0.95rem; margin-bottom: 12px;">⏰ Timing & Confluences</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                        <div class="session-option" id="sessionGolden" onclick="selectSession('golden')">
+                            <div style="font-weight: 500;">London Open</div>
+                            <div style="font-size: 0.75rem; color: var(--accent); margin-top: 5px;">3 points</div>
+                        </div>
+                        <div class="session-option" id="sessionPremium" onclick="selectSession('premium')">
+                            <div style="font-weight: 500;">London/NY Overlap</div>
+                            <div style="font-size: 0.75rem; color: var(--accent); margin-top: 5px;">3 points</div>
+                        </div>
                     </div>
-                `;
-            }
+                    
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="no_news" data-points="2" onchange="calculateGrade()">
+                        <label for="no_news">No Major News (>1 hour) <span class="points-badge">2</span></label>
+                    </div>
+                    
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bonus_triple" data-points="2" onchange="calculateGrade()">
+                        <label for="bonus_triple">Weekly+Daily+4H Alignment <span class="points-badge">+2</span></label>
+                    </div>
+                </div>
+            `;
             
-            calendarGrid.innerHTML = html;
+            document.getElementById('gradingSections').innerHTML = html;
         }
-
-        // ========== PSYCHOLOGY TRACKING ==========
-        function setPsychologyState(state) {
-            psychologyState.state = state;
-            psychologyState.history.push({
-                state: state,
-                timestamp: new Date().toISOString(),
-                grade: currentGrade.grade
+        
+        function calculateGrade() {
+            let score = 0;
+            
+            // Calculate from checkboxes
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                score += parseInt(cb.dataset.points) || 1;
             });
             
-            // Keep only last 20 entries
-            if (psychologyState.history.length > 20) {
-                psychologyState.history = psychologyState.history.slice(-20);
-            }
+            // Add session points
+            if (document.getElementById('sessionGolden').classList.contains('selected')) score += 3;
+            else if (document.getElementById('sessionPremium').classList.contains('selected')) score += 3;
             
-            localStorage.setItem('tradeosPsychology', JSON.stringify(psychologyState));
+            // Update current grade
+            currentGrade.score = score;
+            document.getElementById('totalScore').textContent = score;
             
-            // Update UI
-            document.querySelectorAll('.state-item').forEach(item => {
-                item.classList.remove('state-active');
-                if (item.querySelector('div:nth-child(2)').textContent.toLowerCase() === state) {
-                    item.classList.add('state-active');
-                }
-            });
+            // Determine grade
+            let grade, gradeClass, actionMessage;
             
-            // Show warning if state is dangerous
-            if (['fomo', 'revenge', 'bored'].includes(state)) {
-                const warnings = {
-                    'fomo': '⚠️ FOMO detected. Remember: The market will be here tomorrow.',
-                    'revenge': '⚔️ Revenge trading detected. Take a 15-minute break.',
-                    'bored': '😴 Boredom detected. Step away from charts for 30 minutes.'
-                };
-                document.getElementById('psychologyWarnings').innerHTML = warnings[state];
-                showToast(warnings[state]);
+            if (score >= 40) {
+                grade = 'A++'; gradeClass = 'grade-Aplusplus';
+                actionMessage = '🎯 SNIPER SETUP - Full position (1% risk)';
+            } else if (score >= 33) {
+                grade = 'A+'; gradeClass = 'grade-Aplus';
+                actionMessage = '✅ STRONG SETUP - Normal position (0.75-1% risk)';
+            } else if (score >= 26) {
+                grade = 'A'; gradeClass = 'grade-A';
+                actionMessage = '⚠️ VALID SETUP - Reduced size (0.5% risk)';
+            } else if (score >= 20) {
+                grade = 'A-'; gradeClass = 'grade-Aminus';
+                actionMessage = '❌ WEAK SETUP - Avoid or paper trade only';
             } else {
-                document.getElementById('psychologyWarnings').innerHTML = 'No warnings. Keep up the focused mindset!';
+                grade = 'FAIL'; gradeClass = 'grade-fail';
+                actionMessage = '🚫 NO TRADE - Critical elements missing';
+            }
+            
+            currentGrade.grade = grade;
+            currentGrade.action = actionMessage;
+            
+            // Update display
+            document.getElementById('gradeValue').textContent = grade;
+            document.getElementById('gradeValue').className = 'grade-value ' + gradeClass;
+            document.getElementById('actionMessage').textContent = actionMessage;
+            
+            // Show toast for A++ setups
+            if (score >= 40) {
+                showToast('🎯 Perfect A++ Setup! Ready to place limit order.');
             }
         }
-
-        function showPsychologyTips() {
-            showToast('💡 Psychology Tip: Wait for A+ setups only. Patience compounds.');
+        
+        function selectSession(type) {
+            // Remove selected class from all
+            document.querySelectorAll('.session-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add to clicked one
+            const element = document.getElementById('session' + (type === 'golden' ? 'Golden' : 'Premium'));
+            element.classList.add('selected');
+            
+            // Recalculate
+            calculateGrade();
         }
-
-        // ========== TRADE MANAGEMENT ==========
-        function saveTrade() {
-            if (!currentStrategy || currentGrade.score === 0) {
-                showToast('⚠️ Please select a strategy and grade your setup first');
+        
+        function quickGrade() {
+            // Reset all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            // Reset session
+            document.querySelectorAll('.session-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Reset grade
+            currentGrade = { score: 0, grade: '', action: '' };
+            document.getElementById('totalScore').textContent = '0';
+            document.getElementById('gradeValue').textContent = '-';
+            document.getElementById('actionMessage').textContent = 'Grade your setup to see action plan';
+            
+            showToast('📝 Grading reset');
+        }
+        
+        // ========== MODAL FUNCTIONS ==========
+        function showSaveTradeModal() {
+            if (currentGrade.score === 0) {
+                showToast('⚠️ Please grade your setup first');
                 return;
             }
             
-            // Update modal display
-            document.getElementById('modalGradeDisplay').textContent = currentGrade.grade;
+            // Update modal with current grade
+            document.getElementById('modalGradeValue').textContent = currentGrade.grade;
+            document.getElementById('modalGradeValue').className = 'grade-value ' + 
+                (currentGrade.grade === 'A++' ? 'grade-Aplusplus' : 
+                 currentGrade.grade === 'A+' ? 'grade-Aplus' :
+                 currentGrade.grade === 'A' ? 'grade-A' :
+                 currentGrade.grade === 'A-' ? 'grade-Aminus' : 'grade-fail');
+            document.getElementById('modalScoreValue').textContent = `Score: ${currentGrade.score}/50`;
             document.getElementById('modalActionMessage').textContent = currentGrade.action;
             
+            // Set current date/time
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('tradeDate').value = localDateTime;
+            
+            // Clear inputs
+            document.getElementById('tradePair').value = '';
+            document.getElementById('tradeDirection').value = 'LONG';
+            document.getElementById('entryType').value = 'LIMIT';
+            document.getElementById('targetLevel').value = '';
+            
             // Show modal
-            document.getElementById('saveTradeModal').style.display = 'flex';
+            document.getElementById('saveTradeModal').style.display = 'block';
         }
-
-        function confirmSaveTrade() {
+        
+        function saveGradedSetup() {
             const pair = document.getElementById('tradePair').value.trim().toUpperCase();
             const direction = document.getElementById('tradeDirection').value;
+            const tradeDate = document.getElementById('tradeDate').value;
+            const entryType = document.getElementById('entryType').value;
+            const targetLevel = document.getElementById('targetLevel').value.trim();
             
-            if (!pair || !pair.match(/^[A-Z]{6}$/)) {
-                showToast('⚠️ Enter valid currency pair (e.g., EURUSD)');
+            if (!pair) {
+                showToast('⚠️ Enter currency pair');
+                return;
+            }
+            
+            if (!pair.match(/^[A-Z]{6}$/)) {
+                showToast('⚠️ Use format like EURUSD, GBPUSD');
                 return;
             }
             
             const trade = {
                 id: Date.now(),
-                date: new Date().toISOString(),
+                date: tradeDate || new Date().toISOString(),
                 pair: pair,
                 direction: direction,
-                strategy: currentStrategy,
-                grade: currentGrade.grade,
                 score: currentGrade.score,
-                status: 'open',
-                psychology: psychologyState.state,
-                pnl: 0,
-                rr: 'N/A',
-                notes: ''
+                grade: currentGrade.grade,
+                status: 'OPEN',
+                entryType: entryType,
+                targetLevel: targetLevel || '4H Structure/H&S Neckline',
+                action: currentGrade.action,
+                session: document.getElementById('sessionGolden').classList.contains('selected') ? 'London Open' : 
+                       document.getElementById('sessionPremium').classList.contains('selected') ? 'London/NY Overlap' : 'Other'
             };
             
-            trades.unshift(trade);
-            localStorage.setItem('tradeosTrades', JSON.stringify(trades));
+            openTrades.unshift(trade);
+            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
             
+            updateTradeCounts();
+            renderOpenTrades();
             closeModal('saveTradeModal');
-            showToast(`✅ ${trade.pair} ${trade.direction} setup saved (${trade.grade})`);
             
-            // Reset grading for next setup
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                cb.checked = false;
+            showToast(`✅ ${trade.pair} ${trade.direction} limit order saved (${trade.grade})`);
+            quickGrade(); // Reset for next
+        }
+        
+        function openCloseTradeModal(tradeId) {
+            const trade = openTrades.find(t => t.id === tradeId);
+            if (!trade) return;
+            
+            currentTradeToClose = trade;
+            
+            const date = new Date(trade.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
-            calculateGrade();
             
-            // Update UI
-            if (document.getElementById('journalPage').style.display !== 'none') {
-                showJournalTab('open');
-            }
-        }
-
-        // ========== DATA EXPORT ==========
-        function updateExportStats() {
-            const closedTrades = trades.filter(t => t.status === 'closed');
-            const totalTrades = closedTrades.length;
-            const winningTrades = closedTrades.filter(t => t.result === 'WIN').length;
-            const winRate = totalTrades > 0 ? Math.round((winningTrades / totalTrades) * 100) : 0;
+            document.getElementById('closeTradeInfo').innerHTML = `
+                <div style="background: rgba(100, 255, 218, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 700;">${trade.pair} • ${trade.direction}</h3>
+                        <span style="background: rgba(100, 255, 218, 0.2); color: var(--accent); padding: 6px 12px; border-radius: 15px; font-weight: 700; font-size: 0.9rem;">
+                            ${trade.grade} (${trade.score})
+                        </span>
+                    </div>
+                    <div style="color: #8892b0; font-size: 0.9rem;">
+                        Opened: ${date} • ${trade.session}
+                    </div>
+                    <div style="color: var(--accent); font-weight: 600; margin-top: 10px; font-size: 0.95rem;">
+                        ${trade.action}
+                    </div>
+                    <div style="color: #8892b0; font-size: 0.85rem; margin-top: 8px;">
+                        <i class="fas fa-bullseye" style="margin-right: 5px;"></i>
+                        ${trade.entryType} Order at ${trade.targetLevel}
+                    </div>
+                </div>
+            `;
             
-            document.getElementById('totalTradesCount').textContent = totalTrades;
-            document.getElementById('winRate').textContent = winRate + '%';
-        }
-
-        function exportData(format) {
-            const data = {
-                trades: trades,
-                psychology: psychologyState,
-                settings: {
-                    strategy: currentStrategy,
-                    lastUpdated: new Date().toISOString()
+            // Set close date to now
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('closeDate').value = localDateTime;
+            
+            // Reset form fields
+            document.getElementById('tradeResult').value = '';
+            document.getElementById('tradeRR').value = '';
+            document.getElementById('tradePnL').value = '';
+            document.getElementById('tradeNotes').value = '';
+            document.getElementById('missedReason').value = '';
+            document.getElementById('missedReason').style.display = 'none';
+            document.getElementById('deleteTradeBtn').style.display = 'none';
+            
+            // Show missed reason field when MISSED is selected
+            document.getElementById('tradeResult').addEventListener('change', function() {
+                if (this.value === 'MISSED') {
+                    document.getElementById('missedReason').style.display = 'block';
+                    document.getElementById('deleteTradeBtn').style.display = 'block';
+                    document.getElementById('tradeRR').value = 'N/A';
+                    document.getElementById('tradePnL').value = '0%';
+                } else {
+                    document.getElementById('missedReason').style.display = 'none';
+                    document.getElementById('deleteTradeBtn').style.display = 'none';
                 }
-            };
+            });
             
-            let content, mimeType, filename;
-            
-            if (format === 'json') {
-                content = JSON.stringify(data, null, 2);
-                mimeType = 'application/json';
-                filename = `tradeos-data-${new Date().toISOString().split('T')[0]}.json`;
-            } else {
-                // CSV format
-                const headers = ['Date', 'Pair', 'Direction', 'Strategy', 'Grade', 'Score', 'Result', 'P&L%', 'R:R', 'Psychology'];
-                const rows = trades.map(t => [
-                    new Date(t.date).toLocaleDateString(),
-                    t.pair,
-                    t.direction,
-                    t.strategy,
-                    t.grade,
-                    t.score,
-                    t.result || 'N/A',
-                    t.pnl || '0',
-                    t.rr || 'N/A',
-                    t.psychology || 'N/A'
-                ]);
-                
-                content = [headers, ...rows].map(row => row.join(',')).join('\n');
-                mimeType = 'text/csv';
-                filename = `tradeos-data-${new Date().toISOString().split('T')[0]}.csv`;
-            }
-            
-            // Create download link
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showToast(`📁 Data exported as ${format.toUpperCase()}`);
+            // Show modal
+            document.getElementById('closeTradeModal').style.display = 'block';
         }
-
-        function clearData() {
-            if (confirm('Are you sure? This will delete ALL your trade data.')) {
-                trades = [];
-                psychologyState = { state: 'focused', history: [] };
-                localStorage.removeItem('tradeosTrades');
-                localStorage.removeItem('tradeosPsychology');
-                showToast('🗑️ All data cleared');
-                updateExportStats();
-                if (document.getElementById('journalPage').style.display !== 'none') {
-                    showJournalTab('open');
-                }
-            }
-        }
-
-        // ========== FEEDBACK SYSTEM ==========
-        function showFeedbackModal() {
-            document.getElementById('feedbackModal').style.display = 'flex';
-        }
-
-        function submitFeedback() {
-            const feedback = document.getElementById('feedbackText').value;
-            const feature = document.getElementById('featureRating').value;
+        
+        function saveTradeResult() {
+            const result = document.getElementById('tradeResult').value;
+            const rr = document.getElementById('tradeRR').value.trim();
+            const pnl = document.getElementById('tradePnL').value.trim();
+            const notes = document.getElementById('tradeNotes').value.trim();
+            const closeDate = document.getElementById('closeDate').value;
+            const missedReason = document.getElementById('missedReason').value;
             
-            if (!feedback || !feature) {
-                showToast('⚠️ Please provide both feedback and feature rating');
+            if (!result) {
+                showToast('⚠️ Select result (WIN/LOSS/BREAKEVEN/MISSED)');
                 return;
             }
             
-            // In a real app, this would send to a backend
-            // For now, we'll just show a toast
-            showToast('✅ Feedback submitted! Thank you for helping improve TradeOS.');
-            closeModal('feedbackModal');
+            if (result !== 'MISSED') {
+                if (!rr) {
+                    showToast('⚠️ Enter Risk:Reward (e.g., 1:2.5)');
+                    return;
+                }
+                
+                if (!pnl) {
+                    showToast('⚠️ Enter P&L % (e.g., +2.5% or -1.5%)');
+                    return;
+                }
+            }
             
-            // Clear form
-            document.getElementById('feedbackText').value = '';
-            document.getElementById('featureRating').value = '';
+            if (result === 'MISSED' && !missedReason) {
+                showToast('⚠️ Select reason why you missed the trade');
+                return;
+            }
+            
+            // Remove from open trades
+            openTrades = openTrades.filter(t => t.id !== currentTradeToClose.id);
+            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
+            
+            if (result === 'MISSED') {
+                // Add to missed trades
+                const missedTrade = {
+                    ...currentTradeToClose,
+                    result: 'MISSED',
+                    rr: 'N/A',
+                    pnl: '0%',
+                    notes: notes || `Missed: ${missedReason}`,
+                    missedReason: missedReason,
+                    closedDate: closeDate || new Date().toISOString()
+                };
+                
+                missedTrades.unshift(missedTrade);
+                localStorage.setItem('sniperMissedTrades', JSON.stringify(missedTrades));
+                showToast(`🟣 ${missedTrade.pair} marked as MISSED (${missedReason})`);
+            } else {
+                // Add to completed trades
+                const completedTrade = {
+                    ...currentTradeToClose,
+                    result: result,
+                    rr: rr,
+                    pnl: pnl,
+                    notes: notes,
+                    closedDate: closeDate || new Date().toISOString()
+                };
+                
+                completedTrades.unshift(completedTrade);
+                localStorage.setItem('sniperCompletedTrades', JSON.stringify(completedTrades));
+                showToast(`✅ ${completedTrade.pair} ${completedTrade.direction} closed as ${result}`);
+            }
+            
+            // Update UI
+            updateTradeCounts();
+            renderOpenTrades();
+            renderCompletedTrades();
+            renderMissedTrades();
+            updatePnLCalendar(); // Update calendar too
+            closeModal('closeTradeModal');
         }
-
-        // ========== UTILITY FUNCTIONS ==========
+        
+        function deleteOpenTrade() {
+            if (!confirm('Delete this open trade? (Price never retested your level)')) {
+                return;
+            }
+            
+            // Remove from open trades
+            openTrades = openTrades.filter(t => t.id !== currentTradeToClose.id);
+            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
+            
+            // Update UI
+            updateTradeCounts();
+            renderOpenTrades();
+            closeModal('closeTradeModal');
+            
+            showToast(`🗑️ ${currentTradeToClose.pair} trade deleted (No retest)`);
+        }
+        
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'closeTradeModal') {
+                currentTradeToClose = null;
+            }
         }
-
-        function showDayDetails(day) {
-            showToast(`📅 Day ${day} details would show here in a full version`);
+        
+        // ========== RENDER FUNCTIONS ==========
+        function renderOpenTrades() {
+            const container = document.getElementById('openTradesList');
+            
+            if (openTrades.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            openTrades.forEach(trade => {
+                const date = new Date(trade.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                html += `
+                    <div class="trade-card open-trade">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">${trade.pair} • ${trade.direction}</h3>
+                                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                    <span style="background: rgba(100, 255, 218, 0.15); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">OPEN</span>
+                                    <span style="color: #8892b0; font-size: 0.85rem;">${date}</span>
+                                    <span style="color: #8892b0; font-size: 0.85rem;">${trade.session}</span>
+                                </div>
+                            </div>
+                            <span style="background: rgba(100, 255, 218, 0.2); color: var(--accent); padding: 8px 14px; border-radius: 15px; font-weight: 700; font-size: 0.9rem;">
+                                ${trade.grade} (${trade.score})
+                            </span>
+                        </div>
+                        
+                        <div style="color: var(--accent); font-weight: 600; font-size: 0.95rem; margin-bottom: 10px;">
+                            ${trade.action}
+                        </div>
+                        
+                        <div style="color: #8892b0; font-size: 0.85rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-bullseye"></i>
+                            <span>${trade.entryType} Order at: <strong>${trade.targetLevel}</strong></span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+                            <button class="action-btn btn-win" onclick="openCloseTradeModal(${trade.id})">
+                                <i class="fas fa-check-circle"></i> WIN
+                            </button>
+                            <button class="action-btn btn-loss" onclick="openCloseTradeModal(${trade.id})">
+                                <i class="fas fa-times-circle"></i> LOSS
+                            </button>
+                            <button class="action-btn btn-even" onclick="openCloseTradeModal(${trade.id})">
+                                <i class="fas fa-equals"></i> EVEN
+                            </button>
+                            <button class="action-btn btn-missed" onclick="openCloseTradeModal(${trade.id})">
+                                <i class="fas fa-ban"></i> MISSED
+                            </button>
+                        </div>
+                        
+                        <button class="delete-btn" onclick="deleteTrade(${trade.id})">
+                            <i class="fas fa-trash"></i> Delete (No Retest)
+                        </button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
         }
-
+        
+        function deleteTrade(tradeId) {
+            if (!confirm('Delete this open trade? (Price never retested your level)')) {
+                return;
+            }
+            
+            openTrades = openTrades.filter(t => t.id !== tradeId);
+            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
+            
+            updateTradeCounts();
+            renderOpenTrades();
+            
+            showToast('🗑️ Trade deleted (No retest)');
+        }
+        
+        function renderCompletedTrades() {
+            const container = document.getElementById('completedTradesList');
+            
+            if (completedTrades.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            completedTrades.forEach(trade => {
+                const date = new Date(trade.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                let resultColor = '';
+                if (trade.result === 'WIN') {
+                    resultColor = 'var(--success)';
+                } else if (trade.result === 'LOSS') {
+                    resultColor = 'var(--danger)';
+                } else {
+                    resultColor = 'var(--warning)';
+                }
+                
+                html += `
+                    <div class="trade-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">${trade.pair} • ${trade.direction}</h3>
+                                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                    <span style="background: ${trade.result === 'WIN' ? 'var(--light-success)' : trade.result === 'LOSS' ? 'var(--light-danger)' : 'var(--light-warning)'}; color: ${resultColor}; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">
+                                        ${trade.result}
+                                    </span>
+                                    <span style="color: #8892b0; font-size: 0.85rem;">${date}</span>
+                                    <span style="color: #8892b0; font-size: 0.85rem;">${trade.session}</span>
+                                </div>
+                            </div>
+                            <span style="background: rgba(100, 255, 218, 0.2); color: var(--accent); padding: 8px 14px; border-radius: 15px; font-weight: 700; font-size: 0.9rem;">
+                                ${trade.grade} (${trade.score})
+                            </span>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">Result</div>
+                                <div style="font-weight: 700; font-size: 1.1rem; color: ${resultColor}">
+                                    ${trade.result}
+                                </div>
+                            </div>
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">P&L</div>
+                                <div style="font-weight: 700; font-size: 1.1rem; color: ${trade.pnl.startsWith('+') ? 'var(--success)' : trade.pnl.startsWith('-') ? 'var(--danger)' : 'var(--warning)'}">
+                                    ${trade.pnl}
+                                </div>
+                            </div>
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">R:R</div>
+                                <div style="font-weight: 700; font-size: 1.1rem;">${trade.rr}</div>
+                            </div>
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">Score</div>
+                                <div style="font-weight: 700; font-size: 1.1rem;">${trade.score}/50</div>
+                            </div>
+                        </div>
+                        
+                        ${trade.notes ? `
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
+                            <div style="color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-bottom: 8px;">Notes</div>
+                            <div style="color: #a8b2d1; font-size: 0.9rem; line-height: 1.5;">${trade.notes}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function renderMissedTrades() {
+            const container = document.getElementById('missedTradesList');
+            
+            if (missedTrades.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            missedTrades.forEach(trade => {
+                const date = new Date(trade.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                html += `
+                    <div class="trade-card missed-trade">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">${trade.pair} • ${trade.direction}</h3>
+                                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                    <span class="status-missed">
+                                        <i class="fas fa-ban"></i> MISSED
+                                    </span>
+                                    <span style="color: #8892b0; font-size: 0.85rem;">${date}</span>
+                                    <span style="color: #8892b0; font-size: 0.85rem;">${trade.session}</span>
+                                </div>
+                            </div>
+                            <span style="background: rgba(100, 255, 218, 0.2); color: var(--accent); padding: 8px 14px; border-radius: 15px; font-weight: 700; font-size: 0.9rem;">
+                                ${trade.grade} (${trade.score})
+                            </span>
+                        </div>
+                        
+                        <div style="color: var(--missed); font-weight: 600; font-size: 0.95rem; margin-bottom: 10px;">
+                            <i class="fas fa-bullseye" style="margin-right: 8px;"></i>
+                            Limit at ${trade.targetLevel} - No Retest
+                        </div>
+                        
+                        <div style="color: #8892b0; font-size: 0.85rem; margin-bottom: 15px;">
+                            <strong>Reason:</strong> ${trade.missedReason || trade.notes}
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">Result</div>
+                                <div style="font-weight: 700; font-size: 1.1rem; color: var(--missed)">
+                                    MISSED
+                                </div>
+                            </div>
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">P&L</div>
+                                <div style="font-weight: 700; font-size: 1.1rem; color: var(--missed)">
+                                    0%
+                                </div>
+                            </div>
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">R:R</div>
+                                <div style="font-weight: 700; font-size: 1.1rem;">N/A</div>
+                            </div>
+                            <div>
+                                <div style="color: #8892b0; font-size: 0.75rem; margin-bottom: 5px;">Score</div>
+                                <div style="font-weight: 700; font-size: 1.1rem;">${trade.score}/50</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // ========== P&L CALENDAR FUNCTIONS ==========
+        function updatePnLCalendar() {
+            // Use your actual completed trades
+            const calendarContainer = document.getElementById('pnlCalendarContainer');
+            const totalProfitDisplay = document.getElementById('totalProfitDisplay');
+            const totalTradesDisplay = document.getElementById('totalTradesDisplay');
+            const monthlyBreakdown = document.getElementById('monthlyBreakdown');
+            
+            if (completedTrades.length === 0) {
+                calendarContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #8892b0;">
+                        <i class="fas fa-chart-line" style="font-size: 3rem; opacity: 0.3; margin-bottom: 15px;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 10px 0;">No Trade History Yet</h3>
+                        <p>Complete some trades to see your P&L calendar</p>
+                    </div>
+                `;
+                totalProfitDisplay.textContent = '0%';
+                totalTradesDisplay.textContent = '0';
+                monthlyBreakdown.innerHTML = '';
+                return;
+            }
+            
+            // Calculate total profit
+            let totalProfit = 0;
+            let consecutiveATrades = 0;
+            let maxConsecutive = 0;
+            
+            completedTrades.forEach(trade => {
+                // Extract P&L percentage
+                const pnl = parseFloat(trade.pnl);
+                if (!isNaN(pnl)) {
+                    totalProfit += pnl;
+                }
+                
+                // Track consecutive A+ trades
+                if (trade.grade === 'A+' || trade.grade === 'A++') {
+                    consecutiveATrades++;
+                    if (consecutiveATrades > maxConsecutive) {
+                        maxConsecutive = consecutiveATrades;
+                    }
+                } else {
+                    consecutiveATrades = 0;
+                }
+            });
+            
+            // Group trades by month
+            const tradesByMonth = {};
+            completedTrades.forEach(trade => {
+                const date = new Date(trade.date);
+                const monthYear = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                const monthKey = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0');
+                
+                if (!tradesByMonth[monthKey]) {
+                    tradesByMonth[monthKey] = {
+                        display: monthYear,
+                        trades: [],
+                        totalPnl: 0,
+                        winCount: 0,
+                        lossCount: 0,
+                        evenCount: 0
+                    };
+                }
+                
+                tradesByMonth[monthKey].trades.push(trade);
+                
+                // Calculate P&L
+                const pnl = parseFloat(trade.pnl);
+                if (!isNaN(pnl)) {
+                    tradesByMonth[monthKey].totalPnl += pnl;
+                }
+                
+                if (trade.result === 'WIN') tradesByMonth[monthKey].winCount++;
+                else if (trade.result === 'LOSS') tradesByMonth[monthKey].lossCount++;
+                else tradesByMonth[monthKey].evenCount++;
+            });
+            
+            // Sort months
+            const sortedMonths = Object.keys(tradesByMonth).sort((a, b) => b.localeCompare(a));
+            
+            // Build calendar HTML
+            let html = '';
+            
+            sortedMonths.forEach(monthKey => {
+                const monthData = tradesByMonth[monthKey];
+                const winRate = monthData.trades.length > 0 ? 
+                    Math.round((monthData.winCount / monthData.trades.length) * 100) : 0;
+                
+                // Color based on performance
+                let monthColor = monthData.totalPnl > 0 ? 'var(--success)' : 
+                                monthData.totalPnl < 0 ? 'var(--danger)' : 'var(--warning)';
+                
+                html += `
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--accent);">${monthData.display}</h3>
+                            <span style="background: ${monthData.totalPnl > 0 ? 'var(--light-success)' : 'var(--light-danger)'}; 
+                                  color: ${monthColor}; padding: 6px 12px; border-radius: 15px; font-weight: 700; border: 1px solid ${monthData.totalPnl > 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};">
+                                ${monthData.totalPnl > 0 ? '+' : ''}${monthData.totalPnl.toFixed(1)}%
+                            </span>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 700;">${monthData.trades.length}</div>
+                                <div style="color: #8892b0; font-size: 0.75rem;">Trades</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--success);">${monthData.winCount}</div>
+                                <div style="color: #8892b0; font-size: 0.75rem;">Wins</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--danger);">${monthData.lossCount}</div>
+                                <div style="color: #8892b0; font-size: 0.75rem;">Losses</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 700; color: ${winRate >= 60 ? 'var(--success)' : winRate >= 50 ? 'var(--warning)' : 'var(--danger)'};">${winRate}%</div>
+                                <div style="color: #8892b0; font-size: 0.75rem;">Win Rate</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Calendar grid with boxes -->
+                        <div style="margin-top: 15px;">
+                            <div style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 8px; font-weight: 500;">Daily Trade Activity</div>
+                            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;">
+                                ${generateCalendarBoxes(monthData.trades)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            calendarContainer.innerHTML = html;
+            
+            // Update summary stats
+            totalProfitDisplay.textContent = totalProfit > 0 ? '+' + totalProfit.toFixed(1) + '%' : totalProfit.toFixed(1) + '%';
+            totalTradesDisplay.textContent = maxConsecutive;
+            
+            // Update monthly breakdown
+            updateMonthlyBreakdown(tradesByMonth, sortedMonths);
+        }
+        
+        function generateCalendarBoxes(trades) {
+            let boxes = '';
+            const daysInMonth = 31; // Max days in a month
+            
+            // Create day array with day numbers
+            const dayResults = [];
+            for (let i = 1; i <= daysInMonth; i++) {
+                dayResults[i] = { result: null, pnl: null, pair: null };
+            }
+            
+            // Mark days with trades
+            trades.forEach(trade => {
+                const date = new Date(trade.date);
+                const day = date.getDate();
+                
+                if (day >= 1 && day <= daysInMonth) {
+                    dayResults[day] = {
+                        result: trade.result,
+                        pnl: parseFloat(trade.pnl) || 0,
+                        pair: trade.pair,
+                        grade: trade.grade
+                    };
+                }
+            });
+            
+            // Generate boxes for each day
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayData = dayResults[i];
+                let boxClass = 'day-empty';
+                let title = `Day ${i}: No trade`;
+                let displayText = i;
+                
+                if (dayData.result === 'WIN') {
+                    boxClass = 'day-win';
+                    title = `Day ${i}: WIN | ${dayData.pair} | ${dayData.grade} | P&L: ${dayData.pnl > 0 ? '+' : ''}${dayData.pnl}%`;
+                } else if (dayData.result === 'LOSS') {
+                    boxClass = 'day-loss';
+                    title = `Day ${i}: LOSS | ${dayData.pair} | ${dayData.grade} | P&L: ${dayData.pnl}%`;
+                } else if (dayData.result === 'BREAKEVEN') {
+                    boxClass = 'day-even';
+                    title = `Day ${i}: BREAKEVEN | ${dayData.pair} | ${dayData.grade}`;
+                }
+                
+                boxes += `
+                    <div class="calendar-day-box ${boxClass}" title="${title}">
+                        ${displayText}
+                    </div>
+                `;
+            }
+            
+            return boxes;
+        }
+        
+        function updateMonthlyBreakdown(tradesByMonth, sortedMonths) {
+            const monthlyBreakdown = document.getElementById('monthlyBreakdown');
+            
+            if (sortedMonths.length === 0) {
+                monthlyBreakdown.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div style="color: var(--accent); font-weight: 600; margin-bottom: 15px;">Monthly Breakdown</div>';
+            
+            sortedMonths.forEach(monthKey => {
+                const monthData = tradesByMonth[monthKey];
+                const avgPnlPerTrade = monthData.trades.length > 0 ? (monthData.totalPnl / monthData.trades.length).toFixed(2) : 0;
+                
+                html += `
+                    <div style="background: rgba(42, 59, 92, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600; color: var(--text);">${monthData.display}</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">${monthData.trades.length} trades | ${monthData.winCount}W/${monthData.lossCount}L/${monthData.evenCount}E</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: ${monthData.totalPnl > 0 ? 'var(--success)' : 'var(--danger)'};">${monthData.totalPnl > 0 ? '+' : ''}${monthData.totalPnl.toFixed(1)}%</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">Avg: ${avgPnlPerTrade > 0 ? '+' : ''}${avgPnlPerTrade}%</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            monthlyBreakdown.innerHTML = html;
+        }
+        
+        // ========== UTILITY FUNCTIONS ==========
+        function updateTradeCounts() {
+            document.getElementById('openTradesCount').textContent = openTrades.length;
+            document.getElementById('completedTradesCount').textContent = completedTrades.length;
+            document.getElementById('missedTradesCount').textContent = missedTrades.length;
+        }
+        
+        function updateStatsPage() {
+            const container = document.getElementById('statsContent');
+            
+            if (completedTrades.length === 0 && missedTrades.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 10px 0;">No Statistics Yet</h3>
+                        <p>Complete some trades to see your performance.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const totalTraded = completedTrades.length;
+            const totalMissed = missedTrades.length;
+            const totalSetups = totalTraded + totalMissed;
+            
+            const wins = completedTrades.filter(t => t.result === 'WIN').length;
+            const winRate = totalTraded > 0 ? Math.round((wins / totalTraded) * 100) : 0;
+            const missedRate = totalSetups > 0 ? Math.round((totalMissed / totalSetups) * 100) : 0;
+            
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0;">
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid var(--border);">
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--accent); margin: 10px 0;">${totalSetups}</div>
+                        <div style="color: #8892b0; font-size: 0.9rem;">Total Setups</div>
+                    </div>
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid var(--border);">
+                        <div style="font-size: 2rem; font-weight: 800; color: ${winRate >= 60 ? 'var(--success)' : winRate >= 50 ? 'var(--warning)' : 'var(--danger)'}; margin: 10px 0;">
+                            ${winRate}%
+                        </div>
+                        <div style="color: #8892b0; font-size: 0.9rem;">Win Rate (Traded)</div>
+                    </div>
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid var(--border);">
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--missed); margin: 10px 0;">
+                            ${totalMissed}
+                        </div>
+                        <div style="color: #8892b0; font-size: 0.9rem;">Missed Trades</div>
+                    </div>
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid var(--border);">
+                        <div style="font-size: 2rem; font-weight: 800; color: ${missedRate <= 30 ? 'var(--success)' : missedRate <= 50 ? 'var(--warning)' : 'var(--danger)'}; margin: 10px 0;">
+                            ${missedRate}%
+                        </div>
+                        <div style="color: #8892b0; font-size: 0.9rem;">Missed Rate</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function exportData() {
+            const allData = {
+                openTrades: openTrades,
+                completedTrades: completedTrades,
+                missedTrades: missedTrades,
+                stats: {
+                    totalSetups: completedTrades.length + missedTrades.length,
+                    traded: completedTrades.length,
+                    missed: missedTrades.length,
+                    wins: completedTrades.filter(t => t.result === 'WIN').length,
+                    exported: new Date().toISOString()
+                }
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            const exportName = `Sniper-Journal-${new Date().toISOString().slice(0,10)}.json`;
+            
+            const link = document.createElement('a');
+            link.href = dataUri;
+            link.download = exportName;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('📁 Exported to Files app');
+        }
+        
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1641,4 +1868,4 @@
         }
     </script>
 </body>
-</html>
+</html> 
