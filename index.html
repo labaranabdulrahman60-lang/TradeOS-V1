@@ -366,6 +366,12 @@
             font-weight: 600;
             margin: 2px;
             cursor: help;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         
         .day-win {
@@ -483,13 +489,13 @@
         
         <div id="journal-page" class="page">
             <div style="display: flex; background: var(--secondary); border-radius: 10px; margin-bottom: 20px; padding: 4px;">
-                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer; background:rgba(100, 255, 218, 0.1); color:var(--accent);" 
-                     onclick="showJournalTab('completed')" id="journal-tab-completed">
-                    Completed (<span id="completedTradesCount">0</span>)
-                </div>
-                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer;" 
+                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer; background:rgba(100,255,218,0.1); color:var(--accent);" 
                      onclick="showJournalTab('open')" id="journal-tab-open">
                     Open (<span id="openTradesCount">0</span>)
+                </div>
+                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer;" 
+                     onclick="showJournalTab('completed')" id="journal-tab-completed">
+                    Completed (<span id="completedTradesCount">0</span>)
                 </div>
                 <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer;" 
                      onclick="showJournalTab('missed')" id="journal-tab-missed">
@@ -497,21 +503,21 @@
                 </div>
             </div>
             
-            <div id="completed-trades-section">
-                <div id="completedTradesList"></div>
+            <div id="open-trades-section">
+                <div id="openTradesList"></div>
             </div>
             
-            <div id="open-trades-section" style="display:none;">
-                <div id="openTradesList"></div>
+            <div id="completed-trades-section" style="display:none;">
+                <div id="completedTradesList"></div>
             </div>
             
             <div id="missed-trades-section" style="display:none;">
                 <div id="missedTradesList"></div>
             </div>
             
-            <div id="emptyCompletedState" style="display:none; text-align:center; padding:40px; color:#8892b0;">
-                <i class="fas fa-book-open" style="font-size:3rem; opacity:0.5;"></i>
-                <h3>No Completed Trades</h3>
+            <div id="emptyOpenState" style="display:none; text-align:center; padding:40px; color:#8892b0;">
+                <i class="fas fa-clock" style="font-size:3rem; opacity:0.5;"></i>
+                <h3>No Open Trades</h3>
             </div>
         </div>
         
@@ -543,7 +549,7 @@
                         </div>
                         <div style="background:rgba(100,255,218,0.1); border-radius:12px; padding:15px;">
                             <div style="color:var(--accent); font-size:2rem; font-weight:800; text-align:center;" id="totalTradesDisplay">0</div>
-                            <div style="color:#8892b0; text-align:center;">A+ Trades</div>
+                            <div style="color:#8892b0; text-align:center;">Consecutive A+</div>
                         </div>
                     </div>
                     <div id="monthlyBreakdown" style="margin-top:20px;"></div>
@@ -674,43 +680,38 @@
             { id:14, date:"2026-02-16T18:09", pair:"GBPJPY", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.4", score:35, grade:"A+", session:"London/NY", notes:"Against daily flow" },
             { id:15, date:"2026-02-23T04:23", pair:"EURUSD", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.3", score:35, grade:"A+", session:"London", notes:"False confluences, emotional" },
             
-            // MAR 2026 - UPDATED WITH YOUR P&L
+            // MAR 2026 - UPDATED
             { id:16, date:"2026-03-03T09:30", pair:"EURUSD", dir:"SHORT", result:"LOSS", pnl:"-1.1%", rr:"1:2.3", score:34, grade:"A+", session:"London", notes:"First March trade" },
             { id:17, date:"2026-03-09T14:20", pair:"GBPUSD", dir:"SHORT", result:"WIN", pnl:"+2.33%", rr:"1:2.4", score:36, grade:"A+", session:"London/NY", notes:"Sharp reversal, perfect system" }
         ];
 
         // ========== DATA STORAGE ==========
-        let openTrades = [];
-        let completedTrades = [];
-        let missedTrades = [];
+        let openTrades = JSON.parse(localStorage.getItem('sniperOpenTrades') || '[]');
+        let completedTrades = JSON.parse(localStorage.getItem('sniperCompletedTrades') || '[]');
+        let missedTrades = JSON.parse(localStorage.getItem('sniperMissedTrades') || '[]');
         let currentGrade = { score: 0, grade: '-', action: '' };
         let currentTradeToClose = null;
 
         // ========== INIT ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // Load historical data
-            if (!localStorage.getItem('sniperCompletedTrades')) {
+            // Load historical trades if none exist
+            if (completedTrades.length === 0 && missedTrades.length === 0) {
                 completedTrades = [...historicalTrades];
                 localStorage.setItem('sniperCompletedTrades', JSON.stringify(completedTrades));
-            } else {
-                completedTrades = JSON.parse(localStorage.getItem('sniperCompletedTrades'));
             }
             
-            openTrades = JSON.parse(localStorage.getItem('sniperOpenTrades') || '[]');
-            missedTrades = JSON.parse(localStorage.getItem('sniperMissedTrades') || '[]');
-            
             createGradingSections();
+            calculateGrade();
+            
+            const now = new Date();
+            document.getElementById('tradeDate').value = now.toISOString().slice(0,16);
+            
             updateTradeCounts();
-            renderCompletedTrades();
             renderOpenTrades();
+            renderCompletedTrades();
             renderMissedTrades();
             updatePnLCalendar();
             updateStatsPage();
-            
-            // Set default date
-            const now = new Date();
-            const localDateTime = now.toISOString().slice(0,16);
-            document.getElementById('tradeDate').value = localDateTime;
             
             showToast(`📊 Loaded ${completedTrades.length} trades`);
         });
@@ -727,33 +728,33 @@
             if (page === 'stats') tabs[2].classList.add('active');
             if (page === 'pnlcalendar') tabs[3].classList.add('active');
             
-            if (page === 'journal') showJournalTab('completed');
+            if (page === 'journal') showJournalTab('open');
             if (page === 'stats') updateStatsPage();
             if (page === 'pnlcalendar') updatePnLCalendar();
         }
 
         function showJournalTab(tab) {
-            document.getElementById('completed-trades-section').style.display = 'none';
             document.getElementById('open-trades-section').style.display = 'none';
+            document.getElementById('completed-trades-section').style.display = 'none';
             document.getElementById('missed-trades-section').style.display = 'none';
             
-            document.getElementById('journal-tab-completed').style.background = 'transparent';
-            document.getElementById('journal-tab-completed').style.color = '#8892b0';
             document.getElementById('journal-tab-open').style.background = 'transparent';
             document.getElementById('journal-tab-open').style.color = '#8892b0';
+            document.getElementById('journal-tab-completed').style.background = 'transparent';
+            document.getElementById('journal-tab-completed').style.color = '#8892b0';
             document.getElementById('journal-tab-missed').style.background = 'transparent';
             document.getElementById('journal-tab-missed').style.color = '#8892b0';
             
-            if (tab === 'completed') {
-                document.getElementById('completed-trades-section').style.display = 'block';
-                document.getElementById('journal-tab-completed').style.background = 'rgba(100,255,218,0.1)';
-                document.getElementById('journal-tab-completed').style.color = 'var(--accent)';
-                renderCompletedTrades();
-            } else if (tab === 'open') {
+            if (tab === 'open') {
                 document.getElementById('open-trades-section').style.display = 'block';
                 document.getElementById('journal-tab-open').style.background = 'rgba(100,255,218,0.1)';
                 document.getElementById('journal-tab-open').style.color = 'var(--accent)';
                 renderOpenTrades();
+            } else if (tab === 'completed') {
+                document.getElementById('completed-trades-section').style.display = 'block';
+                document.getElementById('journal-tab-completed').style.background = 'rgba(100,255,218,0.1)';
+                document.getElementById('journal-tab-completed').style.color = 'var(--accent)';
+                renderCompletedTrades();
             } else {
                 document.getElementById('missed-trades-section').style.display = 'block';
                 document.getElementById('journal-tab-missed').style.background = 'rgba(100,255,218,0.1)';
@@ -966,9 +967,44 @@
         }
 
         // ========== RENDER ==========
+        function renderOpenTrades() {
+            const container = document.getElementById('openTradesList');
+            if (!openTrades.length) {
+                container.innerHTML = '';
+                document.getElementById('emptyOpenState').style.display = 'block';
+                return;
+            }
+            document.getElementById('emptyOpenState').style.display = 'none';
+            
+            let html = '';
+            openTrades.forEach(t => {
+                const d = new Date(t.date);
+                const dateStr = d.toLocaleDateString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+                html += `<div class="trade-card open-trade">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div><h3>${t.pair} • ${t.direction}</h3>
+                        <div style="display:flex; gap:8px; margin-top:5px;">
+                            <span style="background:rgba(100,255,218,0.15); color:var(--accent); padding:4px 10px; border-radius:12px;">OPEN</span>
+                            <span style="color:#8892b0;">${dateStr}</span>
+                        </div></div>
+                        <span style="background:rgba(100,255,218,0.2); color:var(--accent); padding:8px 14px; border-radius:15px;">${t.grade}</span>
+                    </div>
+                    <div style="margin:15px 0;">${t.action}</div>
+                    <div style="display:flex; gap:12px;">
+                        <button class="action-btn btn-win" onclick="openCloseTradeModal(${t.id})">WIN</button>
+                        <button class="action-btn btn-loss" onclick="openCloseTradeModal(${t.id})">LOSS</button>
+                        <button class="action-btn btn-even" onclick="openCloseTradeModal(${t.id})">BE</button>
+                        <button class="action-btn btn-missed" onclick="openCloseTradeModal(${t.id})">MISSED</button>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
         function renderCompletedTrades() {
+            const container = document.getElementById('completedTradesList');
             if (!completedTrades.length) {
-                document.getElementById('completedTradesList').innerHTML = '';
+                container.innerHTML = '';
                 return;
             }
             
@@ -995,37 +1031,15 @@
                     ${t.notes ? `<div style="border-top:1px solid var(--border); padding-top:10px; color:#a8b2d1;">${t.notes}</div>` : ''}
                 </div>`;
             });
-            document.getElementById('completedTradesList').innerHTML = html;
-        }
-
-        function renderOpenTrades() {
-            if (!openTrades.length) { document.getElementById('openTradesList').innerHTML = ''; return; }
-            let html = '';
-            openTrades.forEach(t => {
-                const d = new Date(t.date);
-                const dateStr = d.toLocaleDateString([], {month:'short', day:'numeric'});
-                html += `<div class="trade-card open-trade">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div><h3>${t.pair} • ${t.direction}</h3>
-                        <div style="display:flex; gap:8px; margin-top:5px;">
-                            <span style="background:rgba(100,255,218,0.15); color:var(--accent); padding:4px 10px; border-radius:12px;">OPEN</span>
-                            <span style="color:#8892b0;">${dateStr}</span>
-                        </div></div>
-                        <span style="background:rgba(100,255,218,0.2); color:var(--accent); padding:8px 14px; border-radius:15px;">${t.grade}</span>
-                    </div>
-                    <div style="margin:15px 0;">${t.action}</div>
-                    <div style="display:flex; gap:12px;">
-                        <button class="action-btn btn-win" onclick="openCloseTradeModal(${t.id})">WIN</button>
-                        <button class="action-btn btn-loss" onclick="openCloseTradeModal(${t.id})">LOSS</button>
-                        <button class="action-btn btn-even" onclick="openCloseTradeModal(${t.id})">BE</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('openTradesList').innerHTML = html;
+            container.innerHTML = html;
         }
 
         function renderMissedTrades() {
-            if (!missedTrades.length) { document.getElementById('missedTradesList').innerHTML = ''; return; }
+            const container = document.getElementById('missedTradesList');
+            if (!missedTrades.length) {
+                container.innerHTML = '';
+                return;
+            }
             let html = '';
             missedTrades.forEach(t => {
                 const d = new Date(t.date);
@@ -1042,7 +1056,7 @@
                     <div style="color:var(--missed); margin:10px 0;">No retest at ${t.targetLevel || 'entry'}</div>
                 </div>`;
             });
-            document.getElementById('missedTradesList').innerHTML = html;
+            container.innerHTML = html;
         }
 
         // ========== CALENDAR ==========
@@ -1052,85 +1066,164 @@
                 return;
             }
             
+            // Calculate total profit
             let totalProfit = 0;
-            let maxConsecutive = 0, current = 0;
-            
+            let consecutiveATrades = 0, maxConsecutive = 0;
             completedTrades.forEach(t => {
                 const pnl = parseFloat(t.pnl);
                 if (!isNaN(pnl)) totalProfit += pnl;
-                if (t.grade === 'A+' || t.grade === 'A++') { current++; maxConsecutive = Math.max(maxConsecutive, current); }
-                else current = 0;
+                if (t.grade === 'A+' || t.grade === 'A++') {
+                    consecutiveATrades++;
+                    maxConsecutive = Math.max(maxConsecutive, consecutiveATrades);
+                } else {
+                    consecutiveATrades = 0;
+                }
             });
             
             document.getElementById('totalProfitDisplay').textContent = (totalProfit > 0 ? '+' : '') + totalProfit.toFixed(1) + '%';
             document.getElementById('totalTradesDisplay').textContent = maxConsecutive;
             
             // Group by month
-            const months = {};
+            const tradesByMonth = {};
             completedTrades.forEach(t => {
                 const d = new Date(t.date);
-                const key = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0');
-                if (!months[key]) months[key] = { trades:[], totalPnl:0, wins:0, losses:0 };
-                months[key].trades.push(t);
+                const monthKey = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0');
+                if (!tradesByMonth[monthKey]) {
+                    tradesByMonth[monthKey] = {
+                        display: d.toLocaleDateString([], {month:'short', year:'numeric'}),
+                        trades: [],
+                        totalPnl: 0,
+                        winCount: 0,
+                        lossCount: 0,
+                        evenCount: 0
+                    };
+                }
+                tradesByMonth[monthKey].trades.push(t);
                 const pnl = parseFloat(t.pnl);
-                if (!isNaN(pnl)) months[key].totalPnl += pnl;
-                if (t.result === 'WIN') months[key].wins++;
-                else if (t.result === 'LOSS') months[key].losses++;
+                if (!isNaN(pnl)) tradesByMonth[monthKey].totalPnl += pnl;
+                if (t.result === 'WIN') tradesByMonth[monthKey].winCount++;
+                else if (t.result === 'LOSS') tradesByMonth[monthKey].lossCount++;
+                else tradesByMonth[monthKey].evenCount++;
             });
             
+            // Build calendar HTML
             let html = '';
-            Object.keys(months).sort().reverse().forEach(key => {
-                const m = months[key];
-                const monthName = new Date(key + '-01').toLocaleDateString([], {month:'short', year:'numeric'});
-                const winRate = m.trades.length ? Math.round((m.wins / m.trades.length)*100) : 0;
+            Object.keys(tradesByMonth).sort().reverse().forEach(key => {
+                const monthData = tradesByMonth[key];
+                const winRate = monthData.trades.length ? Math.round((monthData.winCount / monthData.trades.length)*100) : 0;
                 
-                html += `<div style="background:var(--card-bg); border-radius:12px; padding:20px; margin-bottom:20px;">
+                html += `<div style="background:var(--card-bg); border-radius:12px; padding:20px; margin-bottom:20px; border:1px solid var(--border);">
                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                        <h3 style="color:var(--accent);">${monthName}</h3>
-                        <span style="background:${m.totalPnl>0?'var(--light-success)':'var(--light-danger)'}; color:${m.totalPnl>0?'var(--success)':'var(--danger)'}; padding:6px 12px; border-radius:15px;">
-                            ${m.totalPnl>0?'+':''}${m.totalPnl.toFixed(1)}%
+                        <h3 style="color:var(--accent);">${monthData.display}</h3>
+                        <span style="background:${monthData.totalPnl>0?'var(--light-success)':'var(--light-danger)'}; color:${monthData.totalPnl>0?'var(--success)':'var(--danger)'}; padding:6px 12px; border-radius:15px;">
+                            ${monthData.totalPnl>0?'+':''}${monthData.totalPnl.toFixed(1)}%
                         </span>
                     </div>
+                    
                     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:15px;">
-                        <div style="text-align:center;"><div style="font-size:1.2rem;">${m.trades.length}</div><div style="color:#8892b0;">Trades</div></div>
-                        <div style="text-align:center;"><div style="color:var(--success); font-size:1.2rem;">${m.wins}</div><div style="color:#8892b0;">Wins</div></div>
-                        <div style="text-align:center;"><div style="color:var(--danger); font-size:1.2rem;">${m.losses}</div><div style="color:#8892b0;">Losses</div></div>
+                        <div style="text-align:center;"><div style="font-size:1.2rem;">${monthData.trades.length}</div><div style="color:#8892b0;">Trades</div></div>
+                        <div style="text-align:center;"><div style="color:var(--success); font-size:1.2rem;">${monthData.winCount}</div><div style="color:#8892b0;">Wins</div></div>
+                        <div style="text-align:center;"><div style="color:var(--danger); font-size:1.2rem;">${monthData.lossCount}</div><div style="color:#8892b0;">Losses</div></div>
                         <div style="text-align:center;"><div style="color:${winRate>=60?'var(--success)':winRate>=50?'var(--warning)':'var(--danger)'}; font-size:1.2rem;">${winRate}%</div><div style="color:#8892b0;">Win Rate</div></div>
+                    </div>
+                    
+                    <div>
+                        <div style="color:#94a3b8; margin-bottom:8px;">Daily Activity</div>
+                        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px;">
+                            ${generateCalendarBoxes(monthData.trades)}
+                        </div>
                     </div>
                 </div>`;
             });
             
             document.getElementById('pnlCalendarContainer').innerHTML = html;
+            updateMonthlyBreakdown(tradesByMonth);
+        }
+
+        function generateCalendarBoxes(trades) {
+            const daysInMonth = 31;
+            const dayResults = Array(daysInMonth+1).fill(null).map(() => ({ result: null, pnl: 0, pair: '', grade: '' }));
+            
+            trades.forEach(t => {
+                const d = new Date(t.date);
+                const day = d.getDate();
+                if (day >= 1 && day <= daysInMonth) {
+                    dayResults[day] = {
+                        result: t.result,
+                        pnl: parseFloat(t.pnl) || 0,
+                        pair: t.pair,
+                        grade: t.grade
+                    };
+                }
+            });
+            
+            let boxes = '';
+            for (let i = 1; i <= daysInMonth; i++) {
+                const day = dayResults[i];
+                let boxClass = 'day-empty';
+                let title = `Day ${i}: No trade`;
+                if (day.result === 'WIN') {
+                    boxClass = 'day-win';
+                    title = `Day ${i}: WIN | ${day.pair} | ${day.grade} | P&L: ${day.pnl>0?'+':''}${day.pnl}%`;
+                } else if (day.result === 'LOSS') {
+                    boxClass = 'day-loss';
+                    title = `Day ${i}: LOSS | ${day.pair} | ${day.grade} | P&L: ${day.pnl}%`;
+                } else if (day.result === 'BREAKEVEN') {
+                    boxClass = 'day-even';
+                    title = `Day ${i}: BREAKEVEN | ${day.pair} | ${day.grade}`;
+                }
+                boxes += `<div class="calendar-day-box ${boxClass}" title="${title}">${i}</div>`;
+            }
+            return boxes;
+        }
+
+        function updateMonthlyBreakdown(tradesByMonth) {
+            const monthlyBreakdown = document.getElementById('monthlyBreakdown');
+            if (!Object.keys(tradesByMonth).length) {
+                monthlyBreakdown.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div style="color:var(--accent); font-weight:600; margin-bottom:15px;">Monthly Breakdown</div>';
+            Object.keys(tradesByMonth).sort().reverse().forEach(key => {
+                const m = tradesByMonth[key];
+                const avgPnl = m.trades.length ? (m.totalPnl / m.trades.length).toFixed(2) : 0;
+                html += `<div style="background:rgba(42,59,92,0.3); border-radius:8px; padding:12px; margin-bottom:10px; display:flex; justify-content:space-between;">
+                    <div><div style="font-weight:600;">${m.display}</div><div style="color:#94a3b8;">${m.trades.length} trades</div></div>
+                    <div style="text-align:right;"><div style="color:${m.totalPnl>0?'var(--success)':'var(--danger)'};">${m.totalPnl>0?'+':''}${m.totalPnl.toFixed(1)}%</div><div style="color:#94a3b8;">Avg: ${avgPnl}%</div></div>
+                </div>`;
+            });
+            monthlyBreakdown.innerHTML = html;
         }
 
         // ========== STATS ==========
         function updateStatsPage() {
-            if (!completedTrades.length) {
+            if (!completedTrades.length && !missedTrades.length) {
                 document.getElementById('statsContent').innerHTML = '<div style="text-align:center; padding:40px;">No stats yet</div>';
                 return;
             }
             
+            const totalSetups = completedTrades.length + missedTrades.length;
             const wins = completedTrades.filter(t => t.result === 'WIN').length;
-            const losses = completedTrades.filter(t => t.result === 'LOSS').length;
-            const be = completedTrades.filter(t => t.result === 'BREAKEVEN').length;
-            const winRate = Math.round((wins / completedTrades.length) * 100);
+            const winRate = completedTrades.length ? Math.round((wins / completedTrades.length)*100) : 0;
+            const missedRate = totalSetups ? Math.round((missedTrades.length / totalSetups)*100) : 0;
             
             let html = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                 <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:var(--accent);">${completedTrades.length}</div>
-                    <div style="color:#8892b0;">Total Trades</div>
+                    <div style="font-size:2rem; color:var(--accent);">${totalSetups}</div>
+                    <div style="color:#8892b0;">Total Setups</div>
                 </div>
                 <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
                     <div style="font-size:2rem; color:${winRate>=60?'var(--success)':winRate>=50?'var(--warning)':'var(--danger)'};">${winRate}%</div>
                     <div style="color:#8892b0;">Win Rate</div>
                 </div>
                 <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:var(--success);">${wins}</div>
-                    <div style="color:#8892b0;">Wins</div>
+                    <div style="font-size:2rem; color:var(--missed);">${missedTrades.length}</div>
+                    <div style="color:#8892b0;">Missed</div>
                 </div>
                 <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:var(--danger);">${losses}</div>
-                    <div style="color:#8892b0;">Losses</div>
+                    <div style="font-size:2rem; color:${missedRate<=30?'var(--success)':missedRate<=50?'var(--warning)':'var(--danger)'};">${missedRate}%</div>
+                    <div style="color:#8892b0;">Missed Rate</div>
                 </div>
             </div>`;
             
@@ -1149,7 +1242,6 @@
                 openTrades, completedTrades, missedTrades,
                 exported: new Date().toISOString()
             };
-            
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1161,10 +1253,10 @@
         }
 
         function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
     </script>
 </body>
