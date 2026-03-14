@@ -339,6 +339,7 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 10px;
+            width: 100%;
         }
         
         .status-missed {
@@ -649,7 +650,10 @@
                 <textarea class="form-textarea" id="tradeNotes" rows="3"></textarea>
             </div>
             
-            <button class="btn btn-primary" onclick="saveTradeResult()">Save & Close</button>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="saveTradeResult()">Save & Close</button>
+                <button class="btn btn-danger" onclick="deleteOpenTrade()" id="deleteTradeBtn" style="display: none;">Delete</button>
+            </div>
             <button class="btn btn-secondary" onclick="closeModal('closeTradeModal')">Cancel</button>
         </div>
     </div>
@@ -680,7 +684,7 @@
             { id:14, date:"2026-02-16T18:09", pair:"GBPJPY", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.4", score:35, grade:"A+", session:"London/NY", notes:"Against daily flow" },
             { id:15, date:"2026-02-23T04:23", pair:"EURUSD", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.3", score:35, grade:"A+", session:"London", notes:"False confluences, emotional" },
             
-            // MAR 2026 - UPDATED
+            // MAR 2026
             { id:16, date:"2026-03-03T09:30", pair:"EURUSD", dir:"SHORT", result:"LOSS", pnl:"-1.1%", rr:"1:2.3", score:34, grade:"A+", session:"London", notes:"First March trade" },
             { id:17, date:"2026-03-09T14:20", pair:"GBPUSD", dir:"SHORT", result:"WIN", pnl:"+2.33%", rr:"1:2.4", score:36, grade:"A+", session:"London/NY", notes:"Sharp reversal, perfect system" }
         ];
@@ -926,6 +930,7 @@
             document.getElementById('tradeRR').value = '';
             document.getElementById('tradePnL').value = '';
             document.getElementById('tradeNotes').value = '';
+            document.getElementById('deleteTradeBtn').style.display = 'none'; // Hide delete button initially
             document.getElementById('closeTradeModal').style.display = 'block';
         }
 
@@ -961,6 +966,29 @@
             showToast(`✅ Trade closed as ${result}`);
         }
 
+        function deleteOpenTrade() {
+            if (!confirm('Delete this open trade? (Price never retested your level)')) {
+                return;
+            }
+            openTrades = openTrades.filter(t => t.id !== currentTradeToClose.id);
+            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
+            updateTradeCounts();
+            renderOpenTrades();
+            closeModal('closeTradeModal');
+            showToast(`🗑️ Trade deleted (No retest)`);
+        }
+
+        function deleteTrade(tradeId) {
+            if (!confirm('Delete this open trade? (Price never retested your level)')) {
+                return;
+            }
+            openTrades = openTrades.filter(t => t.id !== tradeId);
+            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
+            updateTradeCounts();
+            renderOpenTrades();
+            showToast(`🗑️ Trade deleted (No retest)`);
+        }
+
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
             if (id === 'closeTradeModal') currentTradeToClose = null;
@@ -990,12 +1018,15 @@
                         <span style="background:rgba(100,255,218,0.2); color:var(--accent); padding:8px 14px; border-radius:15px;">${t.grade}</span>
                     </div>
                     <div style="margin:15px 0;">${t.action}</div>
-                    <div style="display:flex; gap:12px;">
+                    <div style="display:flex; gap:12px; margin-bottom:10px;">
                         <button class="action-btn btn-win" onclick="openCloseTradeModal(${t.id})">WIN</button>
                         <button class="action-btn btn-loss" onclick="openCloseTradeModal(${t.id})">LOSS</button>
                         <button class="action-btn btn-even" onclick="openCloseTradeModal(${t.id})">BE</button>
                         <button class="action-btn btn-missed" onclick="openCloseTradeModal(${t.id})">MISSED</button>
                     </div>
+                    <button class="delete-btn" onclick="deleteTrade(${t.id})">
+                        <i class="fas fa-trash"></i> Delete (No Retest)
+                    </button>
                 </div>`;
             });
             container.innerHTML = html;
