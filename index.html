@@ -661,7 +661,7 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ========== HISTORICAL TRADES (COMPLETE) ==========
+        // ========== COMPLETE HISTORICAL TRADES (Dec 2025 - Mar 2026) ==========
         const historicalTrades = [
             // DEC 2025
             { id:1, date:"2025-12-10T01:20", pair:"XAUUSD", dir:"LONG", result:"WIN", pnl:"+2.5%", rr:"1:2.5", score:35, grade:"A+", session:"London/NY", notes:"HTF alignment masterpiece" },
@@ -684,9 +684,12 @@
             { id:14, date:"2026-02-16T18:09", pair:"GBPJPY", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.4", score:35, grade:"A+", session:"London/NY", notes:"Against daily flow" },
             { id:15, date:"2026-02-23T04:23", pair:"EURUSD", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.3", score:35, grade:"A+", session:"London", notes:"False confluences, emotional" },
             
-            // MAR 2026
+            // MAR 2026 - UPDATED WITH YOUR NEW TRADES
             { id:16, date:"2026-03-03T09:30", pair:"EURUSD", dir:"SHORT", result:"LOSS", pnl:"-1.1%", rr:"1:2.3", score:34, grade:"A+", session:"London", notes:"First March trade" },
-            { id:17, date:"2026-03-09T14:20", pair:"GBPUSD", dir:"SHORT", result:"WIN", pnl:"+2.33%", rr:"1:2.4", score:36, grade:"A+", session:"London/NY", notes:"Sharp reversal, perfect system" }
+            { id:17, date:"2026-03-09T14:20", pair:"GBPUSD", dir:"SHORT", result:"WIN", pnl:"+2.33%", rr:"1:2.4", score:36, grade:"A+", session:"London/NY", notes:"Sharp reversal, perfect system" },
+            { id:18, date:"2026-03-16T08:15", pair:"XAUUSD", dir:"SHORT", result:"WIN", pnl:"+2.54%", rr:"1:2.54", score:35, grade:"A+", session:"London", notes:"The pattern on sells side is strong H&S. See it, execute, set and forget." },
+            { id:19, date:"2026-03-23T10:45", pair:"BTCUSD", dir:"SHORT", result:"LOSS", pnl:"-1.2%", rr:"1:2.4", score:34, grade:"A+", session:"Other", notes:"BTC highly sensitive to sudden news. Iran/US peace talks spiked buys." },
+            { id:20, date:"2026-03-26T12:30", pair:"GBPJPY", dir:"LONG", result:"BREAKEVEN", pnl:"+1.4%", rr:"1:2", score:33, grade:"A+", session:"London", notes:"Got greedy, lost 2R, caught only 1R. Lesson learnt." }
         ];
 
         // ========== DATA STORAGE ==========
@@ -930,7 +933,7 @@
             document.getElementById('tradeRR').value = '';
             document.getElementById('tradePnL').value = '';
             document.getElementById('tradeNotes').value = '';
-            document.getElementById('deleteTradeBtn').style.display = 'none'; // Hide delete button initially
+            document.getElementById('deleteTradeBtn').style.display = 'none';
             document.getElementById('closeTradeModal').style.display = 'block';
         }
 
@@ -938,7 +941,7 @@
             const result = document.getElementById('tradeResult').value;
             if (!result) { showToast('⚠️ Select result'); return; }
             
-            if (result !== 'MISSED') {
+            if (result !== 'MISSED' && result !== 'BREAKEVEN') {
                 if (!document.getElementById('tradeRR').value) { showToast('⚠️ Enter R:R'); return; }
                 if (!document.getElementById('tradePnL').value) { showToast('⚠️ Enter P&L %'); return; }
             }
@@ -948,8 +951,9 @@
             
             const closedTrade = {
                 ...currentTradeToClose,
-                result, rr: document.getElementById('tradeRR').value || 'N/A',
-                pnl: document.getElementById('tradePnL').value || '0%',
+                result: result,
+                rr: document.getElementById('tradeRR').value || (result === 'BREAKEVEN' ? '1:0' : 'N/A'),
+                pnl: document.getElementById('tradePnL').value || (result === 'BREAKEVEN' ? '0%' : '0%'),
                 notes: document.getElementById('tradeNotes').value,
                 closedDate: document.getElementById('closeDate').value
             };
@@ -1097,7 +1101,6 @@
                 return;
             }
             
-            // Calculate total profit
             let totalProfit = 0;
             let consecutiveATrades = 0, maxConsecutive = 0;
             completedTrades.forEach(t => {
@@ -1114,7 +1117,6 @@
             document.getElementById('totalProfitDisplay').textContent = (totalProfit > 0 ? '+' : '') + totalProfit.toFixed(1) + '%';
             document.getElementById('totalTradesDisplay').textContent = maxConsecutive;
             
-            // Group by month
             const tradesByMonth = {};
             completedTrades.forEach(t => {
                 const d = new Date(t.date);
@@ -1137,11 +1139,11 @@
                 else tradesByMonth[monthKey].evenCount++;
             });
             
-            // Build calendar HTML
             let html = '';
             Object.keys(tradesByMonth).sort().reverse().forEach(key => {
                 const monthData = tradesByMonth[key];
-                const winRate = monthData.trades.length ? Math.round((monthData.winCount / monthData.trades.length)*100) : 0;
+                const totalTrades = monthData.trades.length;
+                const winRate = totalTrades ? Math.round((monthData.winCount / totalTrades) * 100) : 0;
                 
                 html += `<div style="background:var(--card-bg); border-radius:12px; padding:20px; margin-bottom:20px; border:1px solid var(--border);">
                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
@@ -1152,7 +1154,7 @@
                     </div>
                     
                     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:15px;">
-                        <div style="text-align:center;"><div style="font-size:1.2rem;">${monthData.trades.length}</div><div style="color:#8892b0;">Trades</div></div>
+                        <div style="text-align:center;"><div style="font-size:1.2rem;">${totalTrades}</div><div style="color:#8892b0;">Trades</div></div>
                         <div style="text-align:center;"><div style="color:var(--success); font-size:1.2rem;">${monthData.winCount}</div><div style="color:#8892b0;">Wins</div></div>
                         <div style="text-align:center;"><div style="color:var(--danger); font-size:1.2rem;">${monthData.lossCount}</div><div style="color:#8892b0;">Losses</div></div>
                         <div style="text-align:center;"><div style="color:${winRate>=60?'var(--success)':winRate>=50?'var(--warning)':'var(--danger)'}; font-size:1.2rem;">${winRate}%</div><div style="color:#8892b0;">Win Rate</div></div>
@@ -1236,8 +1238,10 @@
             
             const totalSetups = completedTrades.length + missedTrades.length;
             const wins = completedTrades.filter(t => t.result === 'WIN').length;
-            const winRate = completedTrades.length ? Math.round((wins / completedTrades.length)*100) : 0;
-            const missedRate = totalSetups ? Math.round((missedTrades.length / totalSetups)*100) : 0;
+            const losses = completedTrades.filter(t => t.result === 'LOSS').length;
+            const be = completedTrades.filter(t => t.result === 'BREAKEVEN').length;
+            const winRate = completedTrades.length ? Math.round((wins / completedTrades.length) * 100) : 0;
+            const missedRate = totalSetups ? Math.round((missedTrades.length / totalSetups) * 100) : 0;
             
             let html = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                 <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
@@ -1255,6 +1259,20 @@
                 <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
                     <div style="font-size:2rem; color:${missedRate<=30?'var(--success)':missedRate<=50?'var(--warning)':'var(--danger)'};">${missedRate}%</div>
                     <div style="color:#8892b0;">Missed Rate</div>
+                </div>
+            </div>
+            <div style="margin-top:20px; background:var(--card-bg); border-radius:12px; padding:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>Wins: ${wins}</span>
+                    <span>Losses: ${losses}</span>
+                    <span>Breakeven: ${be}</span>
+                </div>
+                <div style="background:rgba(42,59,92,0.5); border-radius:8px; height:8px; overflow:hidden;">
+                    <div style="width:${(wins/(wins+losses+be))*100}%; height:100%; background:var(--success);"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:8px; color:#8892b0;">
+                    <span>WIN</span>
+                    <span>LOSS/BE</span>
                 </div>
             </div>`;
             
