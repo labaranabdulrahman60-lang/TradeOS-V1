@@ -2,1311 +2,861 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>🎯 TradeOS - Complete History</title>
+    <title>🎯 TradeOS - Trading Journal</title>
     <style>
-        :root {
-            --primary: #0a192f;
-            --secondary: #172a45;
-            --accent: #64ffda;
-            --success: #4ade80;
-            --warning: #fbbf24;
-            --danger: #f87171;
-            --missed: #a78bfa;
-            --text: #ccd6f6;
-            --border: #2a3b5c;
-            --card-bg: #112240;
-            --light-success: rgba(74, 222, 128, 0.2);
-            --light-danger: rgba(248, 113, 113, 0.2);
-            --light-warning: rgba(251, 191, 36, 0.2);
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
-            background: var(--primary);
-            color: var(--text);
-            padding: 15px;
-            max-width: 800px;
+            background: #0a192f;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 16px;
+            padding-bottom: 32px;
+            color: #ccd6f6;
+            max-width: 700px;
             margin: 0 auto;
         }
-        
-        .app-header {
+
+        /* Header */
+        .header {
             text-align: center;
-            padding: 15px 0;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            padding: 16px 0 8px 0;
+            border-bottom: 1px solid #2a3b5c;
+            margin-bottom: 20px;
         }
-        
-        .app-title {
-            font-size: 1.4rem;
+        .header h1 {
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 5px;
+            color: #64ffda;
+            letter-spacing: -0.5px;
         }
-        
-        .app-subtitle {
+        .header p {
+            font-size: 0.75rem;
             color: #8892b0;
-            font-size: 0.8rem;
+            margin-top: 6px;
         }
-        
-        .nav-tabs {
+
+        /* Tabs */
+        .tabs {
             display: flex;
-            background: var(--secondary);
-            border-radius: 10px;
+            background: #172a45;
+            border-radius: 14px;
             margin-bottom: 20px;
             overflow: hidden;
         }
-        
-        .nav-tab {
+        .tab {
             flex: 1;
-            padding: 14px 5px;
             text-align: center;
-            color: #8892b0;
-            font-weight: 500;
+            padding: 12px 0;
             font-size: 0.8rem;
-            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #8892b0;
             cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
         }
-        
-        .nav-tab.active {
-            color: var(--accent);
-            border-bottom: 3px solid var(--accent);
-            background: rgba(100, 255, 218, 0.1);
+        .tab.active {
+            color: #64ffda;
+            background: rgba(100, 255, 218, 0.08);
+            border-bottom: 2px solid #64ffda;
         }
-        
+
+        /* Cards */
+        .card {
+            background: #112240;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a3b5c;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #64ffda;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Buttons */
         .btn {
-            padding: 16px 20px;
-            border-radius: 12px;
+            width: 100%;
+            padding: 14px;
             border: none;
+            border-radius: 14px;
             font-weight: 600;
             font-size: 1rem;
-            width: 100%;
-            margin-bottom: 12px;
-            display: block;
             cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
         }
-        
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--success));
+            background: linear-gradient(135deg, #64ffda, #4ade80);
             color: #0a192f;
         }
-        
         .btn-secondary {
-            background: var(--card-bg);
-            color: var(--text);
-            border: 1px solid var(--border);
+            background: #172a45;
+            color: #ccd6f6;
+            border: 1px solid #2a3b5c;
         }
-        
         .btn-danger {
-            background: var(--light-danger);
-            color: var(--danger);
+            background: rgba(248, 113, 113, 0.15);
+            color: #f87171;
             border: 1px solid rgba(248, 113, 113, 0.3);
         }
-        
-        .btn-missed {
-            background: rgba(167, 139, 250, 0.15);
-            color: var(--missed);
-            border: 1px solid rgba(167, 139, 250, 0.3);
-        }
-        
-        .checkbox-item {
+        .action-group {
             display: flex;
-            align-items: center;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            gap: 10px;
+            margin: 12px 0;
         }
-        
-        .checkbox-item input {
-            margin-right: 15px;
-            width: 22px;
-            height: 22px;
-            accent-color: var(--accent);
-        }
-        
-        .checkbox-item label {
+        .action-btn {
             flex: 1;
-            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+        }
+        .win-btn { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+        .loss-btn { background: rgba(248, 113, 113, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+        .be-btn { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+        .missed-btn { background: rgba(167, 139, 250, 0.15); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.3); }
+        .delete-small {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            width: 100%;
+            margin-top: 10px;
             cursor: pointer;
         }
-        
-        .points-badge {
-            background: var(--light-success);
-            color: var(--success);
+
+        /* Checkbox grid for grading */
+        .grade-section {
+            background: rgba(23, 42, 69, 0.6);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .grade-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a3b5c;
+        }
+        .grade-item:last-child { border-bottom: none; }
+        .grade-item input {
+            width: 22px;
+            height: 22px;
+            margin-right: 14px;
+            accent-color: #64ffda;
+        }
+        .grade-item label {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+        .points {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
             padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
             font-weight: 700;
-            margin-left: 8px;
         }
-        
-        .page {
-            display: none;
+        .session-select {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
         }
-        
-        .page.active {
-            display: block;
+        .session-option {
+            background: #112240;
+            border: 2px solid #2a3b5c;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
         }
-        
-        .modal-overlay {
+        .session-option.selected {
+            border-color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+        }
+        .grade-result {
+            text-align: center;
+            padding: 20px;
+            background: #0a192f;
+            border-radius: 16px;
+            margin-top: 16px;
+        }
+        .grade-badge {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+        .grade-Aplusplus { color: #4ade80; }
+        .grade-Aplus { color: #64ffda; }
+        .grade-A { color: #fbbf24; }
+        .grade-fail { color: #f87171; }
+
+        /* Trade Card */
+        .trade-item {
+            background: #112240;
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #2a3b5c;
+        }
+        .trade-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .trade-pair {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .trade-grade {
+            background: rgba(100, 255, 218, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #64ffda;
+        }
+        .trade-detail {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-bottom: 8px;
+        }
+        .trade-pnl {
+            font-weight: 700;
+        }
+        .win-text { color: #4ade80; }
+        .loss-text { color: #f87171; }
+        .be-text { color: #fbbf24; }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #0a192f;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #2a3b5c;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #8892b0;
+            margin-top: 4px;
+        }
+        .progress-bar {
+            background: #2a3b5c;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        .progress-fill {
+            background: #4ade80;
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+        }
+
+        /* Modal */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 25, 47, 0.95);
+            background: rgba(10, 25, 47, 0.96);
             z-index: 1000;
             padding: 20px;
             overflow-y: auto;
         }
-        
         .modal-content {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 25px;
+            background: #112240;
+            border-radius: 24px;
+            padding: 24px;
             max-width: 500px;
-            margin: 0 auto;
-            border: 1px solid var(--border);
+            margin: 40px auto;
+            border: 1px solid #2a3b5c;
         }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 0.9rem;
-        }
-        
-        .form-input, .form-select, .form-textarea {
+        input, select, textarea {
             width: 100%;
-            padding: 16px;
-            background: rgba(23, 42, 69, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 1rem;
-            margin-bottom: 15px;
+            padding: 14px;
+            background: #172a45;
+            border: 1px solid #2a3b5c;
+            border-radius: 12px;
+            color: #ccd6f6;
+            font-size: 0.9rem;
+            margin-bottom: 14px;
         }
-        
+        label {
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            display: block;
+            color: #8892b0;
+        }
         .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: var(--card-bg);
-            border: 1px solid var(--accent);
-            border-radius: 10px;
-            padding: 14px 20px;
-            color: var(--text);
+            background: #112240;
+            border: 1px solid #64ffda;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-size: 0.85rem;
             font-weight: 600;
-            z-index: 2000;
-            transition: transform 0.3s ease;
-            max-width: 90%;
-            text-align: center;
+            z-index: 1100;
+            transition: transform 0.2s;
+            white-space: nowrap;
         }
-        
         .toast.show {
             transform: translateX(-50%) translateY(0);
         }
-        
-        .quick-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .quick-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-        }
-        
-        .trade-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border);
-        }
-        
-        .open-trade {
-            border: 2px solid var(--accent);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { border-color: var(--accent); }
-            50% { border-color: rgba(100, 255, 218, 0.5); }
-            100% { border-color: var(--accent); }
-        }
-        
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-        
-        .btn-win {
-            background: var(--light-success);
-            color: var(--success);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-        }
-        
-        .btn-loss {
-            background: var(--light-danger);
-            color: var(--danger);
-            border: 1px solid rgba(248, 113, 113, 0.3);
-        }
-        
-        .btn-even {
-            background: var(--light-warning);
-            color: var(--warning);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-        
-        .session-option {
-            padding: 14px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 10px;
-            background: var(--card-bg);
-            cursor: pointer;
-        }
-        
-        .session-option.selected {
-            border-color: var(--accent);
-            background: rgba(100, 255, 218, 0.1);
-        }
-        
-        .grade-display {
-            text-align: center;
-            padding: 25px;
-            background: var(--card-bg);
-            border-radius: 16px;
-            margin-top: 25px;
-            border: 1px solid var(--border);
-        }
-        
-        .grade-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 15px 0;
-        }
-        
-        .grade-Aplusplus { color: var(--success); }
-        .grade-Aplus { color: var(--accent); }
-        .grade-A { color: var(--warning); }
-        .grade-Aminus { color: #ff6b00; }
-        .grade-fail { color: var(--danger); }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .delete-btn {
-            padding: 8px 16px;
-            background: var(--light-danger);
-            color: var(--danger);
-            border: 1px solid rgba(248, 113, 113, 0.3);
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-        
-        .status-missed {
-            background: rgba(167, 139, 250, 0.15);
-            color: var(--missed);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        
-        .missed-trade {
-            border: 2px dashed var(--missed);
-            opacity: 0.8;
-        }
-        
-        .calendar-day-box {
-            width: 26px;
-            height: 26px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin: 2px;
-            cursor: help;
-            transition: all 0.2s ease;
-        }
-        
-        .calendar-day-box:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        
-        .day-win {
-            background: var(--light-success);
-            color: var(--success);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-        }
-        
-        .day-loss {
-            background: var(--light-danger);
-            color: var(--danger);
-            border: 1px solid rgba(248, 113, 113, 0.3);
-        }
-        
-        .day-even {
-            background: var(--light-warning);
-            color: var(--warning);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-        
-        .day-empty {
-            background: rgba(42, 59, 92, 0.3);
-            color: #64748b;
-            border: 1px solid rgba(42, 59, 92, 0.5);
-        }
-        
-        .calendar-legend {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-        
-        .legend-box {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-        }
-        
-        .legend-win { background: var(--light-success); border: 1px solid rgba(74, 222, 128, 0.3); }
-        .legend-loss { background: var(--light-danger); border: 1px solid rgba(248, 113, 113, 0.3); }
-        .legend-even { background: var(--light-warning); border: 1px solid rgba(251, 191, 36, 0.3); }
-        .legend-empty { background: rgba(42, 59, 92, 0.3); border: 1px solid rgba(42, 59, 92, 0.5); }
+        .page { display: none; }
+        .page.active { display: block; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .mt-3 { margin-top: 16px; }
+        .mb-2 { margin-bottom: 8px; }
+        .text-center { text-align: center; }
+        .text-accent { color: #64ffda; }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="app-header">
-            <h1 class="app-title">🎯 TradeOS</h1>
-            <div class="app-subtitle">Dec 2025 • Jan • Feb • Mar 2026</div>
+
+<div class="header">
+    <h1>🎯 TradeOS</h1>
+    <p>Dec 2025 · Jan · Feb · Mar · Apr 2026</p>
+</div>
+
+<div class="tabs">
+    <div class="tab active" data-page="grade">📈 Grade</div>
+    <div class="tab" data-page="journal">📓 Journal</div>
+    <div class="tab" data-page="stats">📊 Stats</div>
+    <div class="tab" data-page="calendar">📅 Calendar</div>
+</div>
+
+<div class="page active" id="grade-page">
+    <div class="card">
+        <div class="card-title">
+            Setup Grading Matrix
+            <span style="background: rgba(100,255,218,0.1); padding: 4px 12px; border-radius: 20px;">Score: <span id="score-value">0</span>/50</span>
         </div>
-        
-        <div class="nav-tabs">
-            <div class="nav-tab active" onclick="showPage('grading')">
-                <i class="fas fa-chart-line"></i><br>Grade
-            </div>
-            <div class="nav-tab" onclick="showPage('journal')">
-                <i class="fas fa-book"></i><br>Journal
-            </div>
-            <div class="nav-tab" onclick="showPage('stats')">
-                <i class="fas fa-chart-bar"></i><br>Stats
-            </div>
-            <div class="nav-tab" onclick="showPage('pnlcalendar')">
-                <i class="fas fa-calendar-alt"></i><br>Calendar
-            </div>
+        <div id="grading-sections"></div>
+
+        <div class="session-select">
+            <div class="session-option" data-session="london">🇬🇧 London Open <span style="color:#64ffda;">+3</span></div>
+            <div class="session-option" data-session="overlap">🇺🇸 London/NY Overlap <span style="color:#64ffda;">+3</span></div>
         </div>
-        
-        <div class="quick-actions">
-            <div class="quick-btn" onclick="quickGrade()">
-                <i class="fas fa-bolt"></i> Reset
-            </div>
-            <div class="quick-btn" onclick="exportData()">
-                <i class="fas fa-download"></i> Export
-            </div>
-        </div>
-        
-        <div id="grading-page" class="page active">
-            <div style="background: var(--card-bg); border-radius: 16px; padding: 20px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    <h2 style="font-size: 1.2rem;">Setup Grading</h2>
-                    <div style="background: rgba(100, 255, 218, 0.1); padding: 8px 16px; border-radius: 20px; color: var(--accent);">
-                        Score: <span id="totalScore">0</span>/50
-                    </div>
-                </div>
-                
-                <div id="gradingSections"></div>
-                
-                <div class="grade-display">
-                    <div style="color: #8892b0;">SETUP GRADE</div>
-                    <div id="gradeValue" class="grade-value">-</div>
-                    <div id="actionMessage" style="color: var(--accent); margin: 15px 0;">
-                        Grade your setup
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="calculateGrade()">
-                        Calculate Grade
-                    </button>
-                    
-                    <button class="btn btn-secondary" onclick="showSaveTradeModal()">
-                        Save Graded Setup
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <div id="journal-page" class="page">
-            <div style="display: flex; background: var(--secondary); border-radius: 10px; margin-bottom: 20px; padding: 4px;">
-                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer; background:rgba(100,255,218,0.1); color:var(--accent);" 
-                     onclick="showJournalTab('open')" id="journal-tab-open">
-                    Open (<span id="openTradesCount">0</span>)
-                </div>
-                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer;" 
-                     onclick="showJournalTab('completed')" id="journal-tab-completed">
-                    Completed (<span id="completedTradesCount">0</span>)
-                </div>
-                <div style="flex:1; text-align:center; padding:12px; border-radius:8px; cursor:pointer;" 
-                     onclick="showJournalTab('missed')" id="journal-tab-missed">
-                    Missed (<span id="missedTradesCount">0</span>)
-                </div>
-            </div>
-            
-            <div id="open-trades-section">
-                <div id="openTradesList"></div>
-            </div>
-            
-            <div id="completed-trades-section" style="display:none;">
-                <div id="completedTradesList"></div>
-            </div>
-            
-            <div id="missed-trades-section" style="display:none;">
-                <div id="missedTradesList"></div>
-            </div>
-            
-            <div id="emptyOpenState" style="display:none; text-align:center; padding:40px; color:#8892b0;">
-                <i class="fas fa-clock" style="font-size:3rem; opacity:0.5;"></i>
-                <h3>No Open Trades</h3>
-            </div>
-        </div>
-        
-        <div id="stats-page" class="page">
-            <div style="background: var(--card-bg); border-radius: 16px; padding: 20px;">
-                <h2 style="font-size:1.2rem; margin-bottom:20px;">Performance Stats</h2>
-                <div id="statsContent"></div>
-            </div>
-        </div>
-        
-        <div id="pnlcalendar-page" class="page">
-            <div style="background: var(--card-bg); border-radius: 16px; padding: 20px;">
-                <h2 style="color:var(--accent); margin-bottom:20px;">P&L Calendar</h2>
-                
-                <div class="calendar-legend">
-                    <div class="legend-item"><div class="legend-box legend-win"></div><span>WIN</span></div>
-                    <div class="legend-item"><div class="legend-box legend-loss"></div><span>LOSS</span></div>
-                    <div class="legend-item"><div class="legend-box legend-even"></div><span>BE</span></div>
-                    <div class="legend-item"><div class="legend-box legend-empty"></div><span>No Trade</span></div>
-                </div>
-                
-                <div id="pnlCalendarContainer"></div>
-                
-                <div style="margin-top:30px;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                        <div style="background:var(--light-success); border-radius:12px; padding:15px;">
-                            <div style="color:var(--success); font-size:2rem; font-weight:800; text-align:center;" id="totalProfitDisplay">0.0%</div>
-                            <div style="color:#8892b0; text-align:center;">Total Profit</div>
-                        </div>
-                        <div style="background:rgba(100,255,218,0.1); border-radius:12px; padding:15px;">
-                            <div style="color:var(--accent); font-size:2rem; font-weight:800; text-align:center;" id="totalTradesDisplay">0</div>
-                            <div style="color:#8892b0; text-align:center;">Consecutive A+</div>
-                        </div>
-                    </div>
-                    <div id="monthlyBreakdown" style="margin-top:20px;"></div>
-                </div>
-            </div>
+
+        <div class="grade-result">
+            <div style="font-size:0.8rem; color:#8892b0;">SETUP GRADE</div>
+            <div class="grade-badge" id="grade-badge">-</div>
+            <div id="grade-action" style="color:#64ffda; font-size:0.9rem;">Grade your setup</div>
+            <button class="btn btn-primary" id="calc-grade-btn" style="margin-top: 16px;">📐 Calculate Grade</button>
+            <button class="btn btn-secondary" id="save-setup-btn">💾 Save Graded Setup</button>
         </div>
     </div>
-    
-    <!-- MODALS -->
-    <div id="saveTradeModal" class="modal-overlay">
-        <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; margin-bottom:25px;">
-                <h2 style="font-size:1.3rem;">Save Setup</h2>
-                <button onclick="closeModal('saveTradeModal')" style="background:none; border:none; color:#8892b0; font-size:1.8rem; cursor:pointer;">×</button>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Pair</label>
-                <input type="text" class="form-input" id="tradePair" placeholder="EURUSD">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Direction</label>
-                <select class="form-select" id="tradeDirection">
-                    <option value="LONG">LONG</option>
-                    <option value="SHORT">SHORT</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Entry</label>
-                <select class="form-select" id="entryType">
-                    <option value="LIMIT">Limit</option>
-                    <option value="MARKET">Market</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Target Level</label>
-                <input type="text" class="form-input" id="targetLevel" placeholder="1.08500">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Date/Time</label>
-                <input type="datetime-local" class="form-input" id="tradeDate">
-            </div>
-            
-            <div style="background:rgba(100,255,218,0.1); border-radius:12px; padding:15px; margin:20px 0;">
-                <div style="color:var(--accent); margin-bottom:5px;">Grade: <span id="modalGradeValue">-</span></div>
-                <div style="color:#8892b0;" id="modalScoreValue">Score: 0/50</div>
-            </div>
-            
-            <button class="btn btn-primary" onclick="saveGradedSetup()">Save Trade</button>
-            <button class="btn btn-secondary" onclick="closeModal('saveTradeModal')">Cancel</button>
-        </div>
+</div>
+
+<div class="page" id="journal-page">
+    <div class="tabs" style="margin-bottom: 16px; background: transparent; gap: 8px;">
+        <div class="tab-journal active" data-journal="open">📂 Open (<span id="open-count">0</span>)</div>
+        <div class="tab-journal" data-journal="completed">✅ Completed (<span id="completed-count">0</span>)</div>
+        <div class="tab-journal" data-journal="missed">🚫 Missed (<span id="missed-count">0</span>)</div>
     </div>
-    
-    <div id="closeTradeModal" class="modal-overlay">
-        <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; margin-bottom:25px;">
-                <h2 style="font-size:1.3rem;">Close Trade</h2>
-                <button onclick="closeModal('closeTradeModal')" style="background:none; border:none; color:#8892b0; font-size:1.8rem; cursor:pointer;">×</button>
-            </div>
-            
-            <div id="closeTradeInfo"></div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Result</label>
-                    <select class="form-select" id="tradeResult">
-                        <option value="">Select</option>
-                        <option value="WIN">WIN</option>
-                        <option value="LOSS">LOSS</option>
-                        <option value="BREAKEVEN">BE</option>
-                        <option value="MISSED">MISSED</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Close Date</label>
-                    <input type="datetime-local" class="form-input" id="closeDate">
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">R:R</label>
-                    <input type="text" class="form-input" id="tradeRR" placeholder="1:2.5">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">P&L %</label>
-                    <input type="text" class="form-input" id="tradePnL" placeholder="+2.5%">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Notes</label>
-                <textarea class="form-textarea" id="tradeNotes" rows="3"></textarea>
-            </div>
-            
-            <div style="display: flex; gap: 12px;">
-                <button class="btn btn-primary" onclick="saveTradeResult()">Save & Close</button>
-                <button class="btn btn-danger" onclick="deleteOpenTrade()" id="deleteTradeBtn" style="display: none;">Delete</button>
-            </div>
-            <button class="btn btn-secondary" onclick="closeModal('closeTradeModal')">Cancel</button>
-        </div>
+    <div id="open-trades-list"></div>
+    <div id="completed-trades-list" style="display: none;"></div>
+    <div id="missed-trades-list" style="display: none;"></div>
+    <div id="empty-state" style="text-align:center; padding:40px; color:#8892b0;">No trades yet</div>
+</div>
+
+<div class="page" id="stats-page">
+    <div class="card">
+        <div class="card-title">📈 Performance Stats</div>
+        <div id="stats-content"></div>
+        <button class="btn btn-secondary" id="export-btn" style="margin-top: 16px;">📁 Export Data</button>
     </div>
-    
-    <div class="toast" id="toast"></div>
+</div>
 
-    <script>
-        // ========== COMPLETE HISTORICAL TRADES (Dec 2025 - Mar 2026) ==========
-        const historicalTrades = [
-            // DEC 2025
-            { id:1, date:"2025-12-10T01:20", pair:"XAUUSD", dir:"LONG", result:"WIN", pnl:"+2.5%", rr:"1:2.5", score:35, grade:"A+", session:"London/NY", notes:"HTF alignment masterpiece" },
-            { id:2, date:"2025-12-11T05:56", pair:"EURUSD", dir:"LONG", result:"WIN", pnl:"0%", rr:"1:2.2", score:35, grade:"A+", session:"London", notes:"No retest to AOI" },
-            { id:3, date:"2025-12-17T23:02", pair:"GBPJPY", dir:"LONG", result:"WIN", pnl:"+2.3%", rr:"1:2.3", score:33, grade:"A+", session:"London", notes:"All HTF aligned, smooth" },
-            { id:4, date:"2025-12-17T11:05", pair:"GBPUSD", dir:"SHORT", result:"LOSS", pnl:"-1%", rr:"1:2.2", score:33, grade:"A+", session:"London/NY", notes:"Against daily bias" },
-            { id:5, date:"2025-12-29T00:23", pair:"GBPUSD", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.4", score:35, grade:"A+", session:"London", notes:"Almost forced this trade" },
-            
-            // JAN 2026
-            { id:6, date:"2026-01-05T06:23", pair:"XAUUSD", dir:"LONG", result:"WIN", pnl:"+2.7%", rr:"1:2.7", score:33, grade:"A+", session:"London", notes:"Masterpiece - all HTF aligned" },
-            { id:7, date:"2026-01-07T00:24", pair:"GBPJPY", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.4", score:33, grade:"A+", session:"London", notes:"Weekly said otherwise" },
-            { id:8, date:"2026-01-14T11:36", pair:"EURUSD", dir:"SHORT", result:"WIN", pnl:"+2.4%", rr:"1:2.4", score:33, grade:"A+", session:"London", notes:"H&S perfect, process focus" },
-            { id:9, date:"2026-01-19T01:26", pair:"EURUSD", dir:"SHORT", result:"LOSS", pnl:"-1.3%", rr:"1:2.5", score:35, grade:"A+", session:"London", notes:"Right decision, market wrong" },
-            { id:10, date:"2026-01-22T09:10", pair:"EURUSD", dir:"LONG", result:"WIN", pnl:"+2.3%", rr:"1:2.3", score:36, grade:"A+", session:"London", notes:"Discipline = profit" },
-            { id:11, date:"2026-01-26T00:23", pair:"BTCUSD", dir:"SHORT", result:"BREAKEVEN", pnl:"-0.7%", rr:"1:2.7", score:36, grade:"A+", session:"Other", notes:"BTC driven by economics" },
-            
-            // FEB 2026
-            { id:12, date:"2026-02-04T07:12", pair:"EURUSD", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.7", score:35, grade:"A+", session:"London", notes:"Geopolitical, CPI news" },
-            { id:13, date:"2026-02-11T18:18", pair:"USDCHF", dir:"SHORT", result:"BREAKEVEN", pnl:"0%", rr:"1:2.3", score:34, grade:"A+", session:"London/NY", notes:"Reversed to BE, move on" },
-            { id:14, date:"2026-02-16T18:09", pair:"GBPJPY", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.4", score:35, grade:"A+", session:"London/NY", notes:"Against daily flow" },
-            { id:15, date:"2026-02-23T04:23", pair:"EURUSD", dir:"LONG", result:"LOSS", pnl:"-1%", rr:"1:2.3", score:35, grade:"A+", session:"London", notes:"False confluences, emotional" },
-            
-            // MAR 2026 - UPDATED WITH YOUR NEW TRADES
-            { id:16, date:"2026-03-03T09:30", pair:"EURUSD", dir:"SHORT", result:"LOSS", pnl:"-1.1%", rr:"1:2.3", score:34, grade:"A+", session:"London", notes:"First March trade" },
-            { id:17, date:"2026-03-09T14:20", pair:"GBPUSD", dir:"SHORT", result:"WIN", pnl:"+2.33%", rr:"1:2.4", score:36, grade:"A+", session:"London/NY", notes:"Sharp reversal, perfect system" },
-            { id:18, date:"2026-03-16T08:15", pair:"XAUUSD", dir:"SHORT", result:"WIN", pnl:"+2.54%", rr:"1:2.54", score:35, grade:"A+", session:"London", notes:"The pattern on sells side is strong H&S. See it, execute, set and forget." },
-            { id:19, date:"2026-03-23T10:45", pair:"BTCUSD", dir:"SHORT", result:"LOSS", pnl:"-1.2%", rr:"1:2.4", score:34, grade:"A+", session:"Other", notes:"BTC highly sensitive to sudden news. Iran/US peace talks spiked buys." },
-            { id:20, date:"2026-03-26T12:30", pair:"GBPJPY", dir:"LONG", result:"BREAKEVEN", pnl:"+1.4%", rr:"1:2", score:33, grade:"A+", session:"London", notes:"Got greedy, lost 2R, caught only 1R. Lesson learnt." }
-        ];
+<div class="page" id="calendar-page">
+    <div class="card">
+        <div class="card-title">📅 P&L Calendar</div>
+        <div id="calendar-content"></div>
+    </div>
+</div>
 
-        // ========== DATA STORAGE ==========
-        let openTrades = JSON.parse(localStorage.getItem('sniperOpenTrades') || '[]');
-        let completedTrades = JSON.parse(localStorage.getItem('sniperCompletedTrades') || '[]');
-        let missedTrades = JSON.parse(localStorage.getItem('sniperMissedTrades') || '[]');
-        let currentGrade = { score: 0, grade: '-', action: '' };
-        let currentTradeToClose = null;
+<!-- MODAL: Save Trade -->
+<div id="save-modal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 16px;">Save Graded Setup</h3>
+        <input type="text" id="trade-pair" placeholder="EURUSD" autocomplete="off">
+        <select id="trade-direction"><option>LONG</option><option>SHORT</option></select>
+        <select id="trade-entry"><option>LIMIT</option><option>MARKET</option></select>
+        <input type="text" id="trade-target" placeholder="Target level (e.g., 4H H&S)">
+        <input type="datetime-local" id="trade-datetime">
+        <div style="background:#172a45; border-radius:12px; padding:12px; margin:12px 0;">
+            <div>Grade: <strong id="modal-grade">-</strong> | Score: <span id="modal-score">0</span>/50</div>
+            <div id="modal-action" style="font-size:0.8rem; color:#64ffda;"></div>
+        </div>
+        <button class="btn btn-primary" id="confirm-save-btn">✅ Save Trade</button>
+        <button class="btn btn-secondary" onclick="closeModal('save-modal')">Cancel</button>
+    </div>
+</div>
 
-        // ========== INIT ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load historical trades if none exist
-            if (completedTrades.length === 0 && missedTrades.length === 0) {
-                completedTrades = [...historicalTrades];
-                localStorage.setItem('sniperCompletedTrades', JSON.stringify(completedTrades));
-            }
-            
-            createGradingSections();
-            calculateGrade();
-            
-            const now = new Date();
-            document.getElementById('tradeDate').value = now.toISOString().slice(0,16);
-            
-            updateTradeCounts();
-            renderOpenTrades();
-            renderCompletedTrades();
-            renderMissedTrades();
-            updatePnLCalendar();
-            updateStatsPage();
-            
-            showToast(`📊 Loaded ${completedTrades.length} trades`);
+<!-- MODAL: Close Trade -->
+<div id="close-modal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 16px;">Close Trade</h3>
+        <div id="close-info" style="background:#172a45; border-radius:12px; padding:12px; margin-bottom:16px;"></div>
+        <select id="close-result">
+            <option value="">Select result</option>
+            <option value="WIN">✅ WIN</option>
+            <option value="LOSS">❌ LOSS</option>
+            <option value="BREAKEVEN">⚖️ BREAKEVEN</option>
+            <option value="MISSED">🚫 MISSED (No retest)</option>
+        </select>
+        <input type="datetime-local" id="close-datetime">
+        <input type="text" id="close-rr" placeholder="Risk:Reward (e.g., 1:2.5)">
+        <input type="text" id="close-pnl" placeholder="P&L % (e.g., +2.5% or -1%)">
+        <textarea id="close-notes" rows="2" placeholder="Notes / Lesson learned..."></textarea>
+        <button class="btn btn-primary" id="confirm-close-btn">💾 Save & Close</button>
+        <button class="btn btn-secondary" onclick="closeModal('close-modal')">Cancel</button>
+    </div>
+</div>
+
+<div class="toast" id="toastMsg">📁 Exported</div>
+
+<script>
+    // ==================== DATA ====================
+    let openTrades = JSON.parse(localStorage.getItem('tradeos_open') || '[]');
+    let completedTrades = JSON.parse(localStorage.getItem('tradeos_completed') || '[]');
+    let missedTrades = JSON.parse(localStorage.getItem('tradeos_missed') || '[]');
+
+    // Historical trades (only if empty)
+    const historicalTrades = [
+        { id: 1, date: "2025-12-10T01:20", pair: "XAUUSD", dir: "LONG", result: "WIN", pnl: "+2.5%", rr: "1:2.5", grade: "A+", notes: "HTF alignment masterpiece" },
+        { id: 2, date: "2025-12-11T05:56", pair: "EURUSD", dir: "LONG", result: "WIN", pnl: "0%", rr: "1:2.2", grade: "A+", notes: "No retest to AOI" },
+        { id: 3, date: "2025-12-17T23:02", pair: "GBPJPY", dir: "LONG", result: "WIN", pnl: "+2.3%", rr: "1:2.3", grade: "A+", notes: "All HTF aligned" },
+        { id: 4, date: "2025-12-17T11:05", pair: "GBPUSD", dir: "SHORT", result: "LOSS", pnl: "-1%", rr: "1:2.2", grade: "A+", notes: "Against daily bias" },
+        { id: 5, date: "2025-12-29T00:23", pair: "GBPUSD", dir: "LONG", result: "LOSS", pnl: "-1%", rr: "1:2.4", grade: "A+", notes: "Almost forced" },
+        { id: 6, date: "2026-01-05T06:23", pair: "XAUUSD", dir: "LONG", result: "WIN", pnl: "+2.7%", rr: "1:2.7", grade: "A+", notes: "Masterpiece" },
+        { id: 7, date: "2026-01-07T00:24", pair: "GBPJPY", dir: "LONG", result: "LOSS", pnl: "-1%", rr: "1:2.4", grade: "A+", notes: "Weekly said otherwise" },
+        { id: 8, date: "2026-01-14T11:36", pair: "EURUSD", dir: "SHORT", result: "WIN", pnl: "+2.4%", rr: "1:2.4", grade: "A+", notes: "H&S perfect" },
+        { id: 9, date: "2026-01-19T01:26", pair: "EURUSD", dir: "SHORT", result: "LOSS", pnl: "-1.3%", rr: "1:2.5", grade: "A+", notes: "Right decision" },
+        { id: 10, date: "2026-01-22T09:10", pair: "EURUSD", dir: "LONG", result: "WIN", pnl: "+2.3%", rr: "1:2.3", grade: "A+", notes: "Discipline = profit" },
+        { id: 11, date: "2026-01-26T00:23", pair: "BTCUSD", dir: "SHORT", result: "BREAKEVEN", pnl: "-0.7%", rr: "1:2.7", grade: "A+", notes: "BTC driven by economics" },
+        { id: 12, date: "2026-02-04T07:12", pair: "EURUSD", dir: "LONG", result: "LOSS", pnl: "-1%", rr: "1:2.7", grade: "A+", notes: "CPI news" },
+        { id: 13, date: "2026-02-11T18:18", pair: "USDCHF", dir: "SHORT", result: "BREAKEVEN", pnl: "0%", rr: "1:2.3", grade: "A+", notes: "Reversed to BE" },
+        { id: 14, date: "2026-02-16T18:09", pair: "GBPJPY", dir: "LONG", result: "LOSS", pnl: "-1%", rr: "1:2.4", grade: "A+", notes: "Against daily flow" },
+        { id: 15, date: "2026-02-23T04:23", pair: "EURUSD", dir: "LONG", result: "LOSS", pnl: "-1%", rr: "1:2.3", grade: "A+", notes: "Emotional" },
+        { id: 16, date: "2026-03-03T09:30", pair: "EURUSD", dir: "SHORT", result: "LOSS", pnl: "-1.1%", rr: "1:2.3", grade: "A+", notes: "First March trade" },
+        { id: 17, date: "2026-03-09T14:20", pair: "GBPUSD", dir: "SHORT", result: "WIN", pnl: "+2.33%", rr: "1:2.4", grade: "A+", notes: "Sharp reversal" },
+        { id: 18, date: "2026-03-16T08:15", pair: "XAUUSD", dir: "SHORT", result: "WIN", pnl: "+2.54%", rr: "1:2.54", grade: "A+", notes: "H&S strong" },
+        { id: 19, date: "2026-03-23T10:45", pair: "BTCUSD", dir: "SHORT", result: "LOSS", pnl: "-1.2%", rr: "1:2.4", grade: "A+", notes: "News sensitive" },
+        { id: 20, date: "2026-03-26T12:30", pair: "GBPJPY", dir: "LONG", result: "BREAKEVEN", pnl: "+1.4%", rr: "1:2", grade: "A+", notes: "Got greedy" },
+        { id: 21, date: "2026-03-30T09:00", pair: "EURUSD", dir: "SHORT", result: "MISSED", pnl: "0%", rr: "N/A", grade: "A+", notes: "No retest" },
+        { id: 22, date: "2026-04-01T10:30", pair: "XAUUSD", dir: "LONG", result: "BREAKEVEN", pnl: "+0.07%", rr: "1:2.5", grade: "A+", notes: "Normal day" },
+        { id: 23, date: "2026-04-07T14:15", pair: "GBPJPY", dir: "LONG", result: "WIN", pnl: "+2.3%", rr: "1:2.3", grade: "A+", notes: "H&S strong" }
+    ];
+
+    if (completedTrades.length === 0 && missedTrades.length === 0) {
+        const completed = historicalTrades.filter(t => t.result !== 'MISSED');
+        const missed = historicalTrades.filter(t => t.result === 'MISSED');
+        completedTrades = completed.map(t => ({ ...t, closedDate: t.date }));
+        missedTrades = missed;
+        saveAll();
+    }
+
+    let currentGrade = { score: 0, grade: 'FAIL', action: 'Grade your setup' };
+    let currentCloseTrade = null;
+    let currentGradeScore = 0;
+
+    // Helper functions
+    function saveAll() {
+        localStorage.setItem('tradeos_open', JSON.stringify(openTrades));
+        localStorage.setItem('tradeos_completed', JSON.stringify(completedTrades));
+        localStorage.setItem('tradeos_missed', JSON.stringify(missedTrades));
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toastMsg');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // ==================== GRADING SYSTEM ====================
+    const gradingItems = [
+        { section: "Weekly", items: [
+            { id: "weekly_trend", label: "Clear Weekly Trend (HH/HL or LL/LH)", points: 2 },
+            { id: "weekly_key", label: "Weekly Key Level with Rejection", points: 2 },
+            { id: "weekly_ema", label: "Weekly EMA Respect", points: 2 },
+            { id: "weekly_pattern", label: "Weekly Pattern (H&S, Double)", points: 2 }
+        ]},
+        { section: "Daily", items: [
+            { id: "daily_alignment", label: "Daily aligns with Weekly", points: 2 },
+            { id: "daily_key", label: "Daily Key Level", points: 2 },
+            { id: "daily_ema", label: "Daily EMA Rejection", points: 2 },
+            { id: "daily_pattern", label: "Daily Pattern", points: 2 }
+        ]},
+        { section: "4H Engine", items: [
+            { id: "h4_trend", label: "4H Clear Trend", points: 3 },
+            { id: "h4_bos", label: "Perfect 4H BOS", points: 4 },
+            { id: "h4_pattern", label: "Strong 4H Pattern", points: 3 },
+            { id: "h4_key", label: "4H Key Level", points: 2 },
+            { id: "h4_ema", label: "4H EMA Alignment", points: 3 }
+        ]},
+        { section: "Entry", items: [
+            { id: "h1_trend", label: "1H aligns with 4H", points: 2 },
+            { id: "h1_ema", label: "1H EMA Rejection", points: 2 },
+            { id: "m15_aoi", label: "15M AOI (Order Block)", points: 2 },
+            { id: "m15_overlap", label: "15M overlaps 4H", points: 2 }
+        ]}
+    ];
+
+    function buildGradingUI() {
+        let html = '';
+        gradingItems.forEach(section => {
+            html += `<div class="grade-section"><div class="flex-between"><strong>${section.section}</strong><span style="color:#8892b0;">${section.items.reduce((s,i)=>s+i.points,0)} pts</span></div>`;
+            section.items.forEach(item => {
+                html += `<div class="grade-item">
+                    <input type="checkbox" id="${item.id}" data-points="${item.points}">
+                    <label>${item.label}</label>
+                    <span class="points">+${item.points}</span>
+                </div>`;
+            });
+            html += `</div>`;
         });
+        html += `<div class="grade-section">
+            <div class="grade-item"><input type="checkbox" id="no_news" data-points="2"><label>No Major News (>1 hour)</label><span class="points">+2</span></div>
+            <div class="grade-item"><input type="checkbox" id="bonus_triple" data-points="2"><label>Weekly+Daily+4H Alignment</label><span class="points">+2</span></div>
+        </div>`;
+        document.getElementById('grading-sections').innerHTML = html;
+        document.querySelectorAll('.grade-item input').forEach(cb => cb.addEventListener('change', calculateGrade));
+    }
 
-        // ========== PAGE NAV ==========
-        function showPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(page + '-page').classList.add('active');
-            
-            const tabs = document.querySelectorAll('.nav-tab');
-            if (page === 'grading') tabs[0].classList.add('active');
-            if (page === 'journal') tabs[1].classList.add('active');
-            if (page === 'stats') tabs[2].classList.add('active');
-            if (page === 'pnlcalendar') tabs[3].classList.add('active');
-            
-            if (page === 'journal') showJournalTab('open');
-            if (page === 'stats') updateStatsPage();
-            if (page === 'pnlcalendar') updatePnLCalendar();
+    function calculateGrade() {
+        let score = 0;
+        document.querySelectorAll('.grade-item input:checked').forEach(cb => {
+            score += parseInt(cb.dataset.points) || 0;
+        });
+        const session = document.querySelector('.session-option.selected');
+        if (session && session.dataset.session === 'london') score += 3;
+        if (session && session.dataset.session === 'overlap') score += 3;
+
+        document.getElementById('score-value').innerText = score;
+        currentGradeScore = score;
+
+        let grade, action;
+        if (score >= 40) { grade = 'A++'; action = '🎯 FULL POSITION (1% risk)'; }
+        else if (score >= 33) { grade = 'A+'; action = '✅ NORMAL POSITION (0.75-1%)'; }
+        else if (score >= 26) { grade = 'A'; action = '⚠️ REDUCED SIZE (0.5%)'; }
+        else if (score >= 20) { grade = 'A-'; action = '❌ AVOID / PAPER TRADE'; }
+        else { grade = 'FAIL'; action = '🚫 NO TRADE'; }
+
+        document.getElementById('grade-badge').innerHTML = grade;
+        document.getElementById('grade-action').innerHTML = action;
+        document.getElementById('grade-badge').className = `grade-badge grade-${grade.replace('+', 'plus').replace('-', 'minus')}`;
+        currentGrade = { score, grade, action };
+    }
+
+    function selectSession(el) {
+        document.querySelectorAll('.session-option').forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+        calculateGrade();
+    }
+
+    // ==================== SAVE TRADE MODAL ====================
+    function showSaveModal() {
+        if (currentGradeScore === 0) { showToast('⚠️ Grade your setup first'); return; }
+        document.getElementById('modal-grade').innerText = currentGrade.grade;
+        document.getElementById('modal-score').innerText = currentGradeScore;
+        document.getElementById('modal-action').innerHTML = currentGrade.action;
+        document.getElementById('trade-datetime').value = new Date().toISOString().slice(0,16);
+        document.getElementById('trade-pair').value = '';
+        document.getElementById('trade-direction').value = 'LONG';
+        document.getElementById('trade-entry').value = 'LIMIT';
+        document.getElementById('trade-target').value = '';
+        document.getElementById('save-modal').style.display = 'block';
+    }
+
+    function saveGradedSetup() {
+        const pair = document.getElementById('trade-pair').value.trim().toUpperCase();
+        if (!pair || !pair.match(/^[A-Z]{6}$/)) { showToast('⚠️ Enter valid pair (EURUSD)'); return; }
+        const sessionSelected = document.querySelector('.session-option.selected');
+        const session = sessionSelected ? (sessionSelected.dataset.session === 'london' ? 'London Open' : 'London/NY Overlap') : 'Other';
+        const trade = {
+            id: Date.now(),
+            date: document.getElementById('trade-datetime').value || new Date().toISOString(),
+            pair, direction: document.getElementById('trade-direction').value,
+            entryType: document.getElementById('trade-entry').value,
+            targetLevel: document.getElementById('trade-target').value || 'Key Level',
+            grade: currentGrade.grade, score: currentGradeScore,
+            action: currentGrade.action, session,
+            status: 'OPEN'
+        };
+        openTrades.unshift(trade);
+        saveAll();
+        renderOpenTrades();
+        updateCounts();
+        closeModal('save-modal');
+        showToast(`✅ ${pair} saved as ${trade.grade}`);
+        // Reset grading
+        document.querySelectorAll('.grade-item input:checked').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.session-option').forEach(opt => opt.classList.remove('selected'));
+        calculateGrade();
+    }
+
+    // ==================== CLOSE TRADE ====================
+    function openCloseModal(trade) {
+        currentCloseTrade = trade;
+        const info = `${trade.pair} • ${trade.direction}<br>Opened: ${new Date(trade.date).toLocaleString()}<br>Grade: ${trade.grade} (${trade.score})<br>${trade.action}`;
+        document.getElementById('close-info').innerHTML = info;
+        document.getElementById('close-datetime').value = new Date().toISOString().slice(0,16);
+        document.getElementById('close-result').value = '';
+        document.getElementById('close-rr').value = '';
+        document.getElementById('close-pnl').value = '';
+        document.getElementById('close-notes').value = '';
+        document.getElementById('close-modal').style.display = 'block';
+    }
+
+    function saveCloseResult() {
+        const result = document.getElementById('close-result').value;
+        if (!result) { showToast('⚠️ Select result'); return; }
+        if (result !== 'MISSED' && result !== 'BREAKEVEN') {
+            if (!document.getElementById('close-rr').value) { showToast('⚠️ Enter R:R'); return; }
+            if (!document.getElementById('close-pnl').value) { showToast('⚠️ Enter P&L %'); return; }
         }
-
-        function showJournalTab(tab) {
-            document.getElementById('open-trades-section').style.display = 'none';
-            document.getElementById('completed-trades-section').style.display = 'none';
-            document.getElementById('missed-trades-section').style.display = 'none';
-            
-            document.getElementById('journal-tab-open').style.background = 'transparent';
-            document.getElementById('journal-tab-open').style.color = '#8892b0';
-            document.getElementById('journal-tab-completed').style.background = 'transparent';
-            document.getElementById('journal-tab-completed').style.color = '#8892b0';
-            document.getElementById('journal-tab-missed').style.background = 'transparent';
-            document.getElementById('journal-tab-missed').style.color = '#8892b0';
-            
-            if (tab === 'open') {
-                document.getElementById('open-trades-section').style.display = 'block';
-                document.getElementById('journal-tab-open').style.background = 'rgba(100,255,218,0.1)';
-                document.getElementById('journal-tab-open').style.color = 'var(--accent)';
-                renderOpenTrades();
-            } else if (tab === 'completed') {
-                document.getElementById('completed-trades-section').style.display = 'block';
-                document.getElementById('journal-tab-completed').style.background = 'rgba(100,255,218,0.1)';
-                document.getElementById('journal-tab-completed').style.color = 'var(--accent)';
-                renderCompletedTrades();
-            } else {
-                document.getElementById('missed-trades-section').style.display = 'block';
-                document.getElementById('journal-tab-missed').style.background = 'rgba(100,255,218,0.1)';
-                document.getElementById('journal-tab-missed').style.color = 'var(--accent)';
-                renderMissedTrades();
-            }
-        }
-
-        // ========== GRADING ==========
-        function createGradingSections() {
-            const sections = [
-                { title:'📅 Weekly', points:8, items:[
-                    { id:'weekly_trend', label:'Clear Weekly Trend', points:2 },
-                    { id:'weekly_key', label:'Weekly Key Level', points:2 },
-                    { id:'weekly_ema', label:'Weekly EMA Respect', points:2 },
-                    { id:'weekly_pattern', label:'Weekly Pattern', points:2 }
-                ]},
-                { title:'📊 Daily', points:8, items:[
-                    { id:'daily_alignment', label:'Daily aligns with Weekly', points:2 },
-                    { id:'daily_key', label:'Daily Key Level', points:2 },
-                    { id:'daily_ema', label:'Daily EMA Rejection', points:2 },
-                    { id:'daily_pattern', label:'Daily Pattern', points:2 }
-                ]},
-                { title:'⚡ 4H Engine', points:15, items:[
-                    { id:'4h_trend', label:'4H Clear Trend', points:3 },
-                    { id:'4h_bos', label:'Perfect 4H BOS', points:4 },
-                    { id:'4h_pattern', label:'4H Pattern', points:3 },
-                    { id:'4h_key', label:'4H Key Level', points:2 },
-                    { id:'4h_ema', label:'4H EMA Alignment', points:3 }
-                ]},
-                { title:'🎯 Entry', points:8, items:[
-                    { id:'1h_trend', label:'1H aligns with 4H', points:2 },
-                    { id:'1h_ema', label:'1H EMA Rejection', points:2 },
-                    { id:'15m_aoi', label:'15M AOI', points:2 },
-                    { id:'15m_overlap', label:'15M overlaps 4H', points:2 }
-                ]}
-            ];
-            
-            let html = '';
-            sections.forEach(s => {
-                html += `<div style="background:rgba(23,42,69,0.6); border-radius:12px; padding:15px; margin-bottom:15px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                        <div style="color:var(--accent);">${s.title}</div>
-                        <div style="color:#8892b0;">${s.points} pts</div>
-                    </div>`;
-                s.items.forEach(i => {
-                    html += `<div class="checkbox-item">
-                        <input type="checkbox" id="${i.id}" data-points="${i.points}" onchange="calculateGrade()">
-                        <label>${i.label} <span class="points-badge">${i.points}</span></label>
-                    </div>`;
-                });
-                html += '</div>';
-            });
-            
-            html += `<div style="background:rgba(23,42,69,0.6); border-radius:12px; padding:15px;">
-                <div style="color:var(--accent); margin-bottom:12px;">⏰ Timing</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
-                    <div class="session-option" id="sessionGolden" onclick="selectSession('golden')">London Open <span style="color:var(--accent);">+3</span></div>
-                    <div class="session-option" id="sessionPremium" onclick="selectSession('premium')">London/NY <span style="color:var(--accent);">+3</span></div>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="no_news" data-points="2" onchange="calculateGrade()">
-                    <label>No Major News <span class="points-badge">2</span></label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="bonus_triple" data-points="2" onchange="calculateGrade()">
-                    <label>W+D+4H Aligned <span class="points-badge">+2</span></label>
-                </div>
-            </div>`;
-            
-            document.getElementById('gradingSections').innerHTML = html;
-        }
-
-        function calculateGrade() {
-            let score = 0;
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-                score += parseInt(cb.dataset.points) || 1;
-            });
-            if (document.getElementById('sessionGolden')?.classList.contains('selected')) score += 3;
-            if (document.getElementById('sessionPremium')?.classList.contains('selected')) score += 3;
-            
-            document.getElementById('totalScore').textContent = score;
-            
-            let grade, action;
-            if (score >= 40) { grade = 'A++'; action = '🎯 FULL POSITION (1%)'; }
-            else if (score >= 33) { grade = 'A+'; action = '✅ NORMAL POSITION (0.75-1%)'; }
-            else if (score >= 26) { grade = 'A'; action = '⚠️ REDUCED SIZE (0.5%)'; }
-            else if (score >= 20) { grade = 'A-'; action = '❌ AVOID / PAPER TRADE'; }
-            else { grade = 'FAIL'; action = '🚫 NO TRADE'; }
-            
-            currentGrade = { score, grade, action };
-            document.getElementById('gradeValue').textContent = grade;
-            document.getElementById('actionMessage').textContent = action;
-            
-            let gradeClass = 'grade-fail';
-            if (grade === 'A++') gradeClass = 'grade-Aplusplus';
-            else if (grade === 'A+') gradeClass = 'grade-Aplus';
-            else if (grade === 'A') gradeClass = 'grade-A';
-            else if (grade === 'A-') gradeClass = 'grade-Aminus';
-            document.getElementById('gradeValue').className = 'grade-value ' + gradeClass;
-        }
-
-        function selectSession(type) {
-            document.querySelectorAll('.session-option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('session' + (type === 'golden' ? 'Golden' : 'Premium')).classList.add('selected');
-            calculateGrade();
-        }
-
-        function quickGrade() {
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('.session-option').forEach(opt => opt.classList.remove('selected'));
-            currentGrade = { score:0, grade:'-', action:'' };
-            document.getElementById('totalScore').textContent = '0';
-            document.getElementById('gradeValue').textContent = '-';
-            document.getElementById('actionMessage').textContent = 'Grade your setup';
-        }
-
-        // ========== MODALS ==========
-        function showSaveTradeModal() {
-            if (currentGrade.score === 0) { showToast('⚠️ Grade setup first'); return; }
-            document.getElementById('modalGradeValue').textContent = currentGrade.grade;
-            document.getElementById('modalScoreValue').textContent = `Score: ${currentGrade.score}/50`;
-            document.getElementById('saveTradeModal').style.display = 'block';
-        }
-
-        function saveGradedSetup() {
-            const pair = document.getElementById('tradePair').value.toUpperCase().trim();
-            if (!pair || !pair.match(/^[A-Z]{6}$/)) { showToast('⚠️ Enter valid pair (EURUSD)'); return; }
-            
-            const trade = {
-                id: Date.now(),
-                date: document.getElementById('tradeDate').value || new Date().toISOString(),
-                pair, direction: document.getElementById('tradeDirection').value,
-                score: currentGrade.score, grade: currentGrade.grade,
-                status: 'OPEN', entryType: document.getElementById('entryType').value,
-                targetLevel: document.getElementById('targetLevel').value || 'Key Level',
-                action: currentGrade.action,
-                session: document.getElementById('sessionGolden').classList.contains('selected') ? 'London Open' : 
-                       document.getElementById('sessionPremium').classList.contains('selected') ? 'London/NY' : 'Other'
-            };
-            
-            openTrades.unshift(trade);
-            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
-            updateTradeCounts();
-            renderOpenTrades();
-            closeModal('saveTradeModal');
-            showToast(`✅ ${pair} saved`);
-            quickGrade();
-        }
-
-        function openCloseTradeModal(id) {
-            currentTradeToClose = openTrades.find(t => t.id === id);
-            if (!currentTradeToClose) return;
-            
-            const d = new Date(currentTradeToClose.date);
-            const dateStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            
-            document.getElementById('closeTradeInfo').innerHTML = `
-                <div style="background:rgba(100,255,218,0.1); border-radius:12px; padding:15px; margin-bottom:20px;">
-                    <h3 style="font-size:1.2rem;">${currentTradeToClose.pair} • ${currentTradeToClose.direction}</h3>
-                    <div style="color:#8892b0;">${dateStr} • ${currentTradeToClose.grade} (${currentTradeToClose.score})</div>
-                    <div style="color:var(--accent); margin-top:10px;">${currentTradeToClose.action}</div>
-                </div>
-            `;
-            
-            const now = new Date();
-            document.getElementById('closeDate').value = now.toISOString().slice(0,16);
-            document.getElementById('tradeResult').value = '';
-            document.getElementById('tradeRR').value = '';
-            document.getElementById('tradePnL').value = '';
-            document.getElementById('tradeNotes').value = '';
-            document.getElementById('deleteTradeBtn').style.display = 'none';
-            document.getElementById('closeTradeModal').style.display = 'block';
-        }
-
-        function saveTradeResult() {
-            const result = document.getElementById('tradeResult').value;
-            if (!result) { showToast('⚠️ Select result'); return; }
-            
-            if (result !== 'MISSED' && result !== 'BREAKEVEN') {
-                if (!document.getElementById('tradeRR').value) { showToast('⚠️ Enter R:R'); return; }
-                if (!document.getElementById('tradePnL').value) { showToast('⚠️ Enter P&L %'); return; }
-            }
-            
-            openTrades = openTrades.filter(t => t.id !== currentTradeToClose.id);
-            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
-            
-            const closedTrade = {
-                ...currentTradeToClose,
-                result: result,
-                rr: document.getElementById('tradeRR').value || (result === 'BREAKEVEN' ? '1:0' : 'N/A'),
-                pnl: document.getElementById('tradePnL').value || (result === 'BREAKEVEN' ? '0%' : '0%'),
-                notes: document.getElementById('tradeNotes').value,
-                closedDate: document.getElementById('closeDate').value
-            };
-            
+        const closedTrade = {
+            ...currentCloseTrade,
+            result: result,
+            rr: document.getElementById('close-rr').value || (result === 'BREAKEVEN' ? '1:0' : 'N/A'),
+            pnl: document.getElementById('close-pnl').value || (result === 'BREAKEVEN' ? '0%' : '0%'),
+            notes: document.getElementById('close-notes').value,
+            closedDate: document.getElementById('close-datetime').value || new Date().toISOString()
+        };
+        openTrades = openTrades.filter(t => t.id !== currentCloseTrade.id);
+        if (result === 'MISSED') {
+            missedTrades.unshift(closedTrade);
+        } else {
             completedTrades.unshift(closedTrade);
-            localStorage.setItem('sniperCompletedTrades', JSON.stringify(completedTrades));
-            
-            updateTradeCounts();
-            renderCompletedTrades();
-            renderOpenTrades();
-            updatePnLCalendar();
-            updateStatsPage();
-            closeModal('closeTradeModal');
-            showToast(`✅ Trade closed as ${result}`);
         }
+        saveAll();
+        renderOpenTrades();
+        renderCompletedTrades();
+        renderMissedTrades();
+        updateCounts();
+        renderStats();
+        renderCalendar();
+        closeModal('close-modal');
+        showToast(`✅ Trade closed as ${result}`);
+    }
 
-        function deleteOpenTrade() {
-            if (!confirm('Delete this open trade? (Price never retested your level)')) {
-                return;
-            }
-            openTrades = openTrades.filter(t => t.id !== currentTradeToClose.id);
-            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
-            updateTradeCounts();
-            renderOpenTrades();
-            closeModal('closeTradeModal');
-            showToast(`🗑️ Trade deleted (No retest)`);
-        }
+    function deleteOpenTrade(tradeId) {
+        if (!confirm('Delete this trade? (No retest / cancelled)')) return;
+        openTrades = openTrades.filter(t => t.id !== tradeId);
+        saveAll();
+        renderOpenTrades();
+        updateCounts();
+        showToast('🗑️ Trade deleted');
+    }
 
-        function deleteTrade(tradeId) {
-            if (!confirm('Delete this open trade? (Price never retested your level)')) {
-                return;
-            }
-            openTrades = openTrades.filter(t => t.id !== tradeId);
-            localStorage.setItem('sniperOpenTrades', JSON.stringify(openTrades));
-            updateTradeCounts();
-            renderOpenTrades();
-            showToast(`🗑️ Trade deleted (No retest)`);
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-            if (id === 'closeTradeModal') currentTradeToClose = null;
-        }
-
-        // ========== RENDER ==========
-        function renderOpenTrades() {
-            const container = document.getElementById('openTradesList');
-            if (!openTrades.length) {
-                container.innerHTML = '';
-                document.getElementById('emptyOpenState').style.display = 'block';
-                return;
-            }
-            document.getElementById('emptyOpenState').style.display = 'none';
-            
-            let html = '';
-            openTrades.forEach(t => {
-                const d = new Date(t.date);
-                const dateStr = d.toLocaleDateString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
-                html += `<div class="trade-card open-trade">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div><h3>${t.pair} • ${t.direction}</h3>
-                        <div style="display:flex; gap:8px; margin-top:5px;">
-                            <span style="background:rgba(100,255,218,0.15); color:var(--accent); padding:4px 10px; border-radius:12px;">OPEN</span>
-                            <span style="color:#8892b0;">${dateStr}</span>
-                        </div></div>
-                        <span style="background:rgba(100,255,218,0.2); color:var(--accent); padding:8px 14px; border-radius:15px;">${t.grade}</span>
-                    </div>
-                    <div style="margin:15px 0;">${t.action}</div>
-                    <div style="display:flex; gap:12px; margin-bottom:10px;">
-                        <button class="action-btn btn-win" onclick="openCloseTradeModal(${t.id})">WIN</button>
-                        <button class="action-btn btn-loss" onclick="openCloseTradeModal(${t.id})">LOSS</button>
-                        <button class="action-btn btn-even" onclick="openCloseTradeModal(${t.id})">BE</button>
-                        <button class="action-btn btn-missed" onclick="openCloseTradeModal(${t.id})">MISSED</button>
-                    </div>
-                    <button class="delete-btn" onclick="deleteTrade(${t.id})">
-                        <i class="fas fa-trash"></i> Delete (No Retest)
-                    </button>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function renderCompletedTrades() {
-            const container = document.getElementById('completedTradesList');
-            if (!completedTrades.length) {
-                container.innerHTML = '';
-                return;
-            }
-            
-            let html = '';
-            completedTrades.forEach(t => {
-                const d = new Date(t.date);
-                const dateStr = d.toLocaleDateString([], {month:'short', day:'numeric'});
-                let resultColor = t.result === 'WIN' ? 'var(--success)' : t.result === 'LOSS' ? 'var(--danger)' : 'var(--warning)';
-                let bgColor = t.result === 'WIN' ? 'var(--light-success)' : t.result === 'LOSS' ? 'var(--light-danger)' : 'var(--light-warning)';
-                
-                html += `<div class="trade-card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                        <div><h3>${t.pair} • ${t.direction}</h3>
-                        <div style="display:flex; gap:8px; margin-top:5px;">
-                            <span style="background:${bgColor}; color:${resultColor}; padding:4px 10px; border-radius:12px;">${t.result}</span>
-                            <span style="color:#8892b0;">${dateStr}</span>
-                        </div></div>
-                        <span style="background:rgba(100,255,218,0.2); color:var(--accent); padding:8px 14px; border-radius:15px;">${t.grade}</span>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
-                        <div><div style="color:#8892b0;">P&L</div><div style="color:${resultColor};">${t.pnl}</div></div>
-                        <div><div style="color:#8892b0;">R:R</div><div>${t.rr}</div></div>
-                    </div>
-                    ${t.notes ? `<div style="border-top:1px solid var(--border); padding-top:10px; color:#a8b2d1;">${t.notes}</div>` : ''}
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function renderMissedTrades() {
-            const container = document.getElementById('missedTradesList');
-            if (!missedTrades.length) {
-                container.innerHTML = '';
-                return;
-            }
-            let html = '';
-            missedTrades.forEach(t => {
-                const d = new Date(t.date);
-                const dateStr = d.toLocaleDateString([], {month:'short', day:'numeric'});
-                html += `<div class="trade-card missed-trade">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div><h3>${t.pair} • ${t.direction}</h3>
-                        <div style="display:flex; gap:8px; margin-top:5px;">
-                            <span class="status-missed">MISSED</span>
-                            <span style="color:#8892b0;">${dateStr}</span>
-                        </div></div>
-                        <span style="background:rgba(100,255,218,0.2); color:var(--accent); padding:8px 14px; border-radius:15px;">${t.grade}</span>
-                    </div>
-                    <div style="color:var(--missed); margin:10px 0;">No retest at ${t.targetLevel || 'entry'}</div>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        // ========== CALENDAR ==========
-        function updatePnLCalendar() {
-            if (!completedTrades.length) {
-                document.getElementById('pnlCalendarContainer').innerHTML = '<div style="text-align:center; padding:40px; color:#8892b0;">No trades yet</div>';
-                return;
-            }
-            
-            let totalProfit = 0;
-            let consecutiveATrades = 0, maxConsecutive = 0;
-            completedTrades.forEach(t => {
-                const pnl = parseFloat(t.pnl);
-                if (!isNaN(pnl)) totalProfit += pnl;
-                if (t.grade === 'A+' || t.grade === 'A++') {
-                    consecutiveATrades++;
-                    maxConsecutive = Math.max(maxConsecutive, consecutiveATrades);
-                } else {
-                    consecutiveATrades = 0;
-                }
-            });
-            
-            document.getElementById('totalProfitDisplay').textContent = (totalProfit > 0 ? '+' : '') + totalProfit.toFixed(1) + '%';
-            document.getElementById('totalTradesDisplay').textContent = maxConsecutive;
-            
-            const tradesByMonth = {};
-            completedTrades.forEach(t => {
-                const d = new Date(t.date);
-                const monthKey = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0');
-                if (!tradesByMonth[monthKey]) {
-                    tradesByMonth[monthKey] = {
-                        display: d.toLocaleDateString([], {month:'short', year:'numeric'}),
-                        trades: [],
-                        totalPnl: 0,
-                        winCount: 0,
-                        lossCount: 0,
-                        evenCount: 0
-                    };
-                }
-                tradesByMonth[monthKey].trades.push(t);
-                const pnl = parseFloat(t.pnl);
-                if (!isNaN(pnl)) tradesByMonth[monthKey].totalPnl += pnl;
-                if (t.result === 'WIN') tradesByMonth[monthKey].winCount++;
-                else if (t.result === 'LOSS') tradesByMonth[monthKey].lossCount++;
-                else tradesByMonth[monthKey].evenCount++;
-            });
-            
-            let html = '';
-            Object.keys(tradesByMonth).sort().reverse().forEach(key => {
-                const monthData = tradesByMonth[key];
-                const totalTrades = monthData.trades.length;
-                const winRate = totalTrades ? Math.round((monthData.winCount / totalTrades) * 100) : 0;
-                
-                html += `<div style="background:var(--card-bg); border-radius:12px; padding:20px; margin-bottom:20px; border:1px solid var(--border);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                        <h3 style="color:var(--accent);">${monthData.display}</h3>
-                        <span style="background:${monthData.totalPnl>0?'var(--light-success)':'var(--light-danger)'}; color:${monthData.totalPnl>0?'var(--success)':'var(--danger)'}; padding:6px 12px; border-radius:15px;">
-                            ${monthData.totalPnl>0?'+':''}${monthData.totalPnl.toFixed(1)}%
-                        </span>
-                    </div>
-                    
-                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:15px;">
-                        <div style="text-align:center;"><div style="font-size:1.2rem;">${totalTrades}</div><div style="color:#8892b0;">Trades</div></div>
-                        <div style="text-align:center;"><div style="color:var(--success); font-size:1.2rem;">${monthData.winCount}</div><div style="color:#8892b0;">Wins</div></div>
-                        <div style="text-align:center;"><div style="color:var(--danger); font-size:1.2rem;">${monthData.lossCount}</div><div style="color:#8892b0;">Losses</div></div>
-                        <div style="text-align:center;"><div style="color:${winRate>=60?'var(--success)':winRate>=50?'var(--warning)':'var(--danger)'}; font-size:1.2rem;">${winRate}%</div><div style="color:#8892b0;">Win Rate</div></div>
-                    </div>
-                    
-                    <div>
-                        <div style="color:#94a3b8; margin-bottom:8px;">Daily Activity</div>
-                        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px;">
-                            ${generateCalendarBoxes(monthData.trades)}
-                        </div>
-                    </div>
-                </div>`;
-            });
-            
-            document.getElementById('pnlCalendarContainer').innerHTML = html;
-            updateMonthlyBreakdown(tradesByMonth);
-        }
-
-        function generateCalendarBoxes(trades) {
-            const daysInMonth = 31;
-            const dayResults = Array(daysInMonth+1).fill(null).map(() => ({ result: null, pnl: 0, pair: '', grade: '' }));
-            
-            trades.forEach(t => {
-                const d = new Date(t.date);
-                const day = d.getDate();
-                if (day >= 1 && day <= daysInMonth) {
-                    dayResults[day] = {
-                        result: t.result,
-                        pnl: parseFloat(t.pnl) || 0,
-                        pair: t.pair,
-                        grade: t.grade
-                    };
-                }
-            });
-            
-            let boxes = '';
-            for (let i = 1; i <= daysInMonth; i++) {
-                const day = dayResults[i];
-                let boxClass = 'day-empty';
-                let title = `Day ${i}: No trade`;
-                if (day.result === 'WIN') {
-                    boxClass = 'day-win';
-                    title = `Day ${i}: WIN | ${day.pair} | ${day.grade} | P&L: ${day.pnl>0?'+':''}${day.pnl}%`;
-                } else if (day.result === 'LOSS') {
-                    boxClass = 'day-loss';
-                    title = `Day ${i}: LOSS | ${day.pair} | ${day.grade} | P&L: ${day.pnl}%`;
-                } else if (day.result === 'BREAKEVEN') {
-                    boxClass = 'day-even';
-                    title = `Day ${i}: BREAKEVEN | ${day.pair} | ${day.grade}`;
-                }
-                boxes += `<div class="calendar-day-box ${boxClass}" title="${title}">${i}</div>`;
-            }
-            return boxes;
-        }
-
-        function updateMonthlyBreakdown(tradesByMonth) {
-            const monthlyBreakdown = document.getElementById('monthlyBreakdown');
-            if (!Object.keys(tradesByMonth).length) {
-                monthlyBreakdown.innerHTML = '';
-                return;
-            }
-            
-            let html = '<div style="color:var(--accent); font-weight:600; margin-bottom:15px;">Monthly Breakdown</div>';
-            Object.keys(tradesByMonth).sort().reverse().forEach(key => {
-                const m = tradesByMonth[key];
-                const avgPnl = m.trades.length ? (m.totalPnl / m.trades.length).toFixed(2) : 0;
-                html += `<div style="background:rgba(42,59,92,0.3); border-radius:8px; padding:12px; margin-bottom:10px; display:flex; justify-content:space-between;">
-                    <div><div style="font-weight:600;">${m.display}</div><div style="color:#94a3b8;">${m.trades.length} trades</div></div>
-                    <div style="text-align:right;"><div style="color:${m.totalPnl>0?'var(--success)':'var(--danger)'};">${m.totalPnl>0?'+':''}${m.totalPnl.toFixed(1)}%</div><div style="color:#94a3b8;">Avg: ${avgPnl}%</div></div>
-                </div>`;
-            });
-            monthlyBreakdown.innerHTML = html;
-        }
-
-        // ========== STATS ==========
-        function updateStatsPage() {
-            if (!completedTrades.length && !missedTrades.length) {
-                document.getElementById('statsContent').innerHTML = '<div style="text-align:center; padding:40px;">No stats yet</div>';
-                return;
-            }
-            
-            const totalSetups = completedTrades.length + missedTrades.length;
-            const wins = completedTrades.filter(t => t.result === 'WIN').length;
-            const losses = completedTrades.filter(t => t.result === 'LOSS').length;
-            const be = completedTrades.filter(t => t.result === 'BREAKEVEN').length;
-            const winRate = completedTrades.length ? Math.round((wins / completedTrades.length) * 100) : 0;
-            const missedRate = totalSetups ? Math.round((missedTrades.length / totalSetups) * 100) : 0;
-            
-            let html = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:var(--accent);">${totalSetups}</div>
-                    <div style="color:#8892b0;">Total Setups</div>
+    // ==================== RENDER FUNCTIONS ====================
+    function renderOpenTrades() {
+        const container = document.getElementById('open-trades-list');
+        if (!openTrades.length) { container.innerHTML = '<div style="text-align:center; padding:20px; color:#8892b0;">No open trades</div>'; return; }
+        let html = '';
+        openTrades.forEach(t => {
+            html += `<div class="trade-item">
+                <div class="trade-header"><span class="trade-pair">${t.pair} • ${t.direction}</span><span class="trade-grade">${t.grade}</span></div>
+                <div class="trade-detail">📅 ${new Date(t.date).toLocaleDateString()} • ${t.session || 'Other'}</div>
+                <div class="trade-detail">🎯 ${t.entryType} @ ${t.targetLevel}</div>
+                <div class="action-group">
+                    <button class="action-btn win-btn" onclick='openCloseModal(${JSON.stringify(t).replace(/'/g, "&apos;")})'>✅ WIN</button>
+                    <button class="action-btn loss-btn" onclick='openCloseModal(${JSON.stringify(t).replace(/'/g, "&apos;")})'>❌ LOSS</button>
+                    <button class="action-btn be-btn" onclick='openCloseModal(${JSON.stringify(t).replace(/'/g, "&apos;")})'>⚖️ BE</button>
+                    <button class="action-btn missed-btn" onclick='openCloseModal(${JSON.stringify(t).replace(/'/g, "&apos;")})'>🚫 MISSED</button>
                 </div>
-                <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:${winRate>=60?'var(--success)':winRate>=50?'var(--warning)':'var(--danger)'};">${winRate}%</div>
-                    <div style="color:#8892b0;">Win Rate</div>
-                </div>
-                <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:var(--missed);">${missedTrades.length}</div>
-                    <div style="color:#8892b0;">Missed</div>
-                </div>
-                <div style="background:var(--card-bg); border-radius:12px; padding:20px; text-align:center;">
-                    <div style="font-size:2rem; color:${missedRate<=30?'var(--success)':missedRate<=50?'var(--warning)':'var(--danger)'};">${missedRate}%</div>
-                    <div style="color:#8892b0;">Missed Rate</div>
-                </div>
-            </div>
-            <div style="margin-top:20px; background:var(--card-bg); border-radius:12px; padding:15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span>Wins: ${wins}</span>
-                    <span>Losses: ${losses}</span>
-                    <span>Breakeven: ${be}</span>
-                </div>
-                <div style="background:rgba(42,59,92,0.5); border-radius:8px; height:8px; overflow:hidden;">
-                    <div style="width:${(wins/(wins+losses+be))*100}%; height:100%; background:var(--success);"></div>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin-top:8px; color:#8892b0;">
-                    <span>WIN</span>
-                    <span>LOSS/BE</span>
-                </div>
+                <button class="delete-small" onclick="deleteOpenTrade(${t.id})">🗑️ Delete (No Retest)</button>
             </div>`;
-            
-            document.getElementById('statsContent').innerHTML = html;
-        }
+        });
+        container.innerHTML = html;
+    }
 
-        // ========== UTILS ==========
-        function updateTradeCounts() {
-            document.getElementById('openTradesCount').textContent = openTrades.length;
-            document.getElementById('completedTradesCount').textContent = completedTrades.length;
-            document.getElementById('missedTradesCount').textContent = missedTrades.length;
-        }
+    function renderCompletedTrades() {
+        const container = document.getElementById('completed-trades-list');
+        if (!completedTrades.length) { container.innerHTML = '<div style="text-align:center; padding:20px;">No completed trades</div>'; return; }
+        let html = '';
+        completedTrades.forEach(t => {
+            const pnlClass = t.result === 'WIN' ? 'win-text' : (t.result === 'LOSS' ? 'loss-text' : 'be-text');
+            html += `<div class="trade-item">
+                <div class="trade-header"><span class="trade-pair">${t.pair} • ${t.direction}</span><span class="trade-grade">${t.grade}</span></div>
+                <div class="trade-detail">📅 ${new Date(t.date).toLocaleDateString()} • ${t.result}</div>
+                <div class="trade-detail"><span class="${pnlClass}">💰 ${t.pnl}</span> | R:R ${t.rr}</div>
+                ${t.notes ? `<div class="trade-detail">📝 ${t.notes.substring(0, 80)}${t.notes.length > 80 ? '…' : ''}</div>` : ''}
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
 
-        function exportData() {
-            const data = {
-                openTrades, completedTrades, missedTrades,
-                exported: new Date().toISOString()
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `TradeOS-${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('📁 Exported');
-        }
+    function renderMissedTrades() {
+        const container = document.getElementById('missed-trades-list');
+        if (!missedTrades.length) { container.innerHTML = '<div style="text-align:center; padding:20px;">No missed trades</div>'; return; }
+        let html = '';
+        missedTrades.forEach(t => {
+            html += `<div class="trade-item" style="border-color:#a78bfa;">
+                <div class="trade-header"><span class="trade-pair">${t.pair} • ${t.direction}</span><span class="trade-grade">${t.grade}</span></div>
+                <div class="trade-detail">📅 ${new Date(t.date).toLocaleDateString()} • 🚫 MISSED</div>
+                <div class="trade-detail">No retest at ${t.targetLevel || 'entry'}</div>
+                ${t.notes ? `<div class="trade-detail">📝 ${t.notes}</div>` : ''}
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-    </script>
+    function updateCounts() {
+        document.getElementById('open-count').innerText = openTrades.length;
+        document.getElementById('completed-count').innerText = completedTrades.length;
+        document.getElementById('missed-count').innerText = missedTrades.length;
+    }
+
+    function renderStats() {
+        const wins = completedTrades.filter(t => t.result === 'WIN').length;
+        const losses = completedTrades.filter(t => t.result === 'LOSS').length;
+        const be = completedTrades.filter(t => t.result === 'BREAKEVEN').length;
+        const tradedTotal = wins + losses + be;
+        const winRate = tradedTotal > 0 ? Math.round((wins / tradedTotal) * 100) : 0;
+        const missedTotal = missedTrades.length;
+        const totalSetups = completedTrades.length + missedTotal;
+        const missedRate = totalSetups > 0 ? Math.round((missedTotal / totalSetups) * 100) : 0;
+
+        document.getElementById('stats-content').innerHTML = `
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-number">${totalSetups}</div><div class="stat-label">Total Setups</div></div>
+                <div class="stat-box"><div class="stat-number" style="color:${winRate>=50?'#4ade80':'#fbbf24'}">${winRate}%</div><div class="stat-label">Win Rate (Traded)</div></div>
+                <div class="stat-box"><div class="stat-number">${missedTotal}</div><div class="stat-label">Missed</div></div>
+                <div class="stat-box"><div class="stat-number">${missedRate}%</div><div class="stat-label">Missed Rate</div></div>
+            </div>
+            <div class="flex-between"><span>✅ Wins: ${wins}</span><span>❌ Losses: ${losses}</span><span>⚖️ Breakeven: ${be}</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${tradedTotal ? (wins/tradedTotal)*100 : 0}%"></div></div>
+            <div class="flex-between"><span>WINS</span><span>LOSS / BE</span></div>
+        `;
+    }
+
+    function renderCalendar() {
+        const allTrades = [...completedTrades, ...missedTrades];
+        if (!allTrades.length) { document.getElementById('calendar-content').innerHTML = '<div style="text-align:center; padding:20px;">No trades yet</div>'; return; }
+        const months = {};
+        allTrades.forEach(t => {
+            const d = new Date(t.date);
+            const key = `${d.getFullYear()}-${d.getMonth()+1}`;
+            if (!months[key]) months[key] = { name: d.toLocaleDateString(undefined, { month:'short', year:'numeric' }), trades: [] };
+            months[key].trades.push(t);
+        });
+        let html = '';
+        Object.keys(months).sort().reverse().forEach(key => {
+            const month = months[key];
+            html += `<div style="margin-bottom:20px;"><strong style="color:#64ffda;">${month.name}</strong><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:8px;">`;
+            for (let i=1; i<=31; i++) {
+                const trade = month.trades.find(t => new Date(t.date).getDate() === i);
+                let cls = 'day-empty', title = `Day ${i}: No trade`;
+                if (trade) {
+                    if (trade.result === 'WIN') { cls = 'day-win'; title = `WIN: ${trade.pair} ${trade.pnl}`; }
+                    else if (trade.result === 'LOSS') { cls = 'day-loss'; title = `LOSS: ${trade.pair} ${trade.pnl}`; }
+                    else if (trade.result === 'BREAKEVEN') { cls = 'day-even'; title = `BE: ${trade.pair}`; }
+                    else if (trade.result === 'MISSED') { cls = 'day-empty'; title = `MISSED: ${trade.pair}`; }
+                }
+                html += `<div class="calendar-day-box ${cls}" style="background:${cls === 'day-win' ? 'rgba(74,222,128,0.2)' : cls === 'day-loss' ? 'rgba(248,113,113,0.2)' : cls === 'day-even' ? 'rgba(251,191,36,0.2)' : 'rgba(42,59,92,0.3)'); color:${cls === 'day-win' ? '#4ade80' : cls === 'day-loss' ? '#f87171' : cls === 'day-even' ? '#fbbf24' : '#64748b'}; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:0.7rem;" title="${title}">${i}</div>`;
+            }
+            html += `</div></div>`;
+        });
+        document.getElementById('calendar-content').innerHTML = html;
+    }
+
+    // ==================== JOURNAL TABS ====================
+    function switchJournalTab(tab) {
+        document.querySelectorAll('.tab-journal').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.tab-journal[data-journal="${tab}"]`).classList.add('active');
+        document.getElementById('open-trades-list').style.display = tab === 'open' ? 'block' : 'none';
+        document.getElementById('completed-trades-list').style.display = tab === 'completed' ? 'block' : 'none';
+        document.getElementById('missed-trades-list').style.display = tab === 'missed' ? 'block' : 'none';
+    }
+
+    // ==================== EXPORT ====================
+    function exportData() {
+        const data = { openTrades, completedTrades, missedTrades, exported: new Date().toISOString() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `TradeOS-${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📁 Exported');
+    }
+
+    // ==================== PAGE NAVIGATION ====================
+    function switchPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(`${page}-page`).classList.add('active');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.tab[data-page="${page}"]`).classList.add('active');
+        if (page === 'stats') renderStats();
+        if (page === 'calendar') renderCalendar();
+        if (page === 'journal') switchJournalTab('open');
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', () => {
+        buildGradingUI();
+        document.querySelectorAll('.session-option').forEach(opt => opt.addEventListener('click', () => selectSession(opt)));
+        document.getElementById('calc-grade-btn').addEventListener('click', calculateGrade);
+        document.getElementById('save-setup-btn').addEventListener('click', showSaveModal);
+        document.getElementById('confirm-save-btn').addEventListener('click', saveGradedSetup);
+        document.getElementById('confirm-close-btn').addEventListener('click', saveCloseResult);
+        document.getElementById('export-btn').addEventListener('click', exportData);
+        document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchPage(tab.dataset.page)));
+        document.querySelectorAll('.tab-journal').forEach(tab => tab.addEventListener('click', () => switchJournalTab(tab.dataset.journal)));
+        renderOpenTrades();
+        renderCompletedTrades();
+        renderMissedTrades();
+        updateCounts();
+        renderStats();
+        renderCalendar();
+        calculateGrade();
+        showToast('🎯 TradeOS Ready');
+    });
+</script>
 </body>
 </html>
