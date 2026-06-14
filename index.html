@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>🎯 TradeOS V1 Personal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         :root {
             --primary: #0a192f;
@@ -36,119 +37,125 @@
         body {
             background: var(--primary);
             color: var(--text);
-            padding: 15px;
-            max-width: 800px;
+            padding: 12px;
+            max-width: 700px;
             margin: 0 auto;
-            -webkit-text-size-adjust: 100%;
             line-height: 1.5;
         }
         .app-header {
             text-align: center;
-            padding: 15px 0;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            padding: 16px 0 10px;
         }
         .app-title {
             font-size: 1.4rem;
             font-weight: 700;
             color: var(--accent);
-            margin-bottom: 5px;
         }
         .app-subtitle {
             color: var(--text-secondary);
             font-size: 0.8rem;
+            margin-top: 2px;
         }
-        .nav-tabs {
+        .main-tabs {
             display: flex;
             background: var(--secondary);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
+            border-radius: 24px;
+            padding: 4px;
+            margin: 12px 0;
+            overflow-x: auto;
             position: sticky;
             top: 8px;
             z-index: 20;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
-        .nav-tab {
-            flex: 1;
-            padding: 14px 5px;
+        .main-tabs::-webkit-scrollbar { display: none; }
+        .main-tab {
+            flex: 1 0 auto;
+            padding: 10px 10px;
             text-align: center;
             color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.8rem;
-            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            font-size: 0.7rem;
+            border-radius: 20px;
             cursor: pointer;
             transition: var(--transition);
             white-space: nowrap;
+            border: none;
+            background: transparent;
         }
-        .nav-tab.active {
-            color: var(--accent);
-            border-bottom: 3px solid var(--accent);
-            background: rgba(100, 255, 218, 0.1);
+        .main-tab.active {
+            background: var(--accent);
+            color: #0a192f;
+            box-shadow: 0 2px 8px rgba(100,255,218,0.3);
         }
-        .nav-tab:active { transform: scale(0.96); }
-        .page { display: none; animation: fadeIn 0.25s ease; }
+        .main-tab:active { transform: scale(0.95); }
+        .page {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 16px;
+            margin: 10px 0;
             border: 1px solid var(--border);
         }
         .btn {
-            padding: 14px 18px;
-            border-radius: 10px;
+            padding: 12px 16px;
+            border-radius: 20px;
             border: none;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             cursor: pointer;
             transition: var(--transition);
-            -webkit-appearance: none;
             text-align: center;
+            -webkit-appearance: none;
         }
         .btn:active { transform: scale(0.97); }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--success)); color: #0a192f; }
-        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-primary { background: var(--accent); color: #0a192f; }
+        .btn-secondary { background: var(--secondary); color: var(--text); border: 1px solid var(--border); }
         .btn-danger { background: var(--light-danger); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
-        .btn-missed { background: var(--light-missed); color: var(--missed); border: 1px solid rgba(167,139,250,0.3); }
         .btn-small {
-            padding: 8px 14px;
-            font-size: 0.75rem;
-            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            border-radius: 14px;
             width: auto;
             margin-bottom: 0;
         }
         .checkbox-item {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 10px;
             background: rgba(255,255,255,0.03);
             border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid transparent;
+            margin-bottom: 6px;
         }
-        .checkbox-item input { margin-right: 12px; width: 20px; height: 20px; accent-color: var(--accent); }
-        .checkbox-item label { flex: 1; font-size: 0.9rem; cursor: pointer; }
+        .checkbox-item input { margin-right: 10px; width: 18px; height: 18px; accent-color: var(--accent); }
+        .checkbox-item label { flex: 1; font-size: 0.8rem; cursor: pointer; }
         .points-badge {
             background: var(--light-success);
             color: var(--success);
             padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
+            border-radius: 10px;
+            font-size: 0.65rem;
             font-weight: 700;
-            margin-left: 6px;
+            margin-left: 4px;
         }
         .grade-badge {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 3px 10px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 0.3px;
+            font-size: 0.7rem;
         }
         .grade-Aplusplus { background: #1a3a2a; color: #3fb950; }
         .grade-Aplus { background: #1a3028; color: #56d364; }
@@ -159,34 +166,36 @@
         .result-loss { color: var(--danger); font-weight: 700; }
         .result-be { color: var(--warning); font-weight: 700; }
         .trade-row {
-            background: var(--card-bg);
+            background: var(--secondary);
             border-radius: 8px;
-            padding: 14px;
-            margin: 8px 0;
+            padding: 12px;
+            margin: 6px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 8px;
             border: 1px solid transparent;
             cursor: pointer;
-            transition: var(--transition);
             flex-wrap: wrap;
         }
         .trade-row:hover { border-color: var(--border); }
-        .trade-row .pair { font-weight: 700; font-size: 0.9rem; }
-        .trade-row .meta { font-size: 0.7rem; color: var(--text-secondary); }
-        .trade-row .pl { font-weight: 700; font-size: 0.9rem; }
-        .form-group { margin-bottom: 18px; }
-        .form-label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--text); font-size: 0.85rem; }
+        .open-trade { border: 2px solid var(--accent); animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { border-color: var(--accent); }
+            50% { border-color: rgba(100,255,218,0.4); }
+            100% { border-color: var(--accent); }
+        }
+        .missed-trade { border: 2px dashed var(--missed); opacity: 0.85; }
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.8rem; }
         .form-input, .form-select, .form-textarea {
             width: 100%;
-            padding: 14px;
-            background: rgba(23,42,69,0.6);
+            padding: 12px;
+            background: var(--secondary);
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+            font-size: 0.85rem;
             -webkit-appearance: none;
         }
         .form-textarea { resize: vertical; }
@@ -195,15 +204,15 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10,25,47,0.95);
-            z-index: 1000;
+            z-index: 100;
             padding: 20px;
             overflow-y: auto;
         }
         .modal-content {
             background: var(--card-bg);
             border-radius: 16px;
-            padding: 25px;
-            max-width: 500px;
+            padding: 20px;
+            max-width: 480px;
             margin: 0 auto;
             border: 1px solid var(--border);
         }
@@ -214,206 +223,191 @@
             transform: translateX(-50%) translateY(100px);
             background: var(--card-bg);
             border: 1px solid var(--accent);
-            border-radius: 10px;
-            padding: 14px 20px;
+            border-radius: 20px;
+            padding: 12px 20px;
             color: var(--text);
             font-weight: 600;
-            z-index: 2000;
+            z-index: 200;
             transition: transform 0.3s ease;
             max-width: 90%;
             text-align: center;
+            font-size: 0.85rem;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
         .dash-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 8px;
         }
         .dash-stat {
             background: var(--secondary);
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
             text-align: center;
             border: 1px solid var(--border);
         }
-        .dash-stat .val { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.3px; }
-        .dash-stat .lbl { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
+        .dash-stat .val { font-size: 1.3rem; font-weight: 700; }
+        .dash-stat .lbl { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; margin-top: 2px; }
         .filter-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
+            gap: 5px;
+            margin-bottom: 10px;
         }
         .filter-chip {
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 0.7rem;
+            padding: 5px 10px;
+            border-radius: 14px;
+            font-size: 0.65rem;
             font-weight: 600;
             cursor: pointer;
             border: 1px solid var(--border);
             background: var(--secondary);
             color: var(--text-secondary);
             transition: var(--transition);
-            white-space: nowrap;
         }
         .filter-chip.active { background: var(--accent); color: #0a192f; border-color: var(--accent); }
-        .cal-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            gap: 8px;
-        }
-        .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
+        .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
         .cal-day {
-            padding: 10px 2px;
-            border-radius: 6px;
+            padding: 8px 2px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            transition: var(--transition);
             border: 1px solid transparent;
         }
         .cal-day.win { background: var(--light-success); color: var(--success); }
         .cal-day.loss { background: var(--light-danger); color: var(--danger); }
         .cal-day.be { background: var(--light-warning); color: var(--warning); }
-        .cal-day.empty { cursor: default; color: var(--text-secondary); opacity: 0.4; }
-        .cal-header { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; padding: 6px 0; }
-        .screenshot-thumb { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 8px; cursor: pointer; }
-        .chart-bar-wrap { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
-        .chart-bar-label { width: 36px; font-size: 0.7rem; font-weight: 600; text-align: right; }
-        .chart-bar { flex: 1; height: 20px; background: var(--secondary); border-radius: 4px; overflow: hidden; }
+        .cal-day.empty { color: var(--text-secondary); opacity: 0.3; cursor: default; }
+        .cal-header { font-size: 0.6rem; color: var(--text-secondary); font-weight: 600; padding: 4px 0; }
+        .screenshot-thumb { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 8px; }
+        .chart-bar-wrap { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+        .chart-bar-label { width: 32px; font-size: 0.65rem; font-weight: 600; text-align: right; }
+        .chart-bar { flex: 1; height: 16px; background: var(--secondary); border-radius: 4px; overflow: hidden; }
         .chart-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .session-option {
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--secondary);
+            font-size: 0.8rem;
+        }
+        .session-option.selected { border-color: var(--accent); background: rgba(100,255,218,0.1); }
+        @media (max-width: 380px) {
+            .main-tab { padding: 8px 6px; font-size: 0.65rem; }
+            .dash-grid { grid-template-columns: 1fr 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="app-header">
-            <h1 class="app-title">🎯 TradeOS V1 Personal</h1>
-            <div class="app-subtitle">Grade • Execute • Journal • Compound</div>
-        </div>
+    <div class="app-header">
+        <h1 class="app-title">🎯 TradeOS V1 Personal</h1>
+        <div class="app-subtitle">Grade • Execute • Journal • Compound</div>
+    </div>
 
-        <!-- Tabs -->
-        <div class="nav-tabs" id="tabNav">
-            <div class="nav-tab active" data-page="dashboard"><i class="fas fa-th-large"></i><br>Dash</div>
-            <div class="nav-tab" data-page="grading"><i class="fas fa-chart-line"></i><br>Grade</div>
-            <div class="nav-tab" data-page="journal"><i class="fas fa-book"></i><br>Journal</div>
-            <div class="nav-tab" data-page="stats"><i class="fas fa-chart-bar"></i><br>Stats</div>
-            <div class="nav-tab" data-page="pnlcalendar"><i class="fas fa-calendar-alt"></i><br>P&L</div>
-            <div class="nav-tab" data-page="settings"><i class="fas fa-cog"></i><br>⚙️</div>
-        </div>
+    <div class="main-tabs" id="mainTabNav">
+        <button class="main-tab active" data-page="dashboard">📊 Dash</button>
+        <button class="main-tab" data-page="grading">🎯 Grade</button>
+        <button class="main-tab" data-page="journal">📖 Journal</button>
+        <button class="main-tab" data-page="stats">📈 Stats</button>
+        <button class="main-tab" data-page="pnlcalendar">🗓️ P&L</button>
+        <button class="main-tab" data-page="settings">⚙️</button>
+    </div>
 
-        <!-- Dashboard Page -->
-        <div id="dashboard-page" class="page active">
-            <div class="card">
-                <h3 style="margin-bottom:15px;">📊 Dashboard</h3>
-                <div class="dash-grid">
-                    <div class="dash-stat"><div class="val" id="dashOpen">0</div><div class="lbl">Open Trades</div></div>
-                    <div class="dash-stat"><div class="val" id="dashToday"></div><div class="lbl">Today</div></div>
-                    <div class="dash-stat"><div class="val" id="dashGrowth">0%</div><div class="lbl">Total Growth</div></div>
-                    <div class="dash-stat"><div class="val" id="dashMonthPL">0%</div><div class="lbl">Month P&L</div></div>
-                    <div class="dash-stat"><div class="val" id="dashConsec">0</div><div class="lbl">Consec. A+</div></div>
-                    <div class="dash-stat"><div class="val" id="dashWinRate">0%</div><div class="lbl">Win Rate</div></div>
-                </div>
-                <h4 style="margin:15px 0 10px;">Recent Trades</h4>
-                <div id="dashRecent"></div>
+    <div id="dashboard-page" class="page active">
+        <div class="card">
+            <h3 style="margin-bottom:10px;">📊 Dashboard</h3>
+            <div class="dash-grid">
+                <div class="dash-stat"><div class="val" id="dashOpen">0</div><div class="lbl">Open</div></div>
+                <div class="dash-stat"><div class="val" id="dashToday"></div><div class="lbl">Today</div></div>
+                <div class="dash-stat"><div class="val" id="dashGrowth">0%</div><div class="lbl">Growth</div></div>
+                <div class="dash-stat"><div class="val" id="dashMonthPL">0%</div><div class="lbl">Month P&L</div></div>
+                <div class="dash-stat"><div class="val" id="dashConsec">0</div><div class="lbl">Consec. A+</div></div>
+                <div class="dash-stat"><div class="val" id="dashWinRate">0%</div><div class="lbl">Win Rate</div></div>
             </div>
+            <h4 style="margin:12px 0 8px;">Recent</h4>
+            <div id="dashRecent"></div>
         </div>
+    </div>
 
-        <!-- Grading Page -->
-        <div id="grading-page" class="page">
-            <!-- (same grading structure as before, preserved) -->
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h3>Setup Grading Matrix</h3>
-                    <span class="grade-badge grade-Aplus">Score: <span id="totalScore">0</span>/50</span>
-                </div>
-                <div id="gradingSections"></div>
-                <div class="grade-display" style="text-align:center; padding:20px;">
-                    <div style="color:var(--text-secondary);">SETUP GRADE</div>
-                    <div id="gradeValue" style="font-size:2rem; font-weight:800; margin:10px 0;">-</div>
-                    <div id="actionMessage" style="color:var(--accent); margin:10px 0;">Grade your setup</div>
-                    <button class="btn btn-primary" onclick="calculateGrade()">Calculate Grade</button>
-                    <button class="btn btn-secondary" onclick="showSaveTradeModal()">Save Graded Setup</button>
-                </div>
+    <div id="grading-page" class="page">
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>Setup Grading Matrix</h3>
+                <span class="grade-badge grade-Aplus">Score: <span id="totalScore">0</span>/50</span>
             </div>
-        </div>
-
-        <!-- Journal Page -->
-        <div id="journal-page" class="page">
-            <div style="display:flex; background:var(--secondary); border-radius:10px; margin-bottom:15px; padding:4px;">
-                <div class="nav-tab active" id="journalTabOpen" onclick="switchJournal('open')">Open (<span id="openCount">0</span>)</div>
-                <div class="nav-tab" id="journalTabCompleted" onclick="switchJournal('completed')">Completed (<span id="completedCount">0</span>)</div>
-                <div class="nav-tab" id="journalTabMissed" onclick="switchJournal('missed')">Missed (<span id="missedCount">0</span>)</div>
-            </div>
-            <div id="openTradesContainer"></div>
-            <div id="completedTradesContainer" style="display:none;">
-                <div class="filter-bar" id="filterBar"></div>
-                <div id="completedTradesList"></div>
-            </div>
-            <div id="missedTradesContainer" style="display:none;">
-                <div id="missedTradesList"></div>
-            </div>
-        </div>
-
-        <!-- Stats Page -->
-        <div id="stats-page" class="page">
-            <div class="card">
-                <h3>📈 Advanced Statistics</h3>
-                <div id="statsContent"></div>
-            </div>
-        </div>
-
-        <!-- P&L Calendar Page -->
-        <div id="pnlcalendar-page" class="page">
-            <div class="card">
-                <h3>🗓️ P&L Calendar</h3>
-                <div class="cal-nav">
-                    <button class="btn btn-small" onclick="changeCalendarMonth(-1)">◀</button>
-                    <span id="calMonthLabel" style="font-weight:700;"></span>
-                    <button class="btn btn-small" onclick="changeCalendarMonth(1)">▶</button>
-                </div>
-                <div class="cal-grid" id="calGrid"></div>
-                <div id="calDayDetail" style="margin-top:10px; font-size:0.8rem; color:var(--text-secondary);"></div>
-                <div style="margin-top:20px;">
-                    <div class="dash-grid">
-                        <div class="dash-stat"><div class="val" id="totalProfit">0%</div><div class="lbl">Total Profit</div></div>
-                        <div class="dash-stat"><div class="val" id="totalTrades">0</div><div class="lbl">Consecutive A+</div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings Page -->
-        <div id="settings-page" class="page">
-            <div class="card">
-                <h3>⚙️ Backup & Restore</h3>
-                <button class="btn btn-primary" onclick="exportData()"><i class="fas fa-download"></i> Export JSON</button>
-                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Import JSON</button>
-                <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)">
-                <p style="margin-top:10px; font-size:0.8rem; color:var(--text-secondary);" id="backupNote"></p>
-                <button class="btn btn-danger" onclick="resetAll()" style="margin-top:20px;"><i class="fas fa-trash"></i> Reset All Data</button>
+            <div id="gradingSections"></div>
+            <div style="text-align:center; padding:16px; margin-top:12px;">
+                <div style="color:var(--text-secondary);">SETUP GRADE</div>
+                <div id="gradeValue" style="font-size:2rem; font-weight:800; margin:8px 0;">-</div>
+                <div id="actionMessage" style="margin:8px 0;">Grade your setup</div>
+                <button class="btn btn-primary" onclick="calculateGrade()"><i class="fas fa-calculator"></i> Calculate</button>
+                <button class="btn btn-secondary" onclick="showSaveTradeModal()"><i class="fas fa-save"></i> Save Setup</button>
             </div>
         </div>
     </div>
 
-    <!-- Modals (preserved with additions) -->
+    <div id="journal-page" class="page">
+        <div style="display:flex; background:var(--secondary); border-radius:20px; padding:3px; margin-bottom:12px;">
+            <button class="main-tab active journal-subtab" data-jtab="open">Open (<span id="openCount">0</span>)</button>
+            <button class="main-tab journal-subtab" data-jtab="completed">Done (<span id="completedCount">0</span>)</button>
+            <button class="main-tab journal-subtab" data-jtab="missed">Missed (<span id="missedCount">0</span>)</button>
+        </div>
+        <div id="openTradesContainer"></div>
+        <div id="completedTradesContainer" style="display:none;">
+            <div class="filter-bar" id="filterBar"></div>
+            <div id="completedTradesList"></div>
+        </div>
+        <div id="missedTradesContainer" style="display:none;">
+            <div id="missedTradesList"></div>
+        </div>
+    </div>
+
+    <div id="stats-page" class="page">
+        <div class="card">
+            <h3>📈 Advanced Statistics</h3>
+            <div id="statsContent"></div>
+        </div>
+    </div>
+
+    <div id="pnlcalendar-page" class="page">
+        <div class="card">
+            <h3>🗓️ P&L Calendar</h3>
+            <div class="cal-nav">
+                <button class="btn btn-small" onclick="changeCalendarMonth(-1)">◀</button>
+                <span id="calMonthLabel" style="font-weight:700;"></span>
+                <button class="btn btn-small" onclick="changeCalendarMonth(1)">▶</button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div id="calDayDetail" style="margin-top:10px; font-size:0.75rem; color:var(--text-secondary);"></div>
+            <div style="margin-top:16px;" class="dash-grid">
+                <div class="dash-stat"><div class="val" id="totalProfit">0%</div><div class="lbl">Total Profit</div></div>
+                <div class="dash-stat"><div class="val" id="consecutiveAPlus">0</div><div class="lbl">Consecutive A+</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-page" class="page">
+        <div class="card">
+            <h3>⚙️ Backup & Data</h3>
+            <button class="btn btn-primary" onclick="exportData()"><i class="fas fa-download"></i> Export JSON</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Import JSON</button>
+            <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)">
+            <p style="margin-top:8px; font-size:0.75rem; color:var(--text-secondary);" id="backupNote"></p>
+            <button class="btn btn-danger" onclick="resetAll()" style="margin-top:16px;"><i class="fas fa-trash"></i> Reset All</button>
+        </div>
+    </div>
+
     <div id="saveTradeModal" class="modal-overlay">
         <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Save Graded Setup</h3>
-                <button onclick="closeModal('saveTradeModal')" style="background:none;border:none;color:var(--text-secondary);font-size:1.5rem;">×</button>
-            </div>
+            <div style="display:flex; justify-content:space-between;"><h3>Save Setup</h3><button onclick="closeModal('saveTradeModal')" style="background:none;border:none;color:var(--text-secondary);font-size:1.5rem;">×</button></div>
             <div class="form-group"><label class="form-label">Pair</label><input type="text" class="form-input" id="tradePair" placeholder="EURUSD"></div>
             <div class="form-group"><label class="form-label">Direction</label><select class="form-select" id="tradeDirection"><option>LONG</option><option>SHORT</option></select></div>
             <div class="form-group"><label class="form-label">Date</label><input type="datetime-local" class="form-input" id="tradeDate"></div>
-            <div style="background:rgba(100,255,218,0.1); border-radius:8px; padding:10px; margin:10px 0;">
+            <div style="background:rgba(100,255,218,0.1); padding:8px; border-radius:8px; margin:8px 0;">
                 Grade: <span id="modalGrade"></span> | Score: <span id="modalScore"></span>
             </div>
             <button class="btn btn-primary" onclick="saveGradedSetup()">Save</button>
@@ -423,12 +417,9 @@
 
     <div id="closeTradeModal" class="modal-overlay">
         <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Close Trade</h3>
-                <button onclick="closeModal('closeTradeModal')" style="background:none;border:none;color:var(--text-secondary);font-size:1.5rem;">×</button>
-            </div>
+            <div style="display:flex; justify-content:space-between;"><h3>Close Trade</h3><button onclick="closeModal('closeTradeModal')" style="background:none;border:none;color:var(--text-secondary);font-size:1.5rem;">×</button></div>
             <div id="closeTradeInfo"></div>
-            <div class="form-group"><label class="form-label">Result</label><select class="form-select" id="tradeResult"><option value="">Select</option><option>WIN</option><option>LOSS</option><option>BREAKEVEN</option><option>MISSED</option></select></div>
+            <div class="form-group"><label class="form-label">Result</label><select class="form-select" id="tradeResult" onchange="toggleMissedFields()"><option value="">Select</option><option>WIN</option><option>LOSS</option><option>BREAKEVEN</option><option>MISSED</option></select></div>
             <div class="form-group" id="missedReasonGroup" style="display:none;"><label class="form-label">Reason</label><select class="form-select" id="missedReason"><option>No retest</option><option>Stop hunt</option><option>News</option><option>Other</option></select></div>
             <div class="form-group"><label class="form-label">P&L %</label><input type="text" class="form-input" id="tradePnL" placeholder="+2.5%"></div>
             <div class="form-group"><label class="form-label">R:R</label><input type="text" class="form-input" id="tradeRR" placeholder="1:2.5"></div>
@@ -442,106 +433,634 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ---------- DATA ----------
+        // ========== DATA ENGINE ==========
         const STORAGE_KEY = 'tradeos_v1_data';
-        let appData = {
-            openTrades: [],
-            completedTrades: [],
-            missedTrades: [],
-            lastBackup: null
-        };
+        let appData = { openTrades: [], completedTrades: [], missedTrades: [], lastBackup: null };
+        let currentGrade = { score: 0, grade: '', action: '' };
+        let currentTradeToClose = null;
+        let currentCalendarMonth = new Date().getMonth();
+        let currentCalendarYear = new Date().getFullYear();
+        let activeFilters = { pair: 'all', grade: 'all', session: 'all', result: 'all' };
+        let currentJournalTab = 'open';
 
+        // ========== LOAD / SAVE ==========
         function loadData() {
             const raw = localStorage.getItem(STORAGE_KEY);
             if (raw) {
                 try {
                     const parsed = JSON.parse(raw);
-                    appData = { ...appData, ...parsed };
-                } catch(e){}
+                    appData.openTrades = parsed.openTrades || [];
+                    appData.completedTrades = parsed.completedTrades || [];
+                    appData.missedTrades = parsed.missedTrades || [];
+                    appData.lastBackup = parsed.lastBackup || null;
+                } catch(e) {
+                    console.error('Data corrupt, loading defaults');
+                }
             }
-            if (!appData.completedTrades.length && !appData.openTrades.length && !appData.missedTrades.length) {
-                // preload historical
-                const hist = [
-                    { id:'h1', pair:'XAUUSD', direction:'LONG', result:'WIN', date:'2025-12-10', grade:'A+', pl:'+2.5%', rr:'1:2.5', notes:'HTF alignment masterpiece', session:'London' },
-                    // (truncated for brevity – actual code includes all historical trades)
-                ];
-                hist.forEach(t => { if(t.result==='MISSED') appData.missedTrades.push(t); else appData.completedTrades.push(t); });
-                saveData();
+            // If no data exists at all, preload historical
+            if (!appData.completedTrades.length && !appData.missedTrades.length && !appData.openTrades.length) {
+                preloadHistorical();
             }
         }
 
         function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            } catch(e) {
+                showToast('⚠️ Storage full! Export your data.');
+            }
         }
 
-        // ---------- GRADING (simplified, full logic same) ----------
+        function preloadHistorical() {
+            const hist = [
+                { id:'h1', pair:'XAUUSD', direction:'LONG', result:'WIN', date:'2025-12-10', grade:'A+', pl:'+2.5%', rr:'1:2.5', notes:'HTF alignment masterpiece', session:'London' },
+                { id:'h2', pair:'EURUSD', direction:'LONG', result:'WIN', date:'2025-12-11', grade:'A+', pl:'0%', rr:'1:2.2', notes:'No retest to AOI', session:'London' },
+                { id:'h3', pair:'GBPJPY', direction:'LONG', result:'WIN', date:'2025-12-17', grade:'A+', pl:'+2.3%', rr:'1:2.3', notes:'All HTF aligned, smooth', session:'London' },
+                { id:'h4', pair:'GBPUSD', direction:'SHORT', result:'LOSS', date:'2025-12-17', grade:'A+', pl:'-1%', rr:'1:2.2', notes:'Against daily bias', session:'London/NY' },
+                { id:'h5', pair:'GBPUSD', direction:'LONG', result:'LOSS', date:'2025-12-29', grade:'A+', pl:'-1%', rr:'1:2.4', notes:'Almost forced this trade', session:'London' },
+                { id:'h6', pair:'XAUUSD', direction:'LONG', result:'WIN', date:'2026-01-05', grade:'A+', pl:'+2.7%', rr:'1:2.7', notes:'Masterpiece - all HTF aligned', session:'London' },
+                { id:'h7', pair:'GBPJPY', direction:'LONG', result:'LOSS', date:'2026-01-07', grade:'A+', pl:'-1%', rr:'1:2.4', notes:'Weekly said otherwise', session:'London' },
+                { id:'h8', pair:'EURUSD', direction:'SHORT', result:'WIN', date:'2026-01-14', grade:'A+', pl:'+2.4%', rr:'1:2.4', notes:'H&S perfect, process focus', session:'London' },
+                { id:'h9', pair:'EURUSD', direction:'SHORT', result:'LOSS', date:'2026-01-19', grade:'A+', pl:'-1.3%', rr:'1:2.5', notes:'Right decision, market wrong', session:'London' },
+                { id:'h10', pair:'EURUSD', direction:'LONG', result:'WIN', date:'2026-01-22', grade:'A+', pl:'+2.3%', rr:'1:2.3', notes:'Discipline = profit', session:'London' },
+                { id:'h11', pair:'BTCUSD', direction:'SHORT', result:'BREAKEVEN', date:'2026-01-26', grade:'A+', pl:'-0.7%', rr:'1:2.7', notes:'BTC driven by economics', session:'Other' },
+                { id:'h12', pair:'EURUSD', direction:'LONG', result:'LOSS', date:'2026-02-04', grade:'A+', pl:'-1%', rr:'1:2.7', notes:'Geopolitical, CPI news', session:'London' },
+                { id:'h13', pair:'USDCHF', direction:'SHORT', result:'BREAKEVEN', date:'2026-02-11', grade:'A+', pl:'0%', rr:'1:2.3', notes:'Reversed to BE, move on', session:'London/NY' },
+                { id:'h14', pair:'GBPJPY', direction:'LONG', result:'LOSS', date:'2026-02-16', grade:'A+', pl:'-1%', rr:'1:2.4', notes:'Against daily flow', session:'London/NY' },
+                { id:'h15', pair:'EURUSD', direction:'LONG', result:'LOSS', date:'2026-02-23', grade:'A+', pl:'-1%', rr:'1:2.3', notes:'False confluences, emotional', session:'London' },
+                { id:'h16', pair:'EURUSD', direction:'SHORT', result:'LOSS', date:'2026-03-03', grade:'A+', pl:'-1.1%', rr:'1:2.3', notes:'First March trade', session:'London' },
+                { id:'h17', pair:'GBPUSD', direction:'SHORT', result:'WIN', date:'2026-03-09', grade:'A+', pl:'+2.33%', rr:'1:2.4', notes:'Sharp reversal, perfect system', session:'London/NY' },
+                { id:'h18', pair:'XAUUSD', direction:'SHORT', result:'WIN', date:'2026-03-16', grade:'A+', pl:'+2.54%', rr:'1:2.54', notes:'H&S strong', session:'London' },
+                { id:'h19', pair:'BTCUSD', direction:'SHORT', result:'LOSS', date:'2026-03-23', grade:'A+', pl:'-1.2%', rr:'1:2.4', notes:'BTC news sensitive', session:'Other' },
+                { id:'h20', pair:'GBPJPY', direction:'LONG', result:'BREAKEVEN', date:'2026-03-26', grade:'A+', pl:'+1.4%', rr:'1:2', notes:'Greedy lesson', session:'London' },
+                { id:'h21', pair:'EURUSD', direction:'SHORT', result:'MISSED', date:'2026-03-30', grade:'A+', pl:'0%', rr:'1:2.5', notes:'No retest', session:'London' },
+                { id:'h22', pair:'XAUUSD', direction:'LONG', result:'BREAKEVEN', date:'2026-04-01', grade:'A+', pl:'+0.07%', rr:'1:2.5', notes:'Normal day', session:'London' },
+                { id:'h23', pair:'GBPJPY', direction:'LONG', result:'WIN', date:'2026-04-07', grade:'A+', pl:'+2.3%', rr:'1:2.3', notes:'H&S strong', session:'London' },
+                { id:'h24', pair:'EURUSD', direction:'SHORT', result:'LOSS', date:'2026-05-20', grade:'A+', pl:'-1.27%', rr:'1:2.7', notes:'Emotionally graded - at HTF support', session:'London' },
+                { id:'h25', pair:'AUDUSD', direction:'LONG', result:'LOSS', date:'2026-05-26', grade:'A+', pl:'-1%', rr:'1:2.5', notes:'Lazy - forgot Forex Factory. Clipped by AUD CPI.', session:'London' },
+                { id:'h26', pair:'EURUSD', direction:'SHORT', result:'LOSS', date:'2026-06-03', grade:'A+', pl:'-1.1%', rr:'1:2.7', notes:'Geopolitical/war volatility. Need to back out.', session:'London/NY' }
+            ];
+            hist.forEach(t => {
+                if (t.result === 'MISSED') {
+                    appData.missedTrades.push(t);
+                } else {
+                    appData.completedTrades.push(t);
+                }
+            });
+            saveData();
+        }
+
+        // ========== HELPERS ==========
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function parsePL(s) {
+            if (!s) return 0;
+            return parseFloat(String(s).replace('%', '').replace('+', '').trim()) || 0;
+        }
+
+        // ========== GRADING ==========
+        function buildGradingSections() {
+            document.getElementById('gradingSections').innerHTML = `
+                <div class="card"><h4>📅 Weekly (8pts)</h4>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Clear Weekly Trend (HH/HL or LL/LH)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Weekly Key Level with Rejection</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Weekly EMA Respect (20/50 EMA)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Weekly Pattern (H&S, Double)</label></div>
+                </div>
+                <div class="card"><h4>📊 Daily (8pts)</h4>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Daily aligns with Weekly Trend</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Daily Key Level Rejection</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Daily EMA Rejection (Clear candle)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>Daily Pattern (H&S, Double, Triangle)</label></div>
+                </div>
+                <div class="card"><h4>⚡ 4H Engine CORE (15pts)</h4>
+                    <div class="checkbox-item"><input type="checkbox" data-points="3" onchange="calculateGrade()"><label>4H Clear Trending Bias</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="4" onchange="calculateGrade()"><label>Perfect 4H BOS (Clean break)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="3" onchange="calculateGrade()"><label>Strong 4H Pattern (H&S, Double)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>4H Key Structure Level</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="3" onchange="calculateGrade()"><label>4H EMA Alignment (20/50)</label></div>
+                </div>
+                <div class="card"><h4>🎯 Entry Precision (8pts)</h4>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>1H Trend aligns with 4H</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>1H EMA Rejection (Candlestick)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>15M AOI (Breaker Block/Order Block)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" data-points="2" onchange="calculateGrade()"><label>15M AOI overlaps 4H Structure</label></div>
+                </div>
+                <div class="card"><h4>⏰ Timing & Confluences</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <div class="session-option" id="sessionGolden" onclick="selectSession('golden')">London Open <span style="color:var(--accent);">+3</span></div>
+                        <div class="session-option" id="sessionPremium" onclick="selectSession('premium')">London/NY Overlap <span style="color:var(--accent);">+3</span></div>
+                    </div>
+                    <div class="checkbox-item"><input type="checkbox" id="noNews" data-points="2" onchange="calculateGrade()"><label>No Major News (>1 hour)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="tripleAlign" data-points="2" onchange="calculateGrade()"><label>Weekly+Daily+4H Alignment <span class="points-badge">+2</span></label></div>
+                </div>`;
+        }
+
+        function selectSession(type) {
+            document.querySelectorAll('.session-option').forEach(o => o.classList.remove('selected'));
+            document.getElementById(type === 'golden' ? 'sessionGolden' : 'sessionPremium').classList.add('selected');
+            calculateGrade();
+        }
+
         function calculateGrade() {
             let score = 0;
-            document.querySelectorAll('#gradingSections input[type=checkbox]:checked').forEach(cb => score += parseInt(cb.dataset.points));
-            if(document.getElementById('sessionGolden')?.classList.contains('selected')) score+=3;
-            if(document.getElementById('sessionPremium')?.classList.contains('selected')) score+=3;
+            document.querySelectorAll('#gradingSections input[type=checkbox]:checked').forEach(cb => {
+                score += parseInt(cb.dataset.points) || 0;
+            });
+            if (document.getElementById('sessionGolden')?.classList.contains('selected')) score += 3;
+            if (document.getElementById('sessionPremium')?.classList.contains('selected')) score += 3;
             document.getElementById('totalScore').textContent = score;
             let grade, cls, action;
-            if(score>=40) { grade='A++'; cls='grade-Aplusplus'; action='Full position'; }
-            else if(score>=33) { grade='A+'; cls='grade-Aplus'; action='Normal position'; }
-            else if(score>=26) { grade='A'; cls='grade-A'; action='Reduced size'; }
-            else if(score>=20) { grade='A-'; cls='grade-Aminus'; action='Avoid'; }
-            else { grade='FAIL'; cls='grade-fail'; action='NO TRADE'; }
-            document.getElementById('gradeValue').textContent = grade;
-            document.getElementById('gradeValue').className = 'grade-badge ' + cls;
+            if (score >= 40) { grade = 'A++'; cls = 'grade-Aplusplus'; action = '🎯 SNIPER SETUP - Full position (1% risk)'; }
+            else if (score >= 33) { grade = 'A+'; cls = 'grade-Aplus'; action = '✅ STRONG SETUP - Normal position (0.75-1% risk)'; }
+            else if (score >= 26) { grade = 'A'; cls = 'grade-A'; action = '⚠️ VALID SETUP - Reduced size (0.5% risk)'; }
+            else if (score >= 20) { grade = 'A-'; cls = 'grade-Aminus'; action = '❌ WEAK SETUP - Avoid or paper trade only'; }
+            else { grade = 'FAIL'; cls = 'grade-fail'; action = '🚫 NO TRADE - Critical elements missing'; }
+            currentGrade = { score, grade, action };
+            const gv = document.getElementById('gradeValue');
+            gv.textContent = grade;
+            gv.className = 'grade-badge ' + cls;
+            gv.style.fontSize = '2rem';
             document.getElementById('actionMessage').textContent = action;
-            window._currentGrade = { score, grade, action };
         }
 
-        // ---------- NAVIGATION ----------
+        function showSaveTradeModal() {
+            if (!currentGrade.score) { showToast('⚠️ Grade your setup first'); return; }
+            document.getElementById('modalGrade').textContent = currentGrade.grade;
+            document.getElementById('modalScore').textContent = currentGrade.score + '/50';
+            document.getElementById('tradeDate').value = new Date().toISOString().slice(0, 16);
+            document.getElementById('saveTradeModal').style.display = 'block';
+        }
+
+        function saveGradedSetup() {
+            const pair = document.getElementById('tradePair').value.trim().toUpperCase();
+            if (!pair || !/^[A-Z]{6}$/.test(pair)) { showToast('⚠️ Enter valid pair (EURUSD)'); return; }
+            const trade = {
+                id: 't_' + Date.now(),
+                pair,
+                direction: document.getElementById('tradeDirection').value,
+                date: document.getElementById('tradeDate').value,
+                grade: currentGrade.grade,
+                score: currentGrade.score,
+                action: currentGrade.action,
+                session: document.getElementById('sessionGolden')?.classList.contains('selected') ? 'London' :
+                         document.getElementById('sessionPremium')?.classList.contains('selected') ? 'London/NY' : 'Other',
+                status: 'OPEN'
+            };
+            appData.openTrades.unshift(trade);
+            saveData();
+            closeModal('saveTradeModal');
+            showToast('✅ ' + trade.pair + ' ' + trade.direction + ' saved (' + trade.grade + ')');
+            document.getElementById('tradePair').value = '';
+            refreshAll();
+        }
+
+        // ========== CLOSE TRADE ==========
+        function openCloseTradeModal(tradeId) {
+            currentTradeToClose = appData.openTrades.find(t => t.id === tradeId);
+            if (!currentTradeToClose) return;
+            document.getElementById('closeTradeInfo').innerHTML = `
+                <div style="background:rgba(100,255,218,0.1); padding:10px; border-radius:8px; margin-bottom:10px;">
+                    <strong>${currentTradeToClose.pair}</strong> • ${currentTradeToClose.direction}<br>
+                    <span style="font-size:0.8rem;color:var(--text-secondary);">${currentTradeToClose.grade} (Score: ${currentTradeToClose.score})</span>
+                </div>`;
+            document.getElementById('tradeResult').value = '';
+            document.getElementById('tradePnL').value = '';
+            document.getElementById('tradeRR').value = '';
+            document.getElementById('tradeNotes').value = '';
+            document.getElementById('missedReasonGroup').style.display = 'none';
+            document.getElementById('screenshotPreview').style.display = 'none';
+            document.getElementById('screenshotInput').value = '';
+            document.getElementById('closeTradeModal').style.display = 'block';
+        }
+
+        function toggleMissedFields() {
+            const isMissed = document.getElementById('tradeResult').value === 'MISSED';
+            document.getElementById('missedReasonGroup').style.display = isMissed ? 'block' : 'none';
+        }
+
+        function previewScreenshot() {
+            const file = document.getElementById('screenshotInput').files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('screenshotPreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveTradeResult() {
+            const result = document.getElementById('tradeResult').value;
+            if (!result) { showToast('⚠️ Select result'); return; }
+            const trade = { ...currentTradeToClose, result, closedDate: new Date().toISOString() };
+            trade.pl = document.getElementById('tradePnL').value || '0%';
+            trade.rr = document.getElementById('tradeRR').value || 'N/A';
+            trade.notes = document.getElementById('tradeNotes').value;
+            if (result === 'MISSED') {
+                trade.missedReason = document.getElementById('missedReason').value;
+                appData.missedTrades.unshift(trade);
+            } else {
+                appData.completedTrades.unshift(trade);
+            }
+            const screenshotData = document.getElementById('screenshotPreview').src;
+            if (screenshotData && screenshotData.startsWith('data:image')) {
+                trade.screenshot = screenshotData;
+            }
+            appData.openTrades = appData.openTrades.filter(t => t.id !== currentTradeToClose.id);
+            saveData();
+            closeModal('closeTradeModal');
+            showToast('✅ Trade closed as ' + result);
+            refreshAll();
+        }
+
+        // ========== JOURNAL RENDERING ==========
+        function renderOpenTrades() {
+            const c = document.getElementById('openTradesContainer');
+            if (!appData.openTrades.length) {
+                c.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:20px;">No open trades</p>';
+                return;
+            }
+            c.innerHTML = appData.openTrades.map(t => `
+                <div class="trade-row open-trade">
+                    <div>
+                        <strong>${t.pair}</strong> • ${t.direction}
+                        <span class="grade-badge grade-${t.grade.replace('+','plus')}">${t.grade}</span>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <button class="btn btn-small btn-primary" onclick="openCloseTradeModal('${t.id}')">Close</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function renderFilters() {
+            const pairs = [...new Set(appData.completedTrades.map(t => t.pair))];
+            const grades = [...new Set(appData.completedTrades.map(t => t.grade))];
+            let html = '<span class="filter-chip ' + (activeFilters.pair === 'all' ? 'active' : '') + '" onclick="setFilter(\'pair\',\'all\')">All Pairs</span>';
+            pairs.forEach(p => {
+                html += '<span class="filter-chip ' + (activeFilters.pair === p ? 'active' : '') + '" onclick="setFilter(\'pair\',\'' + p + '\')">' + p + '</span>';
+            });
+            html += ' | ';
+            ['all', 'WIN', 'LOSS', 'BREAKEVEN'].forEach(r => {
+                html += '<span class="filter-chip ' + (activeFilters.result === r ? 'active' : '') + '" onclick="setFilter(\'result\',\'' + r + '\')">' + (r === 'all' ? 'All' : r) + '</span>';
+            });
+            document.getElementById('filterBar').innerHTML = html;
+        }
+
+        function setFilter(cat, val) {
+            activeFilters[cat] = val;
+            renderFilters();
+            renderCompletedTrades();
+        }
+
+        function renderCompletedTrades() {
+            const c = document.getElementById('completedTradesList');
+            let trades = [...appData.completedTrades];
+            if (activeFilters.pair !== 'all') trades = trades.filter(t => t.pair === activeFilters.pair);
+            if (activeFilters.result !== 'all') trades = trades.filter(t => t.result === activeFilters.result);
+            trades.sort((a, b) => new Date(b.date) - new Date(a.date));
+            if (!trades.length) {
+                c.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">No trades match filters</p>';
+                return;
+            }
+            c.innerHTML = trades.map(t => `
+                <div class="trade-row" onclick="viewTradeDetail('${t.id}')">
+                    <div>
+                        <span class="grade-badge grade-${t.grade.replace('+','plus')}">${t.grade}</span>
+                        <strong>${t.pair}</strong> • ${t.direction}
+                        <div style="font-size:0.7rem;color:var(--text-secondary);">${new Date(t.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="${t.result==='WIN'?'result-win':t.result==='LOSS'?'result-loss':'result-be'}">${t.pl}</div>
+                        <div style="font-size:0.7rem;color:var(--text-secondary);">${t.result}</div>
+                    </div>
+                </div>`).join('');
+        }
+
+        function renderMissedTrades() {
+            const c = document.getElementById('missedTradesList');
+            if (!appData.missedTrades.length) {
+                c.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">No missed trades</p>';
+                return;
+            }
+            c.innerHTML = appData.missedTrades.slice().reverse().map(t => `
+                <div class="trade-row missed-trade">
+                    <div>
+                        <strong>${t.pair}</strong> • ${t.direction}
+                        <div style="font-size:0.7rem;color:var(--text-secondary);">${new Date(t.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} · ${t.notes || 'No retest'}</div>
+                    </div>
+                </div>`).join('');
+        }
+
+        function viewTradeDetail(id) {
+            const t = appData.completedTrades.find(x => x.id === id);
+            if (!t) return;
+            const ov = document.createElement('div');
+            ov.className = 'modal-overlay';
+            ov.style.display = 'block';
+            ov.onclick = function(e) { if (e.target === ov) ov.remove(); };
+            ov.innerHTML = `<div class="modal-content">
+                <h3>${t.pair} • ${t.direction}</h3>
+                <p><strong>Date:</strong> ${new Date(t.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</p>
+                <p><strong>Grade:</strong> <span class="grade-badge grade-${t.grade.replace('+','plus')}">${t.grade}</span></p>
+                <p><strong>Result:</strong> <span class="${t.result==='WIN'?'result-win':t.result==='LOSS'?'result-loss':'result-be'}">${t.result}</span></p>
+                <p><strong>P&L:</strong> ${t.pl} | <strong>R:R:</strong> ${t.rr}</p>
+                <p><strong>Session:</strong> ${t.session || 'N/A'}</p>
+                <p><strong>Notes:</strong> ${t.notes || 'None'}</p>
+                ${t.screenshot ? '<img src="' + t.screenshot + '" class="screenshot-thumb">' : ''}
+                <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()" style="margin-top:10px;">Close</button>
+            </div>`;
+            document.body.appendChild(ov);
+        }
+
+        // ========== CALENDAR ==========
+        function updateCalendar() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            document.getElementById('calMonthLabel').textContent = months[currentCalendarMonth] + ' ' + currentCalendarYear;
+            const firstDay = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
+            const daysInMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+            const dayMap = {};
+            appData.completedTrades.forEach(t => {
+                const d = new Date(t.date);
+                if (d.getFullYear() === currentCalendarYear && d.getMonth() === currentCalendarMonth) {
+                    const day = d.getDate();
+                    if (!dayMap[day]) dayMap[day] = [];
+                    dayMap[day].push(t);
+                }
+            });
+            let html = '';
+            ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach(d => html += '<div class="cal-header">' + d + '</div>');
+            for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+            for (let d = 1; d <= daysInMonth; d++) {
+                const trades = dayMap[d] || [];
+                let cls = 'empty';
+                if (trades.length) {
+                    const hasWin = trades.some(t => t.result === 'WIN');
+                    const hasLoss = trades.some(t => t.result === 'LOSS');
+                    if (hasWin && hasLoss) cls = 'be';
+                    else if (hasWin) cls = 'win';
+                    else cls = 'loss';
+                }
+                html += '<div class="cal-day ' + cls + '" onclick="showDayDetail(' + d + ')">' + d + '</div>';
+            }
+            document.getElementById('calGrid').innerHTML = html;
+            document.getElementById('calDayDetail').textContent = 'Tap a highlighted day';
+            // Update summary
+            const totalPL = appData.completedTrades.reduce((s, t) => s + parsePL(t.pl), 0);
+            document.getElementById('totalProfit').textContent = (totalPL >= 0 ? '+' : '') + totalPL.toFixed(2) + '%';
+            let consec = 0, maxConsec = 0;
+            [...appData.completedTrades].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                if (t.grade === 'A+' || t.grade === 'A++') { consec++; maxConsec = Math.max(maxConsec, consec); }
+                else consec = 0;
+            });
+            document.getElementById('consecutiveAPlus').textContent = maxConsec;
+        }
+
+        function changeCalendarMonth(dir) {
+            currentCalendarMonth += dir;
+            if (currentCalendarMonth > 11) { currentCalendarMonth = 0; currentCalendarYear++; }
+            if (currentCalendarMonth < 0) { currentCalendarMonth = 11; currentCalendarYear--; }
+            updateCalendar();
+        }
+
+        function showDayDetail(day) {
+            const ds = currentCalendarYear + '-' + String(currentCalendarMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+            const trades = appData.completedTrades.filter(t => t.date && t.date.startsWith(ds));
+            if (!trades.length) {
+                document.getElementById('calDayDetail').textContent = 'No trades on day ' + day;
+                return;
+            }
+            let total = 0, html = '<strong>' + new Date(ds).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + '</strong><br>';
+            trades.forEach(t => {
+                total += parsePL(t.pl);
+                html += '<span class="' + (t.result === 'WIN' ? 'result-win' : t.result === 'LOSS' ? 'result-loss' : 'result-be') + '">' + t.pair + ' ' + t.direction + ': ' + t.pl + ' (' + t.result + ')</span><br>';
+            });
+            html += '<strong>Total: <span class="' + (total >= 0 ? 'result-win' : 'result-loss') + '">' + (total >= 0 ? '+' : '') + total.toFixed(2) + '%</span></strong>';
+            document.getElementById('calDayDetail').innerHTML = html;
+        }
+
+        // ========== STATS ==========
+        function updateStats() {
+            const trades = appData.completedTrades;
+            if (!trades.length) {
+                document.getElementById('statsContent').innerHTML = '<p style="color:var(--text-secondary);text-align:center;">No data yet</p>';
+                return;
+            }
+            const wins = trades.filter(t => t.result === 'WIN');
+            const losses = trades.filter(t => t.result === 'LOSS');
+            const bes = trades.filter(t => t.result === 'BREAKEVEN');
+            const wr = trades.length > 0 ? (wins.length / trades.length * 100).toFixed(1) : 0;
+            const grossW = wins.reduce((s, t) => s + Math.abs(parsePL(t.pl)), 0);
+            const grossL = losses.reduce((s, t) => s + Math.abs(parsePL(t.pl)), 0);
+            const pf = grossL > 0 ? (grossW / grossL).toFixed(2) : (grossW > 0 ? '∞' : '0');
+            const avgW = wins.length > 0 ? (wins.reduce((s, t) => s + parsePL(t.pl), 0) / wins.length) : 0;
+            const avgL = losses.length > 0 ? (losses.reduce((s, t) => s + Math.abs(parsePL(t.pl)), 0) / losses.length) : 0;
+            const winRate = trades.length > 0 ? wins.length / trades.length : 0;
+            const lossRate = trades.length > 0 ? losses.length / trades.length : 0;
+            const exp = (winRate * avgW) - (lossRate * avgL);
+            const pls = trades.map(t => parsePL(t.pl)).filter(x => !isNaN(x));
+            const largestWin = pls.filter(x => x > 0).sort((a, b) => b - a)[0] || 0;
+            const largestLoss = pls.filter(x => x < 0).sort((a, b) => a - b)[0] || 0;
+            const sorted = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+            let longWin = 0, longLoss = 0, curWin = 0, curLoss = 0;
+            sorted.forEach(t => {
+                if (t.result === 'WIN') { curWin++; curLoss = 0; longWin = Math.max(longWin, curWin); }
+                else if (t.result === 'LOSS') { curLoss++; curWin = 0; longLoss = Math.max(longLoss, curLoss); }
+                else { curWin = 0; curLoss = 0; }
+            });
+            const gradeDist = {};
+            trades.forEach(t => { gradeDist[t.grade] = (gradeDist[t.grade] || 0) + 1; });
+            const maxGrade = Math.max(...Object.values(gradeDist), 1);
+            const gradeColors = { 'A++': '#3fb950', 'A+': '#56d364', 'A': '#7ee787', 'A-': '#d2991d', 'FAIL': '#f85149' };
+            let gradeHTML = '';
+            Object.entries(gradeDist).sort().forEach(([g, c]) => {
+                const pct = Math.round((c / maxGrade) * 100);
+                gradeHTML += `<div class="chart-bar-wrap">
+                    <span class="chart-bar-label">${g}</span>
+                    <div class="chart-bar"><div class="chart-bar-fill" style="width:${pct}%;background:${gradeColors[g] || '#58a6ff'};"></div></div>
+                    <span style="font-size:0.7rem;">${c}</span>
+                </div>`;
+            });
+            document.getElementById('statsContent').innerHTML = `
+                <div class="dash-grid" style="margin-bottom:10px;">
+                    <div class="dash-stat"><div class="val">${trades.length}</div><div class="lbl">Setups</div></div>
+                    <div class="dash-stat"><div class="val">${wr}%</div><div class="lbl">Win Rate</div></div>
+                    <div class="dash-stat"><div class="val">${pf}</div><div class="lbl">Profit Factor</div></div>
+                    <div class="dash-stat"><div class="val">${exp.toFixed(2)}%</div><div class="lbl">Expectancy</div></div>
+                </div>
+                <div class="dash-grid" style="margin-bottom:10px;">
+                    <div class="dash-stat"><div class="val" style="color:var(--success);">${largestWin > 0 ? '+' + largestWin.toFixed(2) + '%' : 'N/A'}</div><div class="lbl">Largest Win</div></div>
+                    <div class="dash-stat"><div class="val" style="color:var(--danger);">${largestLoss < 0 ? largestLoss.toFixed(2) + '%' : 'N/A'}</div><div class="lbl">Largest Loss</div></div>
+                    <div class="dash-stat"><div class="val">${longWin}</div><div class="lbl">Win Streak</div></div>
+                    <div class="dash-stat"><div class="val">${longLoss}</div><div class="lbl">Loss Streak</div></div>
+                </div>
+                <p style="font-weight:700;margin-top:10px;">📊 Grade Distribution</p>
+                ${gradeHTML}
+                <p style="margin-top:10px;"><strong>✅ Wins:</strong> ${wins.length} | <strong>❌ Losses:</strong> ${losses.length} | <strong>⚖️ BE:</strong> ${bes.length}</p>`;
+        }
+
+        // ========== DASHBOARD ==========
+        function updateDashboard() {
+            document.getElementById('dashOpen').textContent = appData.openTrades.length;
+            document.getElementById('dashToday').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+            const totalPL = appData.completedTrades.reduce((s, t) => s + parsePL(t.pl), 0);
+            document.getElementById('dashGrowth').textContent = (totalPL >= 0 ? '+' : '') + totalPL.toFixed(2) + '%';
+            document.getElementById('dashGrowth').style.color = totalPL >= 0 ? 'var(--success)' : 'var(--danger)';
+            const now = new Date();
+            const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            const monthPL = appData.completedTrades.filter(t => t.date && t.date.startsWith(thisMonth)).reduce((s, t) => s + parsePL(t.pl), 0);
+            document.getElementById('dashMonthPL').textContent = (monthPL >= 0 ? '+' : '') + monthPL.toFixed(2) + '%';
+            document.getElementById('dashMonthPL').style.color = monthPL >= 0 ? 'var(--success)' : 'var(--danger)';
+            let consec = 0;
+            [...appData.completedTrades].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                if (t.grade === 'A+' || t.grade === 'A++') consec++;
+                else return;
+            });
+            document.getElementById('dashConsec').textContent = consec;
+            const wins = appData.completedTrades.filter(t => t.result === 'WIN').length;
+            document.getElementById('dashWinRate').textContent = appData.completedTrades.length > 0 ? (wins / appData.completedTrades.length * 100).toFixed(1) + '%' : '0%';
+            const recent = [...appData.completedTrades].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+            document.getElementById('dashRecent').innerHTML = recent.length > 0 ? recent.map(t => `
+                <div class="trade-row" onclick="viewTradeDetail('${t.id}')">
+                    <span><strong>${t.pair}</strong> ${t.direction}</span>
+                    <span class="${t.result==='WIN'?'result-win':t.result==='LOSS'?'result-loss':'result-be'}">${t.pl}</span>
+                    <span style="font-size:0.7rem;color:var(--text-secondary);">${new Date(t.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span>
+                </div>`).join('') : '<p style="color:var(--text-secondary);">No trades yet</p>';
+        }
+
+        // ========== IMPORT/EXPORT ==========
+        function exportData() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tradeos_backup_' + new Date().toISOString().slice(0, 10) + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            appData.lastBackup = new Date().toISOString();
+            saveData();
+            showToast('📥 Backup exported!');
+            updateBackupNote();
+        }
+
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!data.openTrades || !data.completedTrades || !data.missedTrades) {
+                        throw new Error('Invalid structure');
+                    }
+                    if (!confirm('⚠️ This will REPLACE all current data. Continue?')) return;
+                    appData.openTrades = data.openTrades || [];
+                    appData.completedTrades = data.completedTrades || [];
+                    appData.missedTrades = data.missedTrades || [];
+                    appData.lastBackup = data.lastBackup || new Date().toISOString();
+                    saveData();
+                    refreshAll();
+                    showToast('📤 Data imported! ' + appData.completedTrades.length + ' trades loaded');
+                } catch (ex) {
+                    showToast('❌ Invalid file structure');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        }
+
+        function resetAll() {
+            if (!confirm('⚠️ Delete ALL trades? This cannot be undone.')) return;
+            if (!confirm('Are you SURE? All data will be lost.')) return;
+            appData = { openTrades: [], completedTrades: [], missedTrades: [], lastBackup: null };
+            saveData();
+            refreshAll();
+            showToast('🗑️ All data reset');
+        }
+
+        function updateBackupNote() {
+            const note = document.getElementById('backupNote');
+            if (!note) return;
+            if (!appData.lastBackup) {
+                note.textContent = '⚠️ No backup yet. Export your data.';
+            } else {
+                const days = Math.floor((Date.now() - new Date(appData.lastBackup).getTime()) / 86400000);
+                note.textContent = days > 7 ? '⚠️ Last backup: ' + days + ' days ago' : '✅ Backed up ' + (days || 0) + ' days ago';
+            }
+        }
+
+        // ========== NAVIGATION ==========
         function showPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(page+'-page').classList.add('active');
-            document.querySelector(`[data-page="${page}"]`).classList.add('active');
-            if(page==='dashboard') updateDashboard();
-            if(page==='stats') updateStats();
-            if(page==='pnlcalendar') updateCalendar();
-            if(page==='journal') switchJournal('open');
+            document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+            const pageEl = document.getElementById(page + '-page');
+            if (pageEl) pageEl.classList.add('active');
+            const tabEl = document.querySelector('[data-page="' + page + '"]');
+            if (tabEl) tabEl.classList.add('active');
+            if (page === 'journal') switchJournalTab(currentJournalTab || 'open');
+            if (page === 'dashboard') updateDashboard();
+            if (page === 'stats') updateStats();
+            if (page === 'pnlcalendar') updateCalendar();
+            if (page === 'settings') updateBackupNote();
         }
 
-        document.getElementById('tabNav').addEventListener('click', e => {
-            const tab = e.target.closest('.nav-tab');
-            if(tab) showPage(tab.dataset.page);
+        document.getElementById('mainTabNav').addEventListener('click', function(e) {
+            const tab = e.target.closest('.main-tab');
+            if (tab && tab.dataset.page) showPage(tab.dataset.page);
         });
 
-        // ---------- JOURNAL SWITCH ----------
-        function switchJournal(tab) {
-            document.getElementById('openTradesContainer').style.display = tab==='open'?'block':'none';
-            document.getElementById('completedTradesContainer').style.display = tab==='completed'?'block':'none';
-            document.getElementById('missedTradesContainer').style.display = tab==='missed'?'block':'none';
-            document.querySelectorAll('#journal-page .nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('journalTab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
-            if(tab==='open') renderOpenTrades();
-            if(tab==='completed') { renderFilters(); renderCompletedTrades(); }
-            if(tab==='missed') renderMissedTrades();
+        function switchJournalTab(tab) {
+            currentJournalTab = tab;
+            document.getElementById('openTradesContainer').style.display = tab === 'open' ? 'block' : 'none';
+            document.getElementById('completedTradesContainer').style.display = tab === 'completed' ? 'block' : 'none';
+            document.getElementById('missedTradesContainer').style.display = tab === 'missed' ? 'block' : 'none';
+            document.querySelectorAll('.journal-subtab').forEach(t => t.classList.remove('active'));
+            const activeSubtab = document.querySelector('[data-jtab="' + tab + '"]');
+            if (activeSubtab) activeSubtab.classList.add('active');
+            document.getElementById('openCount').textContent = appData.openTrades.length;
+            document.getElementById('completedCount').textContent = appData.completedTrades.length;
+            document.getElementById('missedCount').textContent = appData.missedTrades.length;
+            if (tab === 'open') renderOpenTrades();
+            if (tab === 'completed') { renderFilters(); renderCompletedTrades(); }
+            if (tab === 'missed') renderMissedTrades();
         }
 
-        // ---------- RENDERING (condensed for space, full logic present in actual code) ----------
-        function renderOpenTrades() {
-            const container = document.getElementById('openTradesContainer');
-            if(!appData.openTrades.length) { container.innerHTML = '<p>No open trades</p>'; return; }
-            container.innerHTML = appData.openTrades.map(t => `
-                <div class="trade-row">
-                    <div><span class="pair">${t.pair}</span> ${t.direction} <span class="grade-badge grade-${t.grade.replace('+','plus')}">${t.grade}</span></div>
-                    <div class="btn-row">
-                        <button class="btn-small btn-primary" onclick="openCloseTradeModal('${t.id}')">Close</button>
-                    </div>
-                </div>
-            `).join('');
+        document.getElementById('journal-page').addEventListener('click', function(e) {
+            const tab = e.target.closest('.journal-subtab');
+            if (tab && tab.dataset.jtab) switchJournalTab(tab.dataset.jtab);
+        });
+
+        function refreshAll() {
+            renderOpenTrades();
+            renderFilters();
+            renderCompletedTrades();
+            renderMissedTrades();
+            updateDashboard();
+            updateCalendar();
+            updateStats();
+            document.getElementById('openCount').textContent = appData.openTrades.length;
+            document.getElementById('completedCount').textContent = appData.completedTrades.length;
+            document.getElementById('missedCount').textContent = appData.missedTrades.length;
+            updateBackupNote();
         }
 
-        // Filters, calendar, stats, screenshot, import/export, etc. fully implemented in the actual script.
-        // (The code is truncated here for brevity but would be complete in the real answer.)
-
+        // ========== INIT ==========
         loadData();
-        updateDashboard();
+        buildGradingSections();
+        calculateGrade();
+        refreshAll();
         showPage('dashboard');
+        showToast('🎯 TradeOS Ready — ' + appData.completedTrades.length + ' trades loaded');
     </script>
 </body>
 </html>
