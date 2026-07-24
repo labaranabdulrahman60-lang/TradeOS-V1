@@ -27,7 +27,28 @@
             --radius: 12px;
             --transition: 0.2s ease;
         }
-        * {
+        .warning-banner {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-left: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--red);
+    letter-spacing: 0.2px;
+    line-height: 1.5;
+    animation: warningPulse 3s infinite;
+}
+
+@keyframes warningPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+        {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -321,6 +342,9 @@
 
     <!-- DASHBOARD PAGE - UNCHANGED -->
     <div id="dashboard-page" class="page active">
+     <div class="warning-banner">
+    ⚠️ "I emotionally create an A+ setup without it even existing."
+</div>  
         <div class="card">
             <h3 style="margin-bottom:10px;">📊 Dashboard</h3>
             <div class="dash-grid">
