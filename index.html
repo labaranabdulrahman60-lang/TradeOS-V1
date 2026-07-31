@@ -323,6 +323,49 @@
             .main-tab { padding: 8px 6px; font-size: 0.65rem; }
             .dash-grid { grid-template-columns: 1fr 1fr; }
         }
+        .checklist-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.checklist-item:hover {
+    border-color: var(--blue);
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green);
+    pointer-events: none;
+}
+
+.checklist-item.checked {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.checklist-item.checked span {
+    color: var(--green);
+    text-decoration: line-through;
+}
+
+.decision-buttons {
+    display: flex;
+    gap: 8px;
+}
     </style>
 </head>
 <body>
@@ -334,6 +377,7 @@
     <div class="main-tabs" id="mainTabNav">
         <button class="main-tab active" data-page="dashboard">📊 Dash</button>
         <button class="main-tab" data-page="grading">🎯 Grade</button>
+        <button class="main-tab" data-page="execution">⚡ Execute</button>
         <button class="main-tab" data-page="journal">📖 Journal</button>
         <button class="main-tab" data-page="stats">📈 Stats</button>
         <button class="main-tab" data-page="pnlcalendar">🗓️ P&L</button>
@@ -345,6 +389,23 @@
      <div class="warning-banner">
     ⚠️ "I emotionally create an A+ setup without it even existing."
 </div>  
+        <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="section-title">📜 Constitution</div>
+    <ol class="text-xs text-gray" style="padding-left:16px;line-height:1.8;">
+        <li>1% risk. Always.</li>
+        <li>No crypto. Ever.</li>
+        <li>30-min pre-news check.</li>
+        <li>No weekend holds during war.</li>
+        <li>Screenshot or it's not real.</li>
+        <li>Time buffer between trades.</li>
+        <li>Never against 4H trend.</li>
+        <li>No FOMO. No revenge.</li>
+        <li>Missed trade ≠ bad day.</li>
+        <li>Phone 40%+. Net stable.</li>
+        <li>One rule broken = stop.</li>
+    </ol>
+    <p class="text-xs text-red mt-2" style="font-style:italic;">"I emotionally create an A+ setup without it even existing."</p>
+</div>
         <div class="card">
             <h3 style="margin-bottom:10px;">📊 Dashboard</h3>
             <div class="dash-grid">
@@ -377,7 +438,140 @@
             </div>
         </div>
     </div>
+   <!-- EXECUTION  PAGE -->
+    <!-- EXECUTION ENGINE -->
+<div class="page" id="execution-page">
+    
+    <!-- NEWS PROTECTION MODULE -->
+    <div class="card">
+        <div class="section-title">📰 News Protection — Pre-News Checklist</div>
+        <p class="text-xs text-gray mb-3">Complete this 30 minutes before every high-impact news event.</p>
+        
+        <div class="checklist-grid">
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Any active pending orders?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Trade currently triggered and live?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Is the trade currently protected? (SL to BE?)</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Does this trade need to move to Breakeven?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Should pending orders be cancelled before news?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Is your phone battery above 40%?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Is your internet connection stable?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Alarm/alert confirmed for news time?</span>
+            </div>
+        </div>
+        
+        <div class="decision-buttons mt-3">
+            <button class="btn-small btn-primary" onclick="saveNewsDecision('continue')">✅ Continue</button>
+            <button class="btn-small" style="background:var(--amber);color:#000;" onclick="saveNewsDecision('protect')">⚠ Protect</button>
+            <button class="btn-small btn-danger" onclick="saveNewsDecision('cancel')">❌ Cancel All</button>
+        </div>
+        <p class="text-xs text-gray mt-2" id="newsDecisionLog">Last check: Never</p>
+    </div>
 
+    <!-- ACTIVE TRADE MANAGER -->
+    <div class="card">
+        <div class="section-title">📊 Active Trade Manager</div>
+        <div id="activeTradePanel">
+            <p class="text-xs text-gray text-center">No active trade. Log one in the Journal tab.</p>
+        </div>
+    </div>
+
+    <!-- PENDING ORDER MANAGER -->
+    <div class="card">
+        <div class="section-title">📋 Pending Order Manager</div>
+        <div id="pendingOrdersPanel">
+            <p class="text-xs text-gray text-center">No pending orders.</p>
+        </div>
+    </div>
+
+    <!-- EXECUTION CHECKLIST -->
+    <div class="card">
+        <div class="section-title">✅ Pre-Execution Checklist</div>
+        <p class="text-xs text-gray mb-3">Complete before clicking Buy/Sell.</p>
+        
+        <div class="checklist-grid">
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>A+ Grade confirmed?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Risk = 1% exactly?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Position size correct?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Stop Loss set correctly?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Take Profit set correctly?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>News checked — no red folder within 1 hour?</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Emotionally neutral? (Not FOMO, not revenge)</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox"> <span>Screenshot of setup saved?</span>
+            </div>
+        </div>
+        <button class="btn btn-primary mt-3" onclick="confirmExecution()">✅ Confirm & Execute</button>
+    </div>
+
+    <!-- EXIT TAGGER -->
+    <div class="card">
+        <div class="section-title">🚪 Exit Tagger</div>
+        <p class="text-xs text-gray mb-3">Tag every trade exit with the reason.</p>
+        <div class="chip-row">
+            <span class="chip" onclick="tagExit('TP')">🏆 TP Hit</span>
+            <span class="chip" onclick="tagExit('SL')">🛑 SL Hit</span>
+            <span class="chip" onclick="tagExit('BE')">⚖️ Breakeven</span>
+            <span class="chip" onclick="tagExit('MANUAL')">✋ Manual Exit</span>
+            <span class="chip" onclick="tagExit('NEWS')">📰 News Exit</span>
+            <span class="chip" onclick="tagExit('RULE_VIOLATION')">🚩 Rule Violation</span>
+        </div>
+        <p class="text-xs text-gray mt-2" id="exitLog"></p>
+    </div>
+
+    <!-- MISTAKE DATABASE -->
+    <div class="card">
+        <div class="section-title">📚 Mistake Database</div>
+        <button class="btn btn-small btn-secondary mb-2" onclick="openMistakeForm()">+ Log a Mistake</button>
+        <div id="mistakeList">
+            <p class="text-xs text-gray text-center">No mistakes logged yet. Every mistake becomes data.</p>
+        </div>
+    </div>
+
+    <!-- TRADEOS CONSTITUTION -->
+    <div class="card">
+        <div class="section-title">📜 TradeOS Constitution</div>
+        <ol class="text-xs text-gray" style="padding-left:16px;line-height:2;">
+            <li><strong>1% Risk.</strong> Never more. Never less.</li>
+            <li><strong>No unmanaged pending orders through High Impact News.</strong></li>
+            <li><strong>Never invent confluence.</strong> Screenshot or it doesn't exist.</li>
+            <li><strong>Every trade gets documented.</strong> No exceptions.</li>
+            <li><strong>Missed trade ≠ Bad day.</strong> Discipline is the goal.</li>
+            <li><strong>No FOMO entries.</strong> If you feel rushed, stand down.</li>
+            <li><strong>Phone battery above 40% during active setups.</strong></li>
+            <li><strong>30-minute pre-news review is mandatory.</strong></li>
+            <li><strong>If one execution rule is broken → Stop trading for the day.</strong></li>
+        </ol>
+    </div>
+</div>
     <!-- JOURNAL PAGE - UNCHANGED -->
     <div id="journal-page" class="page">
         <div style="display:flex; background:var(--secondary); border-radius:20px; padding:3px; margin-bottom:12px;">
@@ -677,6 +871,119 @@
         document.getElementById('journal-page').addEventListener('click', function(e) { const tab = e.target.closest('.journal-subtab'); if (tab && tab.dataset.jtab) switchJournalTab(tab.dataset.jtab); });
         function refreshAll() { renderOpenTrades(); renderFilters(); renderCompletedTrades(); renderMissedTrades(); updateDashboard(); updateCalendar(); updateStats(); document.getElementById('openCount').textContent = appData.openTrades.length; document.getElementById('completedCount').textContent = appData.completedTrades.length; document.getElementById('missedCount').textContent = appData.missedTrades.length; updateBackupNote(); }
         loadData(); buildGradingSections(); calculateGrade(); refreshAll(); showPage('dashboard'); showToast('🎯 TradeOS Ready — ' + appData.completedTrades.length + ' trades loaded');
+  // ========== EXECUTION ENGINE ==========
+
+// Toggle checklist items
+function toggleCheck(element) {
+    element.classList.toggle('checked');
+    const checkbox = element.querySelector('input[type="checkbox"]');
+    checkbox.checked = !checkbox.checked;
+}
+
+// News Protection Decision
+function saveNewsDecision(decision) {
+    const labels = {
+        'continue': '✅ Continued — All clear',
+        'protect': '⚠ Protected — Moved SL to BE / Cancelled pending',
+        'cancel': '❌ Cancelled — All pending orders removed'
+    };
+    const now = new Date().toLocaleString();
+    document.getElementById('newsDecisionLog').textContent = `Last check: ${now} — ${labels[decision]}`;
+    showToast(`News check: ${labels[decision]}`);
+}
+
+// Pre-Execution Confirmation
+function confirmExecution() {
+    const items = document.querySelectorAll('#execution-page .checklist-item');
+    let allChecked = true;
+    items.forEach(item => {
+        if (!item.classList.contains('checked')) allChecked = false;
+    });
+    
+    if (!allChecked) {
+        showToast('⚠ Complete all checklist items before executing');
+        return;
+    }
+    
+    showToast('✅ All checks passed. Execute with discipline.');
+}
+
+// Exit Tagger
+function tagExit(reason) {
+    const labels = {
+        'TP': '🏆 TP Hit',
+        'SL': '🛑 SL Hit',
+        'BE': '⚖️ Breakeven',
+        'MANUAL': '✋ Manual Exit',
+        'NEWS': '📰 News Exit',
+        'RULE_VIOLATION': '🚩 Rule Violation'
+    };
+    document.getElementById('exitLog').textContent = `Exit tagged: ${labels[reason]}`;
+    
+    // Highlight the selected chip
+    document.querySelectorAll('#execution-page .chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    showToast(`Trade exit tagged: ${labels[reason]}`);
+}
+
+// Mistake Database
+let mistakes = JSON.parse(localStorage.getItem('tradeos_mistakes') || '[]');
+
+function openMistakeForm() {
+    const modal = document.getElementById('genericModal');
+    const content = document.getElementById('genericModalContent');
+    content.innerHTML = `
+        <div class="flex-between mb-3"><h3 class="font-bold">Log a Mistake</h3><button onclick="closeModal()" style="background:none;border:none;color:var(--text2);font-size:1.5rem;">×</button></div>
+        <label>Date</label><input type="date" id="mDate" value="${new Date().toISOString().slice(0,10)}">
+        <label class="mt-2">Pair</label><input type="text" id="mPair" placeholder="AUDUSD">
+        <label class="mt-2">Problem</label><input type="text" id="mProblem" placeholder="Pending order during CPI news">
+        <label class="mt-2">Root Cause</label><input type="text" id="mRootCause" placeholder="No pre-news review">
+        <label class="mt-2">Solution</label><input type="text" id="mSolution" placeholder="30-min news alert before every order">
+        <button class="btn btn-primary mt-3" onclick="saveMistake()">Save Mistake</button>
+    `;
+    modal.style.display = 'flex';
+}
+
+function saveMistake() {
+    const g = (id) => document.getElementById(id)?.value || '';
+    const mistake = {
+        id: Date.now(),
+        date: g('mDate'),
+        pair: g('mPair'),
+        problem: g('mProblem'),
+        rootCause: g('mRootCause'),
+        solution: g('mSolution'),
+        status: 'Fixed',
+        occurrences: 1
+    };
+    mistakes.unshift(mistake);
+    localStorage.setItem('tradeos_mistakes', JSON.stringify(mistakes));
+    closeModal();
+    renderMistakes();
+    showToast('✅ Mistake logged');
+}
+
+function renderMistakes() {
+    const container = document.getElementById('mistakeList');
+    if (!mistakes.length) {
+        container.innerHTML = '<p class="text-xs text-gray text-center">No mistakes logged yet.</p>';
+        return;
+    }
+    container.innerHTML = mistakes.map(m => `
+        <div class="row-item">
+            <div class="flex-between">
+                <span class="rt">${m.pair} — ${m.problem}</span>
+                <span class="badge badge-green">${m.status}</span>
+            </div>
+            <div class="rm">Root: ${m.rootCause} → Solution: ${m.solution}</div>
+            <div class="rm">${m.date} · Occurrences: ${m.occurrences}</div>
+        </div>
+    `).join('');
+}
+
+// Initialize
+renderMistakes();
     </script>
 </body>
 </html>
